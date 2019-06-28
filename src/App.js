@@ -25,7 +25,8 @@ const styles = theme => ({
     backgroundColor: 'black'
   },
   h1: {
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    // backgroundColor:'#262f3d'
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -175,7 +176,8 @@ const styles = theme => ({
     margin: theme.spacing.unit,
   },
   typeG: {
-    backgroundColor: '#3e51b5',
+    // backgroundColor: '#3e51b5',
+    backgroundColor:'#262f3d',
     color: 'white',
     padding: '10px 0px'
   },
@@ -211,7 +213,9 @@ function App(props) {
         {/* <Grid item xs={12}>
           <Header classes={classes} />
         </Grid> */}
-        <Grid item xs={12} style={{ backgroundColor: '#fbfbfb' }}>
+        {/* <Grid item xs={12} style={{ backgroundColor: '#fbfbfb' }}> */}
+        <Grid item xs={12} style={{ backgroundColor: '#f8f9fa' }}>
+        
           <Routes classes={classes} />
         </Grid>
       </Grid>

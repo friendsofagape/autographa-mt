@@ -23,7 +23,7 @@ export default class UpdateTokens extends Component {
             targetLanguageId: targetLanguageId,
             token: token,
             translation: tokenTranslation,
-            senses: this.state.senses
+            senses: this.state.sense
         }
         console.log('api', apiData)
         try {
@@ -94,7 +94,7 @@ export default class UpdateTokens extends Component {
         const { senses, sense } = this.state
         if (sense) {
             senses.push(sense)
-            this.setState({ senses })
+            // this.setState({ senses })
             this.updateTransaltion()
             this.setState({ sense: '' })
             this.getTranslatedWords(this.props.data.token)

@@ -50,6 +50,7 @@ const SignedInLinks = ({classes}) => {
                 <ButtonStyle data={{text:"Translation", link:"/homepage"}} />
                 <ButtonStyle data={{text:"Download Draft", link:"/download"}} />
                 <ButtonStyle data={{text:"Log Out", link:"/signin"}} /> */}
+                <Link color="inherit" variant="body2" href="/assignment" className={classes.link}>Dashboard</Link>
                 <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link>
                 <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
                 <Link color="inherit" variant="body2" href="/homepage" className={classes.link}>Translation</Link>

@@ -15,7 +15,6 @@ export default class TokenList extends Component {
         await this.props.data.updateState({ concordance: concordance })
     }
 
-
     async getTranslationWords(word) {
         const { sourceId } = this.props.data
         const data = await fetch(apiUrl + '/v1/translationshelps/words/' + sourceId + '/' + word, {
@@ -29,6 +28,7 @@ export default class TokenList extends Component {
 
     async getTranslatedWords(word){
         const { sourceId, targetLanguageId, updateState } = this.props.data
+        console.log("printing", apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word)
         const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word, {
             method:'GET'
         })
