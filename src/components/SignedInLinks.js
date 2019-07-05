@@ -9,14 +9,17 @@ import { Typography } from '@material-ui/core';
 import { Link } from '@material-ui/core';
 
 let decoded;
-let tokenAliveFlag;
+let tokenAliveFlag = false
 var accessToken = localStorage.getItem('access_token')
 if (accessToken) {
     decoded = jwt_decode(accessToken)
     let currentDate = new Date().getTime()
     let expiry = decoded.exp * 1000
     console.log(currentDate, expiry)
-    var hours = Math.abs(expiry - currentDate) / 36e5
+    console.log((expiry - currentDate) / 36e5)
+    console.log(Math.abs(expiry - currentDate))
+    // var hours = Math.abs(expiry - currentDate) / 36e5
+    var hours = (expiry - currentDate) / 36e5
     if(hours > 0){
         console.log(hours)
         console.log("logged in")
@@ -50,6 +53,8 @@ const SignedInLinks = ({classes}) => {
                 <ButtonStyle data={{text:"Translation", link:"/homepage"}} />
                 <ButtonStyle data={{text:"Download Draft", link:"/download"}} />
                 <ButtonStyle data={{text:"Log Out", link:"/signin"}} /> */}
+                {/* <Link color="inherit" variant="body2" href="/createorganisation" className={classes.link}>Create Organisation Request</Link> */}
+                <Link color="inherit" variant="body2" href="/createorganisation" className={classes.link}>Create Organisation Request</Link>
                 <Link color="inherit" variant="body2" href="/assignment" className={classes.link}>Dashboard</Link>
                 <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link>
                 <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
@@ -76,7 +81,13 @@ const SignedInLinks = ({classes}) => {
                         <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
                         <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Log Out</Link>
                         </div>
-                    ) : null
+                    ) : (
+                        <div>
+                        
+                        <Link color="inherit" variant="body2" href="/signin" className={classes.link}>Sign In</Link>
+                        <Link color="inherit" variant="body2" href="/signup" className={classes.link}>Sign Up</Link>
+                        </div>
+                    )
                 )
             )}
             {/* </Router> */}

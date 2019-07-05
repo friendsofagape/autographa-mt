@@ -78,20 +78,21 @@ export default class ViewSources extends Component {
                                 </TableRow>
                             ))}
                         </TableBody>
-                        <TableFooter>
+                        {/* <TableFooter>
                             <TableRow>
                                 <TablePagination
                                     rowsPerPageOptions={[5, 10, 25]}
                                     colSpan={1}
                                     count={3}
-                                    rowsPerPage={5}
-                                    page={''}
+                                    rowsPerPage={3}
+                                    page={2}
+                                    onChangePage={() => this.onChangePage}
                                     SelectProps={{
                                         native: true,
                                     }}
                                 />
                             </TableRow>
-                        </TableFooter>
+                        </TableFooter> */}
                     </Table>
                 </Paper>
             </Grid>

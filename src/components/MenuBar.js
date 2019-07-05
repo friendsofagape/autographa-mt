@@ -163,7 +163,7 @@ class MenuBar extends Component {
 
     render() {
         const { classes, language, version, book } = this.props.data
-        console.log(this.state)
+        // console.log(this.state)
         return (
             <Grid container item xs={12} className={classes.selectionGrid}>
             <Grid container item xs={8}>

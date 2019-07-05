@@ -49,7 +49,7 @@ export default class LoginPage extends Component {
         const myJson = await data.json()
         console.log(myJson.message)
         if ('access_token' in myJson) {
-            localStorage.setItem('access_token', myJson.access_token)
+            await localStorage.setItem('access_token', myJson.access_token)
             this.setState({ redirect: true })
         } else {
             alert(myJson.message)
@@ -76,7 +76,7 @@ export default class LoginPage extends Component {
             let currentDate = new Date().getTime()
             let expiry = decoded.exp * 1000
             console.log(currentDate, expiry)
-            var hours = Math.abs(expiry - currentDate) / 36e5
+            var hours = (expiry - currentDate) / 36e5
             if(hours > 0){
                 console.log(hours)
                 console.log("logged in")
@@ -150,14 +150,14 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         const { redirect } = this.state
         if (redirect) {
             return <Redirect to='/homepage' />
         }
         const { classes } = this.props
         return (
-            <div>
+            <Grid item xs={12}>
             <Header classes={classes} />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
                 {/* <Paper className={classes.loginPage}> */}
@@ -312,7 +312,7 @@ export default class LoginPage extends Component {
                 </Dialog>
                 {/* </Paper> */}
             </Container>
-            </div>
+            </Grid>
         )
     }
 }

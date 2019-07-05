@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 export default class TranslationWords extends Component {
     getTranslationWords = () => {
         const { classes, translationWords } = this.props.data
-        console.log("TW", translationWords)
+        // console.log("TW", translationWords)
         if (translationWords) {
             var tWkeys = Object.keys(translationWords)
             console.log(tWkeys[0])
@@ -43,7 +43,7 @@ export default class TranslationWords extends Component {
 
     render() {
         const { classes, translationWords } = this.props.data
-        console.log("mark", this.state)
+        // console.log("mark", this.state)
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid container item xs={12}>

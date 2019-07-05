@@ -18,7 +18,7 @@ export default class TranslationNotes extends Component {
         }
     }
     render() {
-        console.log("notes", this.props)
+        // console.log("notes", this.props)
         const { classes } = this.props.data
         return (
             <Grid item xs={12} className={classes.containerGrid}>

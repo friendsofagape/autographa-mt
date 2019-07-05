@@ -137,7 +137,7 @@ export default class Concordance extends Component {
         }
     }
     render() {
-        console.log("concord", this.props.data)
+        // console.log("concord", this.props.data)
         const { classes, concordance, book, token } = this.props.data
         return (
             <Grid container item xs={12} className={classes.containerGrid}>

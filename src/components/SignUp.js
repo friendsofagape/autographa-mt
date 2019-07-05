@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 
 function Transition(props) {
@@ -81,6 +82,8 @@ export default class SignUp extends Component {
         }
         const { classes } = this.props
         return (
+            <Grid item xs={12}>
+            <Header classes={classes} />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
                 {/* <Paper className={classes.loginPage}> */}
                 {/* <CssBaseline /> */}
@@ -193,6 +196,7 @@ export default class SignUp extends Component {
                     </DialogActions>
                 </Dialog>
             </Container>
+            </Grid>
         )
     }
 }

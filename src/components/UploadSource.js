@@ -57,8 +57,8 @@ export default class UploadSource extends Component {
         message: '',
         snackColor: '',
         loading: false,
-        display:'none',
-        counter:0,
+        display: 'none',
+        counter: 0,
         // message:[]
     }
 
@@ -129,62 +129,62 @@ export default class UploadSource extends Component {
 
 
     async uploadVersionDetails(apiData) {
-        try{
+        try {
             const postVersions = await fetch('http://127.0.0.1:8000/v1/uploadsources', {
                 method: 'POST',
                 body: JSON.stringify(apiData)
             })
             const myJson = await postVersions.json()
-            this.setState({message:myJson.message})
-            if (myJson.success){
+            this.setState({ message: myJson.message })
+            if (myJson.success) {
                 return true
-            }else{
+            } else {
                 return false
-    
+
             }
         }
-        catch(ex){
+        catch (ex) {
             this.setState({ variant: "error", snackBarOpen: true, message: "Upload Process Failed", snackColor: '#d32f2f' })
         }
     }
 
     submitVersionDetails() {
-        const {parsedUsfm, fileContent} = this.state
+        const { parsedUsfm, fileContent } = this.state
 
         // let errorFiles = []
         let uploadFail = []
         let message = []
         parsedUsfm.map((item, index) => {
             console.log(item)
-                let bookName = item.metadata.id.book
-                var apiData = {
-                    'languageCode': this.state.languageCode,
-                    'contentType': this.state.contentType,
-                    'versionContentCode': this.state.versionContentCode,
-                    'versionContentDescription': this.state.versionContentDescription,
-                    'year': this.state.year,
-                    'revision': this.state.revision,
-                    'license': this.state.license,
-                    'wholeUsfmText': fileContent[index],
-                    'parsedUsfmText': item
-                }
-                let result = this.uploadVersionDetails(apiData)
-                console.log("APIIIIIIIII", result)
-                if (!result) {
-                    // this.setState({ variant: "success", snackBarOpen: true, message: result.message, snackColor: '#43a047' })
-                    uploadFail.push(bookName)
-                    message.push(result.message)
-                } 
-                // console.log(result)
-            })
-            if(uploadFail){
-                this.setState({ variant: "error", snackBarOpen: true, message: this.state.message, snackColor: '#d32f2f' })
+            let bookName = item.metadata.id.book
+            var apiData = {
+                'languageCode': this.state.languageCode,
+                'contentType': this.state.contentType,
+                'versionContentCode': this.state.versionContentCode,
+                'versionContentDescription': this.state.versionContentDescription,
+                'year': this.state.year,
+                'revision': this.state.revision,
+                'license': this.state.license,
+                'wholeUsfmText': fileContent[index],
+                'parsedUsfmText': item
             }
+            let result = this.uploadVersionDetails(apiData)
+            console.log("APIIIIIIIII", result)
+            if (!result) {
+                // this.setState({ variant: "success", snackBarOpen: true, message: result.message, snackColor: '#43a047' })
+                uploadFail.push(bookName)
+                message.push(result.message)
+            }
+            // console.log(result)
+        })
+        if (uploadFail) {
+            this.setState({ variant: "error", snackBarOpen: true, message: this.state.message, snackColor: '#d32f2f' })
         }
-            // else{
-            //     this.setState({ variant: "error", snackBarOpen: true, message: "File Error", snackColor: '#d32f2f' })
-            // }
-        // })
+    }
+    // else{
+    //     this.setState({ variant: "error", snackBarOpen: true, message: "File Error", snackColor: '#d32f2f' })
+    // }
+    // })
     // }
 
 
@@ -199,18 +199,18 @@ export default class UploadSource extends Component {
     };
 
     async handleFileChosen(file) {
-        
+
         let fileReader = await new FileReader();
         fileReader.onloadend = (e) => {
             const { fileContent, parsedUsfm, errorFiles } = this.state
             const content = fileReader.result;
             var jsonOutput = grammar.parse(content)
             console.log('nice')
-            if (jsonOutput.ERROR){
+            if (jsonOutput.ERROR) {
                 console.log('here')
                 errorFiles.push(file.name)
-                this.setState({errorFiles})
-            }else{
+                this.setState({ errorFiles })
+            } else {
                 console.log('fin')
                 fileContent.push(content)
                 parsedUsfm.push(jsonOutput)
@@ -225,7 +225,7 @@ export default class UploadSource extends Component {
         e.preventDefault();
         const filesObj = e.target.files
         const filesKeys = Object.keys(filesObj)
-        this.setState({fileContent:[], parsedUsfm:[], errorFiles:[]})
+        this.setState({ fileContent: [], parsedUsfm: [], errorFiles: [] })
         filesKeys.map(key => {
             console.log('I shall')
             this.handleFileChosen(filesObj[key])
@@ -253,164 +253,167 @@ export default class UploadSource extends Component {
         // var jsonOutput = grammar.parse(this.state.fileContent)
         // console.log(jsonOutput)
         return (
-            <div>
-            
-            <Header classes={classes} />
-            <Container component="main" maxWidth="xs" className={classes.uploadPane}>
-                    {/* <Paper className={classes.versionUpdate}> */}
-                        <ComponentHeading data={{classes, text:"Enter details"}} />
-                        <Typography variant="h5" color="primary" align="center" >
-                            Enter details
-                        </Typography>
+            // <div>
+                <Grid item xs={12}>
+                    {/* <Grid item xs={12}> */}
+                        <Header classes={classes} />
+                    {/* </Grid> */}
+                    {/* <Grid item xs={12}> */}
+                        <Container component="main" maxWidth="xs" className={classes.uploadPane}>
+                            <ComponentHeading data={{ classes, text: "Enter details" }} />
+                            <Paper className={classes.paper}>
+                            {/* <Typography variant="h5" color="primary" align="center" >
+                                Enter details
+                        </Typography> */}
 
-                        {/* <Divider /> */}
-                        <Snackbar
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
-                            }}
-                            open={this.state.snackBarOpen}
-                            autoHideDuration={4000}
-                            onClose={this.snackBarHandleClose}
-                        >
-                            <SnackbarContent
-                                style={{ backgroundColor: this.state.snackColor }}
+                            {/* <Divider /> */}
+                            <Snackbar
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                }}
+                                open={this.state.snackBarOpen}
+                                autoHideDuration={4000}
                                 onClose={this.snackBarHandleClose}
-                                variant={this.state.variant}
-                                message={this.state.message}
-                            />
-                        </Snackbar>
-                        {/* <form className={classes.form} onSubmit={this.handleSubmit}> */}
-                        <Grid container item xs={12}>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <TextField
-                                    onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
-                                    id="version-content-description"
-                                    label="Version Content Description"
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
+                            >
+                                <SnackbarContent
+                                    style={{ backgroundColor: this.state.snackColor }}
+                                    onClose={this.snackBarHandleClose}
+                                    variant={this.state.variant}
+                                    message={this.state.message}
                                 />
-                            </Grid>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <TextField
-                                    onChange={(e) => this.setState({ versionContentCode: e.target.value })}
-                                    id="version-code"
-                                    label="Version Content Code"
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <TextField
-                                    onChange={(e) => this.setState({ year: e.target.value })}
-                                    id="year"
-                                    label="Year"
-                                    className={classes.input}
-                                    margin="normal"
-                                    variant="outlined"
-                                />
-
-                            </Grid>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <TextField
-                                    onChange={(e) => this.setState({ revision: e.target.value })}
-                                    id="revision"
-                                    label="Revision"
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                />
-
-                            </Grid>
-                        </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <TextField
-                                    onChange={(e) => this.setState({ license: e.target.value })}
-                                    id="licence"
-                                    label="License"
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                    defaultValue="CC BY SA"
-                                />
-
-                            </Grid>
-                        </Grid>
-                        <Divider />
-                        <Grid container item xs={12}>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="select-language">Language</InputLabel>
-                                    <Select
-                                        value={this.state.languageName}
-                                        className={classes.selectMenu2}
-                                        // onChange={e => this.setState({
-                                        //     languageid:e.target.getAttribute('key'), 
-                                        //     languageName:e.target.value
-                                        // })}
+                            </Snackbar>
+                            {/* <form className={classes.form} onSubmit={this.handleSubmit}> */}
+                            <Grid container item xs={12}>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <TextField
+                                        onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
+                                        id="version-content-description"
+                                        label="Version Content Description"
+                                        className={classes.textField}
+                                        margin="normal"
                                         variant="outlined"
-                                        onChange={this.setLanguage}
-                                        inputProps={{
-                                            name: 'language',
-                                            id: 'select-language'
-                                        }}
-                                    >
-                                        {this.displayLanguage()}
-                                    </Select>
-                                </FormControl>
-
-                            </Grid>
-                            <Grid item xs={6} className={classes.versionTextField}>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="select-content">Content Type</InputLabel>
-                                    <Select
-                                        value={this.state.contentType}
-                                        className={classes.selectMenu2}
-                                        // onChange={(e) => this.setState({
-                                        //     contentid:e.target.getAttribute('key'),
-                                        //     contentType:e.target.value
-                                        // })}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <TextField
+                                        onChange={(e) => this.setState({ versionContentCode: e.target.value })}
+                                        id="version-code"
+                                        label="Version Content Code"
+                                        className={classes.textField}
+                                        margin="normal"
                                         variant="outlined"
-                                        onChange={this.setContent}
-                                        inputProps={{
-                                            name: 'content',
-                                            id: 'select-content',
-                                        }}
-                                    >
-                                        {this.displaycontentType()}
-                                    </Select>
-                                </FormControl>
-                                {/* <Divider /> */}
+                                    />
+                                </Grid>
                             </Grid>
-                            <br />
-                        </Grid>
-                        <Divider />
-                        {/* <Paper className={classes.paper}> */}
-                        {/* Update Tokens */}
+                            <Grid container item xs={12}>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <TextField
+                                        onChange={(e) => this.setState({ year: e.target.value })}
+                                        id="year"
+                                        label="Year"
+                                        className={classes.input}
+                                        margin="normal"
+                                        variant="outlined"
+                                    />
 
-                        <Grid container item xs={12} className={classes.buttonGrid}>
-                        
-                       
-                        <input
-                            //   accept="image/*"
-                            //   className={classes.input}
-                            style={{ display: 'none' }}
-                            id="raised-button-file"
-                            multiple
-                            type="file"
-                            onChange={this.uploadFile}
-                        />
-                        <label htmlFor="raised-button-file">
-                            <Button variant="raised" color="secondary" component="span" >
-                                <AddIcon /> add files
+                                </Grid>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <TextField
+                                        onChange={(e) => this.setState({ revision: e.target.value })}
+                                        id="revision"
+                                        label="Revision"
+                                        className={classes.textField}
+                                        margin="normal"
+                                        variant="outlined"
+                                    />
+
+                                </Grid>
+                            </Grid>
+                            <Grid container item xs={12}>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <TextField
+                                        onChange={(e) => this.setState({ license: e.target.value })}
+                                        id="licence"
+                                        label="License"
+                                        className={classes.textField}
+                                        margin="normal"
+                                        variant="outlined"
+                                        defaultValue="CC BY SA"
+                                    />
+
+                                </Grid>
+                            </Grid>
+                            <Divider />
+                            <Grid container item xs={12}>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-language">Language</InputLabel>
+                                        <Select
+                                            value={this.state.languageName}
+                                            className={classes.selectMenu2}
+                                            // onChange={e => this.setState({
+                                            //     languageid:e.target.getAttribute('key'), 
+                                            //     languageName:e.target.value
+                                            // })}
+                                            variant="outlined"
+                                            onChange={this.setLanguage}
+                                            inputProps={{
+                                                name: 'language',
+                                                id: 'select-language'
+                                            }}
+                                        >
+                                            {this.displayLanguage()}
+                                        </Select>
+                                    </FormControl>
+
+                                </Grid>
+                                <Grid item xs={6} className={classes.versionTextField}>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="select-content">Content Type</InputLabel>
+                                        <Select
+                                            value={this.state.contentType}
+                                            className={classes.selectMenu2}
+                                            // onChange={(e) => this.setState({
+                                            //     contentid:e.target.getAttribute('key'),
+                                            //     contentType:e.target.value
+                                            // })}
+                                            variant="outlined"
+                                            onChange={this.setContent}
+                                            inputProps={{
+                                                name: 'content',
+                                                id: 'select-content',
+                                            }}
+                                        >
+                                            {this.displaycontentType()}
+                                        </Select>
+                                    </FormControl>
+                                    {/* <Divider /> */}
+                                </Grid>
+                                <br />
+                            </Grid>
+                            <Divider />
+                            {/* <Paper className={classes.paper}> */}
+                            {/* Update Tokens */}
+
+                            <Grid container item xs={12} className={classes.buttonGrid}>
+
+
+                                <input
+                                    //   accept="image/*"
+                                    //   className={classes.input}
+                                    style={{ display: 'none' }}
+                                    id="raised-button-file"
+                                    multiple
+                                    type="file"
+                                    onChange={this.uploadFile}
+                                />
+                                <label htmlFor="raised-button-file">
+                                    <Button variant="raised" color="secondary" component="span" >
+                                        <AddIcon /> add files
                         </Button>
-                        </label>
-                        {/* <Fade
+                                </label>
+                                {/* <Fade
                         in={this.state.loading}
                         style={{
                             transitionDelay: this.state.loading ? '400ms' : '0ms',
@@ -419,27 +422,26 @@ export default class UploadSource extends Component {
                         >
                             <CircularProgress />
                         </Fade> */}
-                        {/* <div
+                                {/* <div
                             style={{ display: this.state.display }}
                             >
                             <CircularProgress />
                         </div> */}
-                        <Button variant="raised" color="inherit"  onClick={this.handleSubmit}>Upload</Button>
-                        </Grid>
+                                <Button variant="raised" color="inherit" onClick={this.handleSubmit}>Upload</Button>
+                            </Grid>
                             {/* <Fab color="primary" aria-label="Add" className={classes.fab}> */}
                             {/* <AddIcon /> */}
                             {/* </Fab> */}
-                        {/* <Fade
+                            {/* <Fade
                             in={this.state.loading}
                             unmountOnExit
                         > */}
-                        {/* </Fade> */}
-                    {/* </Paper> */}
-                    
+                            {/* </Fade> */}
+                            </Paper>
 
-                </Container>
-
-</div>
-                )
-            }
-        }
+                        </Container>
+                    {/* </Grid> */}
+                </Grid>
+        )
+    }
+}

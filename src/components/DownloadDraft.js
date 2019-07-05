@@ -219,7 +219,7 @@ export default class DownloadDraft extends Component {
     }
 
     render() {
-        console.log("state",this.state)
+        // console.log("state",this.state)
         const { classes } = this.props
         return (
             // <Grid container item xs={12}>

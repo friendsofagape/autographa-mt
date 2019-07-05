@@ -9,14 +9,16 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignUp from './components/SignUp';
 import UploadSource from './components/UploadSource';
-import AdminPage from './components/AdminPage';
+import AdminPage from './components/Administration/AdminPage';
 import DownloadDraft from './components/DownloadDraft';
 import Routes from './components/Routes';
 // import {Router} from 'react-router-dom'
 
 const styles = theme => ({
   root: {
+    display:'flex',
     flexGrow: 1,
+    backgroundColor: '#f8f9fa'
   },
   grow: {
     flexGrow: 1,
@@ -176,8 +178,8 @@ const styles = theme => ({
     margin: theme.spacing.unit,
   },
   typeG: {
-    // backgroundColor: '#3e51b5',
-    backgroundColor:'#262f3d',
+    backgroundColor: '#3e51b5',
+    // backgroundColor:'#262f3d',
     color: 'white',
     padding: '10px 0px'
   },
@@ -214,10 +216,10 @@ function App(props) {
           <Header classes={classes} />
         </Grid> */}
         {/* <Grid item xs={12} style={{ backgroundColor: '#fbfbfb' }}> */}
-        <Grid item xs={12} style={{ backgroundColor: '#f8f9fa' }}>
+        {/* <Grid item xs={12} style={{ backgroundColor: '#f8f9fa' }}> */}
         
           <Routes classes={classes} />
-        </Grid>
+        {/* </Grid> */}
       </Grid>
     // </BrowserRouter>
   );

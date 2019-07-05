@@ -25,7 +25,7 @@ export default class UpdateTokens extends Component {
             translation: tokenTranslation,
             senses: this.state.sense
         }
-        console.log('api', apiData)
+        // console.log('api', apiData)
         try {
 
             const update = await fetch(apiUrl + '/v1/updatetokentranslations', {
@@ -107,7 +107,7 @@ export default class UpdateTokens extends Component {
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }
-        console.log("sense", senses)
+        // console.log("sense", senses)
         return (
 
             <Grid item xs={12} className={classes.containerGrid}>
