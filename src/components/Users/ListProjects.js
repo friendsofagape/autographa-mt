@@ -8,6 +8,8 @@ import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
 
 
+const accessToken = localStorage.getItem('access_token')
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -20,6 +22,21 @@ class ListProjects extends Component {
         projectLists:[]
     }
 
+    async getUserProjects() {
+        const { updateState } = this.props
+        const data = await fetch(apiUrl + '/v1/autographamt/users/projects', {
+            method: 'GET',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            }
+        })
+        const userProjectsData = await data.json()
+        console.log(userProjectsData)
+        if (userProjectsData != false) {
+            updateState({ userProjectsData })
+        }
+    }
+    
     async getProjectsList(){
         const data = await fetch(apiUrl + '/v1/autographamt/projects', {
             method:'GET'
@@ -28,31 +45,32 @@ class ListProjects extends Component {
         this.setState({projectLists})
     }
 
-    componentDidMount(){
-        this.getProjectsList()
+    componentDidMount() {
+        this.getUserProjects()
+        // this.getProjectsList()
     }
 
-    handleProjects = (projectId) => {
-        const { updateState } = this.props
-        const project = this.state.projectLists.find(item => item.projectId === projectId)
 
+    handleProjects = (project) => {
+        const { updateState } = this.props
+        console.log(project)
         updateState({
-            listUsersPane: false,
-            listOrganisationsPane:false,
-            createProjectsPane:false,
+            selectedProject: project,
             listProjectsPane: false,
-            assignmentsPane: true,
-            projectId:projectId,
-            projectDetails: project
+            displayDashboard: false,
+            translationPane: true,
         })
+
     }
 
     displayProjectCards(){
         const { projectLists } = this.state
-        return projectLists.map(project => {
+        const { userProjectsData, classes } = this.props
+        return userProjectsData.map(project => {
             return (
-                <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'3px'}}>
-                    <Card onClick={() => this.handleProjects(project.projectId)}>
+                <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
+                    {/* <div className={classes.toolbar} /> */}
+                    <Card onClick={() => this.handleProjects(project)}>
                         <CardHeader
                             title={`Organisation: ${project.organisationName}`}
                             subheader={`Organisation: ${project.organisationName}`} />

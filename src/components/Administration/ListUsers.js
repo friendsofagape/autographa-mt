@@ -10,7 +10,7 @@ import ComponentHeading from '../ComponentHeading';
 export default class ListUsers extends Component {
     state = {
         userId: '',
-        admin: ''
+        admin: '',
     }
 
     handleChange = (userId) => {

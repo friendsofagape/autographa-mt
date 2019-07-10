@@ -2,6 +2,23 @@ import React from 'react';
 import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import SignedInLinks from './SignedInLinks';
 import { Link } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+    root: {
+        display: 'flex',
+    },
+    link: {
+      margin: theme.spacing.unit,
+    },
+    h1: {
+      backgroundColor: 'black',
+      // backgroundColor:'#262f3d'
+    },
+    grow: {
+      flexGrow: 1,
+    },
+});
 
 function Header({ classes }) {
     return (
@@ -20,4 +37,4 @@ function Header({ classes }) {
     )
 }
 
-export default Header;
+export default withStyles(styles)(Header);

@@ -36,7 +36,7 @@ if (accessToken) {
 
 const SignedInLinks = ({classes}) => {
 
-    function  logOut(){
+    function LogOut(){
         localStorage.removeItem('access_token')
     }
     // const { classes } props
@@ -60,26 +60,27 @@ const SignedInLinks = ({classes}) => {
                 <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
                 <Link color="inherit" variant="body2" href="/homepage" className={classes.link}>Translation</Link>
                 <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Log Out</Link>
+                <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link>
                 </div>
             // </div>
             ) : (
                 (accessToken && decoded.role === 'ad' && tokenAliveFlag) ? (
                     <div>
+                    <Link color="inherit" variant="body2" href="/dashboard" className={classes.link}>Dashboard</Link>
                     <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link>
                     <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
                     <Link color="inherit" variant="body2" href="/homepage" className={classes.link}>Translation</Link>
                     <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                    <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Log Out</Link>
+                    <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link>
                     </div>
                 ) : (
                     (accessToken && decoded.role === 'm' && tokenAliveFlag) ? (
                         <div>
-                        
+                        <Link color="inherit" variant="body2" href="/dashboard" className={classes.link}>Dashboard</Link>
                         <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
                         <Link color="inherit" variant="body2" href="/homepage" className={classes.link}>Translation</Link>
                         <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                        <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Log Out</Link>
+                        <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link>
                         </div>
                     ) : (
                         <div>

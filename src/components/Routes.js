@@ -9,6 +9,7 @@ import DownloadDraft from './DownloadDraft';
 import HomePage from './HomePage';
 import ViewSources from './ViewSources';
 import OrganisationRequest from './Assignments/OrganisationRequest';
+import UserDashboard from './Users/UserDashboard';
 
 let decoded;
 var accessToken = localStorage.getItem('access_token')
@@ -71,9 +72,10 @@ export default class Routes extends Component {
                             <Route path="/signin" component={() => <LoginPage classes={classes} />} />
                             <Route path="/signup" component={() => <SignUp classes={classes} />} />
                             <Route path="/homepage" component={() => <HomePage classes={classes} />} />
+                            <Route path="/dashboard" component={() => <AdminPage classes={classes} />} />
                             <Route path="/upload" component={() => <UploadSource classes={classes} />} />
                             <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
-                        <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                            <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
                         </Switch>
                     ) : (
                         (accessToken && decoded.role === 'm' && tokenAliveFlag) ? (
@@ -83,7 +85,8 @@ export default class Routes extends Component {
                             <Route path="/signup" component={() => <SignUp classes={classes} />} />
                             <Route path="/homepage" component={() => <HomePage classes={classes} />} />
                             <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
-                        <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                            <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                            <Route path="/dashboard" component={() => <UserDashboard  />} />
                             </Switch>
                         ) : (
                         <Switch>

@@ -11,6 +11,7 @@ import ListOrganisations from './ListOrganisations';
 import CreateProjects from '../Assignments/CreateProjects';
 import ListProjects from './ListProjects';
 import AssignUser from '../Assignments/AssignUser';
+import CreateOrganisations from '../Assignments/CreateOrganisations';
 
 
 const drawerWidth = 240;
@@ -54,6 +55,7 @@ class AdminPage extends Component {
         projectDetails:{},
         listUsersPane: false,
         listOrganisationsPane:false,
+        createOrganisationsPane:false,
         createProjectsPane:false,
         listProjectsPane: false,
         assignmentsPane: false
@@ -97,6 +99,11 @@ class AdminPage extends Component {
                         createProjectsPane:this.state.createProjectsPane,
                         updateState:this.updateState
                         }} />
+                    <CreateOrganisations 
+                        classes={classes}
+                        createOrganisationsPane={this.state.createOrganisationsPane}
+                        updateState={this.updateState}
+                         />
                     {(this.state.listProjectsPane) ? (<ListProjects updateState={this.updateState} />) : null}
                     {(this.state.assignmentsPane) ? 
                         (

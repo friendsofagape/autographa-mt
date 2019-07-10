@@ -22,6 +22,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { Divider } from '@material-ui/core';
 import PopUpMessages from '../PopUpMessages';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
     root: {
@@ -40,18 +41,13 @@ class AssignUser extends Component {
     state = {
         userListing: false,
         snackBarOpen: false,
+        listBooks: false,
         popupdata: {},
         availableBooks:[],
-        assignedUsers: []
-    }
-
-    async getAvailableBooks(){
-        const sourceId = this.props.projectDetails.sourceId
-        const data = await fetch(apiUrl + 'v1/sources/books/' + sourceId, {
-            method:'GET'
-        })
-        const availableBooks = await data.json()
-        this.setState({availableBooks})
+        assignedUsers: [],
+        availableBooksData: {},
+        userId:'',
+        projectId: ''
     }
 
     async getAssignedUsers(){
@@ -66,7 +62,7 @@ class AssignUser extends Component {
     }
 
     componentDidMount(){
-        this.getAvailableBooks()
+        // this.getAvailableBooks()
         this.getAssignedUsers()
     }
 
@@ -91,7 +87,15 @@ class AssignUser extends Component {
                 body: JSON.stringify(apiData)
             })
             const myJson = await data.json()
-            // this.setState({})
+            this.setState({ 
+                snackBarOpen: true, 
+                popupdata: { 
+                    variant: "success", 
+                    message: myJson.message, 
+                    snackBarOpen: true, 
+                    closeSnackBar: this.closeSnackBar 
+                } 
+            })
         }catch(ex){
             this.setState({ 
                 snackBarOpen: true, 
@@ -105,19 +109,23 @@ class AssignUser extends Component {
         }
     }
 
-
     selectUser = (userId) => {
         const { projectId } =  this.props
         const apiData = {
             projectId: projectId,
             userId:userId,
             books:[],
-            action:'add'
+            // action:'add'
         }
         this.assignUserToProject(apiData)
     }
-    handleClose = () => {
+
+    closeUserListing = () => {
         this.setState({userListing: false})
+    }
+
+    closeBookListing = () => {
+        this.setState({userId: '', projectId:'', listBooks:false})
     }
 
     getUserNames = () => {
@@ -170,6 +178,46 @@ class AssignUser extends Component {
         }
         this.deleteUser(apiData)
     }
+
+
+    async getUserBooks(userId){
+        try{
+            const { projectId } = this.props
+            const data = await fetch(apiUrl + 'v1/sources/projects/books/' + projectId + '/' + userId, {
+                method:'GET'
+            })
+            const response = await data.json()
+            this.setState({ 
+                listBooks:true, 
+                availableBooksData: response,
+                snackBarOpen: true, 
+                popupdata: { 
+                    variant: "success", 
+                    message: "Books Fetched", 
+                    snackBarOpen: true, 
+                    closeSnackBar: this.closeSnackBar 
+                } 
+            })
+        }
+        catch(ex){
+            this.setState({ 
+                snackBarOpen: true, 
+                popupdata: { 
+                    variant: "error", 
+                    message: "Server Error", 
+                    snackBarOpen: true, 
+                    closeSnackBar: this.closeSnackBar 
+                } 
+            })
+
+        }
+    }
+
+    handleSelectBooks = (userId, projectId) => {
+        this.setState({userId, projectId})
+        this.getUserBooks(userId)
+    }
+
     displayAssignedUsers = () => {
         const { assignedUsers } = this.state
         console.log(assignedUsers)
@@ -179,16 +227,58 @@ class AssignUser extends Component {
                 <TableRow>
                     <TableCell align="right">{ userName }</TableCell>
                     <TableCell align="right">{ email }</TableCell>
-                    <TableCell align="right"><Button variant="contained" color="primary">Books</Button></TableCell>
+                    <TableCell align="right"><Button variant="contained" color="primary" onClick={() => this.handleSelectBooks(userId, user.projectId)}>Books</Button></TableCell>
                     <TableCell align="right"><Button small onClick={() => this.handleDelete(userId, user.projectId)}><DeleteOutlinedIcon  /></Button></TableCell>
                 </TableRow>)
         })
     }
 
+    handleBooksChecked = (book) => {
+        const { availableBooksData } = this.state
+        const value = availableBooksData[book]["assigned"]
+        availableBooksData[book]["assigned"] = !value
+        this.setState({availableBooksData})
+    }
+
+    displayBooks = () => {
+        const { availableBooksData } = this.state
+        const allBooks = Object.keys(availableBooksData)
+        return allBooks.map(book => {
+            return (
+                <FormControlLabel key={book}
+                    control={
+                        <Checkbox 
+                        checked={availableBooksData[book]["assigned"]}
+                        onChange={() => this.handleBooksChecked(book)}
+                        value={availableBooksData[book]["assigned"]}
+                        
+                        />
+                    }
+                    label={book}
+                    />
+            )
+        })
+    }
+
+    assignBooksToUser = () => {
+        const { userId, projectId, availableBooksData } = this.state
+
+        const checkedBooks = Object.keys(availableBooksData).filter(book => availableBooksData[book]["assigned"] === true)
+
+        const apiData = {
+            projectId: projectId,
+            userId:userId,
+            books:checkedBooks,
+            // action:'add'
+        }
+        this.assignUserToProject(apiData)
+    }
+
 
     render() {
         const { classes, projectDetails, userData } = this.props
-        const { userListing, popupdata } = this.state
+        const { userListing, popupdata, listBooks } = this.state
+        console.log("books check", this.state.availableBooksData)
         return (
 
             <div className={classes.root}>
@@ -242,7 +332,7 @@ class AssignUser extends Component {
                 {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
                 <Dialog
                     open={userListing}
-                    // onClose={this.handleClose}
+                    // onClose={this.closeUserListing}
                     aria-labelledby="form-dialog-title"
                 >
                     <ComponentHeading data={{classes:classes, text:"Add User", styleColor:'#2a2a2fbd'}} />
@@ -256,11 +346,26 @@ class AssignUser extends Component {
                         </List>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} variant="contained" color="secondary">
+                        <Button onClick={this.closeUserListing} variant="contained" color="secondary">
                             Close
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog
+                        open={listBooks}
+                        // onClose={this.closeUserListing}
+                        // value={this.state.value}
+                    >
+                        <DialogContent>
+                            {this.displayBooks()}
+
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeBookListing} variant="raised" color="secondary">Close</Button>
+                            <Button onClick={this.assignBooksToUser} variant="raised" color="primary" >Assign</Button>
+                        </DialogActions>
+                    </Dialog>
             </div>
         )
     }

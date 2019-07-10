@@ -9,6 +9,23 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import apiUrl from '../GlobalUrl';
 import { Divider } from '@material-ui/core';
+import jwt_decode from 'jwt-decode';
+
+
+let decoded;
+var role;
+// let tokenAliveFlag = false
+var accessToken = localStorage.getItem('access_token')
+if (accessToken) {
+    decoded = jwt_decode(accessToken)
+    role = decoded.role
+}
+var drawerItems;
+if(role === 'sa'){
+    drawerItems = ['List Organisations', 'List Users', 'List Projects', 'Create Projects', 'Create Organisation']
+}else{
+    drawerItems = ['List Users', 'List Projects', 'Create Projects', 'Create Organisation']
+}
 
 export default class DrawerPane extends Component {
 
@@ -58,7 +75,7 @@ export default class DrawerPane extends Component {
             method:'GET'
         })
         const organisationsData = await data.json()
-        // console.log(organisationsData, organisationsStatus)
+        console.log(organisationsData, organisationsStatus)
         organisationsData.map(item => {
             organisationsStatus[item.organisationId] = {
                 "verified":item.verified
@@ -84,6 +101,13 @@ export default class DrawerPane extends Component {
         updateState({createProjectsPane:true})
     }
 
+
+
+    createOrganisations(){
+        const {updateState} = this.props.data
+        updateState({createOrganisationsPane:true})
+    }
+
     listProjects(){
         const {updateState} = this.props.data
         updateState({
@@ -99,7 +123,7 @@ export default class DrawerPane extends Component {
         switch(text){
             case 'List Organisations': this.handleOrganisations(); break;
             case 'Assignments': this.handleStatistics(); break;
-            case 'Manage Password': this.handleCharts(); break;
+            case 'Create Organisation': this.createOrganisations(); break;
             case 'List Users': this.handleUsers(); break;
             case 'Statistics': this.handleStatistics(); break;
             case 'Charts': this.handleCharts(); break;
@@ -140,7 +164,7 @@ export default class DrawerPane extends Component {
                         <Typography color="inherit" className={classes.heading}>Manager</Typography>
                     </ExpansionPanelSummary>
                     <List>
-                        {['List Organisations', 'List Users', 'List Projects', 'Create Projects', 'Manage Password'].map((text, index) => (
+                        {drawerItems.map((text, index) => (
                             <ListItem button key={text} className={classes.exp}>
                                 <ListItemText disableTypography divider="true"
                                     primary={<Typography type="body2" style={{ color: '#FFFFFF' }}

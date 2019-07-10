@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 import { Button, Grid, FormControl, Select, InputLabel } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
-import DialogActions from '@material-ui/core/DialogActions';
 import Header from './Header';
 import PopUpMessages from './PopUpMessages';
 var FileSaver = require('file-saver');
