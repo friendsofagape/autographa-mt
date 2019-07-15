@@ -8,7 +8,7 @@ import AdminPage from './Administration/AdminPage'
 import DownloadDraft from './DownloadDraft';
 import HomePage from './HomePage';
 import ViewSources from './ViewSources';
-import OrganisationRequest from './Assignments/OrganisationRequest';
+// import OrganisationRequest from './Assignments/OrganisationRequest';
 import UserDashboard from './Users/UserDashboard';
 
 let decoded;
@@ -62,7 +62,7 @@ export default class Routes extends Component {
                         <Route path="/assignment" component={() => <AdminPage classes={classes} />} />
                         <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
                         <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
-                        <Route path="/createorganisation" component={() => <OrganisationRequest classes={classes} />} />
+                        
                         {/* <Route path="/createprojects" component={() => <OrganisationRequest classes={classes} />} /> */}
                     </Switch>
                 ) : (

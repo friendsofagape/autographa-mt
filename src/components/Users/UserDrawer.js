@@ -7,7 +7,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import apiUrl from '../GlobalUrl';
+// import apiUrl from '../GlobalUrl';
 import { Divider } from '@material-ui/core';
 
 
@@ -35,6 +35,7 @@ export default class UserDrawer extends Component {
             case 'Project Access': this.handleStatistics(); break;
             case 'Charts': this.handleCharts(); break;
             case 'My Projects': this.listProjects(); break;
+            default: console.log('no choice')
         }
     }
     render() {

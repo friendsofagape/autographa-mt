@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { FormControl, Grid, Paper, MenuItem, Select, InputLabel } from '@material-ui/core';
+import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
 import './css/style.css'
-import ComponentHeading from './ComponentHeading';
+// import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 class MenuBar extends Component {
     state = {
@@ -103,7 +103,7 @@ class MenuBar extends Component {
         console.log("source", source)
         const sourceId = source.sourceId
         console.log("sourceId", sourceId)
-        var book = await fetch('http://127.0.0.1:8000/v1/books/' + sourceId, {
+        var book = await fetch('http://127.0.0.1:8000/v1/sources/books/' + sourceId, {
             method: 'GET'
         })
         const myJson = await book.json();

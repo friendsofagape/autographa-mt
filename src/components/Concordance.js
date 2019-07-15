@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import ComponentHeading from './ComponentHeading';
 import { ListItem } from '@material-ui/core';
 import { Divider } from '@material-ui/core';

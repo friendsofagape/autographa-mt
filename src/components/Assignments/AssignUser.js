@@ -51,12 +51,14 @@ class AssignUser extends Component {
     }
 
     async getAssignedUsers(){
+        console.log('Im getting')
         const projectId = this.props.projectId
         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments/' + projectId, {
             method:'GET'
         })
         const assignedUsers = await data.json()
         if(!assignedUsers.message){
+            console.log('got and now setting')
             this.setState({assignedUsers})
         }
     }
@@ -66,9 +68,9 @@ class AssignUser extends Component {
         this.getAssignedUsers()
     }
 
-    componentDidUpdate(){
-        this.getAssignedUsers()
-    }
+    // componentDidUpdate(){
+    //     this.getAssignedUsers()
+    // }
 
     addUser(){
         this.setState({userListing:true})
@@ -79,8 +81,8 @@ class AssignUser extends Component {
     }
 
     async assignUserToProject(apiData){
-        console.log(apiData)
-        console.log(apiUrl + '/v1/autographamt/projects/assignments')
+        // console.log(apiData)
+        // console.log(apiUrl + '/v1/autographamt/projects/assignments')
         try{
             const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments', {
                 method:'POST',
@@ -96,6 +98,7 @@ class AssignUser extends Component {
                     closeSnackBar: this.closeSnackBar 
                 } 
             })
+            this.getAssignedUsers()
         }catch(ex){
             this.setState({ 
                 snackBarOpen: true, 
@@ -147,7 +150,8 @@ class AssignUser extends Component {
         })
         const response = await data.json()
         if(response.success){
-            this.setState({ 
+            console.log('deleted')
+            await this.setState({ 
                 snackBarOpen: true, 
                 popupdata: { 
                     variant: "success", 
@@ -155,7 +159,8 @@ class AssignUser extends Component {
                     snackBarOpen: true, 
                     closeSnackBar: this.closeSnackBar 
                 } 
-            })
+            }, () => this.getAssignedUsers())
+            
             
         }else{
             this.setState({ 
@@ -177,6 +182,7 @@ class AssignUser extends Component {
             projectId: projectId
         }
         this.deleteUser(apiData)
+        this.getAssignedUsers()
     }
 
 
@@ -220,15 +226,15 @@ class AssignUser extends Component {
 
     displayAssignedUsers = () => {
         const { assignedUsers } = this.state
-        console.log(assignedUsers)
+        // console.log(assignedUsers)
         return assignedUsers.map(user => {
             const { userName, email, userId } = user.user
             return (
-                <TableRow>
+                <TableRow key={userId}>
                     <TableCell align="right">{ userName }</TableCell>
                     <TableCell align="right">{ email }</TableCell>
                     <TableCell align="right"><Button variant="contained" color="primary" onClick={() => this.handleSelectBooks(userId, user.projectId)}>Books</Button></TableCell>
-                    <TableCell align="right"><Button small onClick={() => this.handleDelete(userId, user.projectId)}><DeleteOutlinedIcon  /></Button></TableCell>
+                    <TableCell align="right"><Button small="true" onClick={() => this.handleDelete(userId, user.projectId)}><DeleteOutlinedIcon  /></Button></TableCell>
                 </TableRow>)
         })
     }
@@ -276,9 +282,9 @@ class AssignUser extends Component {
 
 
     render() {
-        const { classes, projectDetails, userData } = this.props
-        const { userListing, popupdata, listBooks } = this.state
-        console.log("books check", this.state.availableBooksData)
+        const { classes, projectDetails } = this.props
+        const { userListing, listBooks } = this.state
+        console.log("assigned user", this.state.assignedUsers)
         return (
 
             <div className={classes.root}>
@@ -362,8 +368,8 @@ class AssignUser extends Component {
 
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.closeBookListing} variant="raised" color="secondary">Close</Button>
-                            <Button onClick={this.assignBooksToUser} variant="raised" color="primary" >Assign</Button>
+                            <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
+                            <Button onClick={this.assignBooksToUser} variant="contained" color="primary" >Assign</Button>
                         </DialogActions>
                     </Dialog>
             </div>

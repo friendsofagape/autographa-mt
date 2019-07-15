@@ -19,7 +19,7 @@ export default class PopUpMessages extends Component {
     };
     render() {
 
-        const { variant, snackBarOpen, message, closeSnackBar} = this.props.data
+        const { variant, snackBarOpen, message} = this.props.data
         let snackColor;
         if(variant === "success"){
             snackColor = '#43a047'
@@ -39,7 +39,7 @@ export default class PopUpMessages extends Component {
                 <SnackbarContent
                     style={{ backgroundColor: snackColor }}
                     onClose={this.snackBarHandleClose}
-                    variant={variant}
+                    // variant={variant}
                     message={message}
                 />
             </Snackbar>

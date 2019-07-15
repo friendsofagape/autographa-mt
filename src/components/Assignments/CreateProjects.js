@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
 import {
     Grid,
-    TextField,
-    Paper,
     Button,
-    FormControlLabel,
-    Checkbox,
-    Link,
-    Typography,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Slide,
     MenuItem,
     FormControl,
     InputLabel,
@@ -22,6 +15,8 @@ import {
 import apiUrl from '../GlobalUrl';
 import ComponentHeading from '../ComponentHeading';
 import PopUpMessages from '../PopUpMessages';
+
+const accessToken = localStorage.getItem('access_token')
 
 export default class CreateProjects extends Component {
     state = {
@@ -63,10 +58,15 @@ export default class CreateProjects extends Component {
 
     async getOrganisations(){
         const org = await fetch(apiUrl + '/v1/autographamt/organisations', {
-            method:'GET'
+            method:'GET',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            }
         })
         const organisationDetails = await org.json()
-        this.setState({organisationDetails})
+        if(!organisationDetails.success === false){
+            this.setState({organisationDetails})
+        }
     }
 
     componentDidMount() {
@@ -151,24 +151,46 @@ export default class CreateProjects extends Component {
         this.setState({language:'', version:'', targetLanguage:'', sourceId:'' })
     }
 
+    
+    async getProjectsList(){
+        const { updateState } = this.props.data
+        const data = await fetch(apiUrl + '/v1/autographamt/projects', {
+            method:'GET',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            }
+        })
+        const projectLists = await data.json()
+        // this.setState({projectLists})
+        updateState({projectLists: projectLists})
+    }
+
     async createProject(){
-        const { sourceId, organisationId, targetLanguageId } = this.state
+        const { sourceId, targetLanguageId } = this.state
         const apiData = {
             sourceId: sourceId,
-            targetLanguageId: targetLanguageId,
-            organisationId: organisationId
+            targetLanguageId: targetLanguageId
         }
-        const data = await fetch(apiUrl + '/v1/autographamt/projects', {
-            method:'POST',
-            body: JSON.stringify(apiData)
-        })
-        const myJson = await data.json()
-        console.log(myJson)
-        if(myJson.success){
-            this.setState({ organisation:'', snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
-            this.props.data.updateState({listProjectsPane:true,})
-        }else{
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+        try{
+            const data = await fetch(apiUrl + '/v1/autographamt/organisations/projects', {
+                method:'POST',
+                body: JSON.stringify(apiData),
+                headers: {
+                    Authorization: 'bearer ' + accessToken
+                }
+            })
+            const myJson = await data.json()
+            console.log(myJson)
+            if(myJson.success){
+                this.setState({ organisation:'', snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.getProjectsList()
+                // this.props.data.updateState({listProjectsPane:true,})
+            }else{
+                this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            }
+        }
+        catch(ex){
+            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
         // this.handleClose()
     }
@@ -184,7 +206,7 @@ export default class CreateProjects extends Component {
 
 
     render() {
-        const { language, version, targetLanguage, dialogOpen, organisation, popupdata } = this.state
+        const { language, version, organisation, popupdata } = this.state
         const { createProjectsPane, classes } = this.props.data
         return (
 

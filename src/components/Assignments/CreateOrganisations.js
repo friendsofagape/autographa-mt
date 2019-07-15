@@ -2,22 +2,12 @@ import React, { Component } from 'react'
 import {
     Grid,
     TextField,
-    Paper,
     Button,
-    FormControlLabel,
-    Checkbox,
-    Link,
-    Typography,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Slide,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Select
 } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import ComponentHeading from '../ComponentHeading';
@@ -97,7 +87,7 @@ export default class CreateOrganisations extends Component {
 
 
     render() {
-        const { language, version, targetLanguage, dialogOpen, organisation, popupdata } = this.state
+        const { popupdata } = this.state
         const { createOrganisationsPane, classes } = this.props
         return (
 
@@ -112,8 +102,8 @@ export default class CreateOrganisations extends Component {
                 <DialogTitle id="form-dialog-title"> </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                    Request to Create Organisation
-                </DialogContentText>
+                        Enter details for request to create an Organisation
+                    </DialogContentText>
                     <Grid item xs={12}>
                         <Grid item xs={12}>
                                 <TextField

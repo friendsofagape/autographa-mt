@@ -1,12 +1,10 @@
-import React from 'react';
-import { Button } from '@material-ui/core';
+import React, { useState } from 'react';
 import jwt_decode from 'jwt-decode';
-import ButtonStyle from './ButtonStyle';
-// import { Link } from 'react-router-dom'
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom"
-import Routes from './Routes'
-import { Typography } from '@material-ui/core';
-import { Link } from '@material-ui/core';
+import { Link, List, ListItem, Menu, MenuItem } from '@material-ui/core';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import IconButton from '@material-ui/core/IconButton';
+// import Label from '@material-ui/core/Label';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 let decoded;
 let tokenAliveFlag = false
@@ -15,31 +13,48 @@ if (accessToken) {
     decoded = jwt_decode(accessToken)
     let currentDate = new Date().getTime()
     let expiry = decoded.exp * 1000
-    console.log(currentDate, expiry)
-    console.log((expiry - currentDate) / 36e5)
-    console.log(Math.abs(expiry - currentDate))
-    // var hours = Math.abs(expiry - currentDate) / 36e5
+    var firstName = decoded.firstName
+    var lastName = decoded.LastName
     var hours = (expiry - currentDate) / 36e5
     if(hours > 0){
-        console.log(hours)
-        console.log("logged in")
-        // this.setState({redirect:true})
         tokenAliveFlag = true
     }else{
         console.log("logged out")
     }
 }
 
-// function LinkTab(props) {
-//     return <Tab component="a" onClick={event => event.preventDefault()} {...props} />;
-// }
 
 const SignedInLinks = ({classes}) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl)
 
-    function LogOut(){
+    function LogOut(event){
         localStorage.removeItem('access_token')
     }
-    // const { classes } props
+
+    function handleMenu(event){
+        setAnchorEl(event.currentTarget)
+    }
+
+    function handleClose(){
+        setAnchorEl(null)
+    }
+
+    function getMenuItems(){
+        const options = ["Log Out"]
+        return  (
+            <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            >
+                <MenuItem>
+                    <Link color="inherit" variant="body2" href="/" onClick={ LogOut} className={classes.link}>Log Out</Link>
+                </MenuItem>
+            </Menu>
+        )
+    }
+
     return (
         
         <div>
@@ -54,13 +69,24 @@ const SignedInLinks = ({classes}) => {
                 <ButtonStyle data={{text:"Download Draft", link:"/download"}} />
                 <ButtonStyle data={{text:"Log Out", link:"/signin"}} /> */}
                 {/* <Link color="inherit" variant="body2" href="/createorganisation" className={classes.link}>Create Organisation Request</Link> */}
-                <Link color="inherit" variant="body2" href="/createorganisation" className={classes.link}>Create Organisation Request</Link>
+                
                 <Link color="inherit" variant="body2" href="/assignment" className={classes.link}>Dashboard</Link>
                 <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link>
                 <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
                 <Link color="inherit" variant="body2" href="/homepage" className={classes.link}>Translation</Link>
                 <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link>
+                <label color="inherit" style={{padding:'5px'}}>Welcome, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}</label>
+                {/* <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
+              <IconButton
+                aria-label="Account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              {getMenuItems()}
                 </div>
             // </div>
             ) : (

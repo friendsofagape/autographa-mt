@@ -33,7 +33,10 @@ export default class DrawerPane extends Component {
     async getUsers(){
         const {updateState, userStatus} = this.props.data
         const data = await fetch(apiUrl + '/v1/autographamt/users', {
-            method:'GET'
+            method:'GET',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            }
         })
         const userData = await data.json()
         userData.map(item => {
@@ -64,6 +67,7 @@ export default class DrawerPane extends Component {
             createProjectsPane:false,
             listProjectsPane: false,
             assignmentsPane: false,
+            listUserProjectsPane: false,
         })
         // this.displayUsers()
     }
@@ -72,7 +76,10 @@ export default class DrawerPane extends Component {
         const {updateState, organisationsStatus} = this.props.data
 
         const data = await fetch(apiUrl + '/v1/autographamt/organisations', {
-            method:'GET'
+            method:'GET',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            }
         })
         const organisationsData = await data.json()
         console.log(organisationsData, organisationsStatus)
@@ -89,6 +96,7 @@ export default class DrawerPane extends Component {
             createProjectsPane:false,
             listProjectsPane: false,
             assignmentsPane: false,
+            listUserProjectsPane: false,
         })
     }
 
@@ -116,6 +124,19 @@ export default class DrawerPane extends Component {
             listOrganisationsPane:false,
             createProjectsPane:false,
             assignmentsPane: false,
+            listUserProjectsPane: false,
+        })
+    }
+
+    listMyProjects(){
+        const { updateState } = this.props.data
+        updateState({
+            listUserProjectsPane: true,
+            listProjectsPane:false, 
+            listUsersPane: false,
+            listOrganisationsPane:false,
+            createProjectsPane:false,
+            assignmentsPane: false,
         })
     }
 
@@ -129,6 +150,8 @@ export default class DrawerPane extends Component {
             case 'Charts': this.handleCharts(); break;
             case 'Create Projects': this.createProjects(); break;
             case 'List Projects': this.listProjects(); break;
+            case 'My Projects': this.listMyProjects(); break;
+            default: console.log('No option selected')
         }
     }
     render() {

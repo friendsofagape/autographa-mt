@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import './components/css/style.css';
-import Header from './components/Header';
-import HomePage from './components/HomePage';
-import { BrowserRouter, Route } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import SignUp from './components/SignUp';
-import UploadSource from './components/UploadSource';
-import AdminPage from './components/Administration/AdminPage';
-import DownloadDraft from './components/DownloadDraft';
 import Routes from './components/Routes';
 // import {Router} from 'react-router-dom'
 

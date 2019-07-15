@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from '../Header';
 import UserDrawer from './UserDrawer';
-import ListProjects from './ListProjects';
+import ListUserProjects from './ListUserProjects';
 import HomePage from './Translations/HomePage';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
 
@@ -44,7 +44,7 @@ const styles = theme => ({
 class UserDashboard extends Component {
     state = {
         userProjectsData: [],
-        listProjectsPane: true,
+        listUserProjectsPane: true,
         displayDashboard: true,
         translationPane: false,
         createOrganisationsPane: false,
@@ -60,7 +60,7 @@ class UserDashboard extends Component {
         console.log("user", this.state)
         const { 
             displayDashboard, 
-            listProjectsPane, 
+            listUserProjectsPane, 
             userProjectsData, 
             translationPane,
             selectedProject,
@@ -82,8 +82,8 @@ class UserDashboard extends Component {
                 }
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    {(listProjectsPane) ? (
-                        <ListProjects
+                    {(listUserProjectsPane) ? (
+                        <ListUserProjects
                             userProjectsData={userProjectsData}
                             updateState={this.updateState}
                         />

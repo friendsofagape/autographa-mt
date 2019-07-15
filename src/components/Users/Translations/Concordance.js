@@ -88,9 +88,9 @@ class Concordance extends Component {
                 const bcv = item.book + item.chapterNumber + item.verseNumber
                 const { book, chapterNumber, verseNumber, verse, bookCode } = item
                 return (
-                    <div>
+                    <div
+                    key={bcv + 'p' + index}>
                     <ListItem button
-                    key={bcv + 'p' + index}
                     value={bcv}
                     onClick={() => this.storeBCV(bookCode, chapterNumber, verseNumber)}>
                     <p>{book.toUpperCase()} {chapterNumber}:{verseNumber}&nbsp;

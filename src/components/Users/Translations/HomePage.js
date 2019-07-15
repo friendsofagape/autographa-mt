@@ -10,7 +10,7 @@ import { Switch } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 // import Header from '../Header';
 
-export default class HomePage extends Component {
+export default class ProjectHomePage extends Component {
     state = {
         book: '',
         tokenList: '',
@@ -39,7 +39,7 @@ export default class HomePage extends Component {
     }
     
     handleTNSwitchChange = e => {
-        const { tNswitchChecked, tWswitchChecked } = this.state
+        const { tNswitchChecked } = this.state
         if (tNswitchChecked) {
             this.setState({
                 tNswitchChecked: !tNswitchChecked,
@@ -90,7 +90,7 @@ export default class HomePage extends Component {
 
     render() {
         const { classes, selectedProject } = this.props
-        const { books, sourceId, targetId} = selectedProject
+        const { books, sourceId, targetId, projectId} = selectedProject
         const {
             book,
             token,
@@ -108,6 +108,7 @@ export default class HomePage extends Component {
             translationNotes,
             displayTranslationWordSwitch
         } = this.state
+        console.log("home State", this.state)
         return (
             <Grid container item xs={12}>
                 {/* <Header classes={classes} /> */}
@@ -129,10 +130,10 @@ export default class HomePage extends Component {
                             <Switch
                                 checked={this.state.tWswitchChecked}
                                 onChange={this.handleTWSwitchChange}
-                                value={this.handleTWSwitchChange}
-                            >
-                                Toggle
-                            </Switch>
+                                // value={this.handleTWSwitchChange}
+                            />
+                                {/* Toggle
+                            </Switch> */}
                         </div>
                     </Grid>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={3}>
@@ -142,10 +143,10 @@ export default class HomePage extends Component {
                         <Switch
                             checked={this.state.tNswitchChecked}
                             onChange={this.handleTNSwitchChange}
-                            value={this.handleTNSwitchChange}
-                        >
-                            Toggle
-                        </Switch>
+                            // value={this.handleTNSwitchChange}
+                        />
+                            {/* Toggle
+                        </Switch> */}
                     </Grid>
                 </Grid>
                 <Grid container item xs={12}>
@@ -156,7 +157,9 @@ export default class HomePage extends Component {
                             book: book,
                             classes: classes,
                             sourceId: sourceId,
-                            targetLanguageId: targetId
+                            targetLanguageId: targetId,
+                            projectId:projectId
+
                         }} />
                     </Grid>
                     <Grid item xs={translationPane}>
@@ -168,7 +171,8 @@ export default class HomePage extends Component {
                             book: book,
                             tokenTranslation: tokenTranslation,
                             senses: senses,
-                            updateState:this.updateState
+                            updateState:this.updateState,
+                            projectId:projectId
                         }} />
                     </Grid>
                     <Grid item xs={concordancePane}

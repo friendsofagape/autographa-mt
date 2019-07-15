@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Paper, Button, Typography } from '@material-ui/core';
+import { Grid, Button, Typography } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import ComponentHeading from '../../ComponentHeading';
 import PopUpMessages from '../../PopUpMessages';
@@ -7,6 +7,8 @@ import Chip from '@material-ui/core/Chip';
 import apiUrl from '../../GlobalUrl';
 // import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
+
+const accessToken = localStorage.getItem('access_token')
 
 const styles = theme => ({
     root: {
@@ -37,10 +39,9 @@ class UpdateTokens extends Component {
     }
 
     async updateTransaltion() {
-        const { sourceId, targetLanguageId, token, book, tokenTranslation } = this.props.data
+        const { projectId, token, tokenTranslation } = this.props.data
         const apiData = {
-            sourceId: sourceId,
-            targetLanguageId: targetLanguageId,
+            projectId: projectId,
             token: token,
             translation: tokenTranslation,
             senses: this.state.sense
@@ -48,13 +49,18 @@ class UpdateTokens extends Component {
         // console.log('api', apiData)
         try {
 
-            const update = await fetch(apiUrl + '/v1/updatetokentranslations', {
+            const update = await fetch(apiUrl + '/v1/autographamt/projects/translations', {
                 method: 'POST',
-                body: JSON.stringify(apiData)
+                body: JSON.stringify(apiData),
+                headers: {
+                    "Authorization": 'bearer ' + accessToken
+                }
             })
             const myJson = await update.json()
             if (myJson.success) {
+                console.log('updated')
                 this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.getTranslatedWords(this.props.data.token)
             } else {
                 this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }
@@ -66,28 +72,32 @@ class UpdateTokens extends Component {
 
 
     async getTranslatedWords(word) {
-        const { sourceId, targetLanguageId, updateState } = this.props.data
-        const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word, {
-            method: 'GET'
+        const { updateState, projectId } = this.props.data
+        // console.log("printing", apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word)
+        const data = await fetch(apiUrl + '/v1/autographamt/projects/translations/' + word + '/' + projectId, {
+            method:'GET'
         })
         const translatedWords = await data.json()
         if (translatedWords.translation) {
-            // console.log("******************", translatedWords)
             const { translation, senses } = translatedWords
-            updateState({ tokenTranslation: translation, senses: senses })
+            console.log(senses)
+            console.log('fetched')
+            await updateState({ tokenTranslation: translation, senses: senses })
         } else {
             updateState({ tokenTranslation: '', senses: [] })
         }
+        this.setState({ sense: '' })
     }
 
     displaySenses() {
-        const { tokenTransaltion, senses } = this.props.data
+        const { senses } = this.props.data
         if (senses) {
             // this.setState({displaySensesPane:'block'})
             return senses.map(item => {
                 return (
 
                     <Chip
+                        key={item}
                         label={item}
                         component="a"
                         clickable
@@ -116,15 +126,15 @@ class UpdateTokens extends Component {
             senses.push(sense)
             // this.setState({ senses })
             this.updateTransaltion()
-            this.setState({ sense: '' })
-            this.getTranslatedWords(this.props.data.token)
+            
         }
     }
 
+ 
     render() {
-        const { token, targetLanguage, tokenTranslation, senses, updateState } = this.props.data
+        const { token, targetLanguage, tokenTranslation, updateState } = this.props.data
         const { classes } = this.props
-        const displayLanguage = ''
+        var displayLanguage = ''
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }

@@ -43,7 +43,7 @@ export default class HomePage extends Component {
     }
     
     handleTNSwitchChange = e => {
-        const { tNswitchChecked, tWswitchChecked } = this.state
+        const { tNswitchChecked } = this.state
         if (tNswitchChecked) {
             this.setState({
                 tNswitchChecked: !tNswitchChecked,
@@ -110,7 +110,7 @@ export default class HomePage extends Component {
         return (
             <Grid container item xs={12}>
                 {/* <Grid item xs={2}> */}
-                <Header classes={classes} />
+                <Header />
                 <MenuBar data={{
                     updateState: this.updateState,
                     classes: classes,
@@ -130,7 +130,7 @@ export default class HomePage extends Component {
                             <Switch
                                 checked={this.state.tWswitchChecked}
                                 onChange={this.handleTWSwitchChange}
-                                value={this.handleTWSwitchChange}
+                                // value={this.handleTWSwitchChange}
                             >
                                 Toggle
                             </Switch>
@@ -143,7 +143,7 @@ export default class HomePage extends Component {
                         <Switch
                             checked={this.state.tNswitchChecked}
                             onChange={this.handleTNSwitchChange}
-                            value={this.handleTNSwitchChange}
+                            // value={this.handleTNSwitchChange}
                         >
                             Toggle
                         </Switch>

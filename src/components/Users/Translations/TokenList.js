@@ -51,16 +51,16 @@ class TokenList extends Component {
     }
 
     async getTranslatedWords(word){
-        const { sourceId, targetLanguageId, updateState } = this.props.data
-        console.log("printing", apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word)
-        const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word, {
+        const { updateState, projectId } = this.props.data
+        // console.log("printing", apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word)
+        const data = await fetch(apiUrl + '/v1/autographamt/projects/translations/' + word + '/' + projectId, {
             method:'GET'
         })
         const translatedWords = await data.json()
         if(translatedWords.translation){
-            console.log("******************", translatedWords)
+            // console.log("******************", translatedWords)
             const {translation, senses} = translatedWords
-            updateState({tokenTranslation: translation, senses: senses})
+            await updateState({tokenTranslation: translation, senses: senses})
         }else{
             updateState({tokenTranslation: '', senses: []})
         }
@@ -78,9 +78,9 @@ class TokenList extends Component {
         if (this.props.data.tokenList) {
             return tokenList.map((item, index) => {
                 return (
-                    <div>
+                    <div
+                    key={item + index}>
                         <ListItem button
-                            key={item + index}
                             name={item}
                             value={item}
                             onClick={this.handleClick}>{item}

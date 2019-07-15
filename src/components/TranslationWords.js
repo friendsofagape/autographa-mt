@@ -42,7 +42,7 @@ export default class TranslationWords extends Component {
     }
 
     render() {
-        const { classes, translationWords } = this.props.data
+        const { classes } = this.props.data
         // console.log("mark", this.state)
         return (
             <Grid item xs={12} className={classes.containerGrid}>

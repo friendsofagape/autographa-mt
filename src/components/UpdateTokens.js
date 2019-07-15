@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Grid, Paper, Button, Typography } from '@material-ui/core';
+import { Grid, Button, Typography } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import ComponentHeading from './ComponentHeading';
 import PopUpMessages from './PopUpMessages';
 import Chip from '@material-ui/core/Chip';
 import apiUrl from './GlobalUrl';
-import Container from '@material-ui/core/Container';
+// import Container from '@material-ui/core/Container';
 
 export default class UpdateTokens extends Component {
     state = {
@@ -17,7 +17,7 @@ export default class UpdateTokens extends Component {
     }
 
     async updateTransaltion() {
-        const { sourceId, targetLanguageId, token, book, tokenTranslation } = this.props.data
+        const { sourceId, targetLanguageId, token, tokenTranslation } = this.props.data
         const apiData = {
             sourceId: sourceId,
             targetLanguageId: targetLanguageId,
@@ -61,7 +61,7 @@ export default class UpdateTokens extends Component {
     }
 
     displaySenses() {
-        const { tokenTransaltion, senses } = this.props.data
+        const { senses } = this.props.data
         if (senses) {
             // this.setState({displaySensesPane:'block'})
             return senses.map(item => {
@@ -102,8 +102,8 @@ export default class UpdateTokens extends Component {
     }
 
     render() {
-        const { classes, token, targetLanguage, tokenTranslation, senses, updateState } = this.props.data
-        const displayLanguage = ''
+        const { classes, token, targetLanguage, tokenTranslation, updateState } = this.props.data
+        var displayLanguage = ''
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }

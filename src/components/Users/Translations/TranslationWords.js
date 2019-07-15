@@ -40,7 +40,7 @@ class TranslationWords extends Component {
         // console.log("TW", translationWords)
         if (translationWords) {
             var tWkeys = Object.keys(translationWords)
-            console.log(tWkeys[0])
+            // console.log(tWkeys[0])
             return tWkeys.map((item, index) => {
                 return (
                     <ExpansionPanel
@@ -66,7 +66,6 @@ class TranslationWords extends Component {
     }
 
     render() {
-        const { translationWords } = this.props.data
         const { classes } = this.props
         // console.log("mark", this.state)
         return (

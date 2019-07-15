@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Typography, CardContent } from '@material-ui/core';
@@ -15,9 +15,12 @@ const styles = theme => ({
         flexGrow: 1,
         padding: theme.spacing.unit * 2
     },
+    cursorPointer: {
+      cursor: 'pointer',
+    },
 });
 
-class ListProjects extends Component {
+class ListUserProjects extends Component {
     state = {
         projectLists:[]
     }
@@ -32,7 +35,7 @@ class ListProjects extends Component {
         })
         const userProjectsData = await data.json()
         console.log(userProjectsData)
-        if (userProjectsData != false) {
+        if (userProjectsData !== false) {
             updateState({ userProjectsData })
         }
     }
@@ -53,10 +56,10 @@ class ListProjects extends Component {
 
     handleProjects = (project) => {
         const { updateState } = this.props
-        console.log(project)
+        // console.log(project)
         updateState({
             selectedProject: project,
-            listProjectsPane: false,
+            listUserProjectsPane: false,
             displayDashboard: false,
             translationPane: true,
         })
@@ -64,13 +67,13 @@ class ListProjects extends Component {
     }
 
     displayProjectCards(){
-        const { projectLists } = this.state
+        // const { projectLists } = this.state
         const { userProjectsData, classes } = this.props
         return userProjectsData.map(project => {
             return (
                 <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
                     {/* <div className={classes.toolbar} /> */}
-                    <Card onClick={() => this.handleProjects(project)}>
+                    <Card onClick={() => this.handleProjects(project)} className={classes.cursorPointer}>
                         <CardHeader
                             title={`Organisation: ${project.organisationName}`}
                             subheader={`Organisation: ${project.organisationName}`} />
@@ -106,4 +109,4 @@ class ListProjects extends Component {
     }
 }
 
-export default withStyles(styles)(ListProjects);
+export default withStyles(styles)(ListUserProjects);

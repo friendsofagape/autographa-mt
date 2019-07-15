@@ -76,7 +76,7 @@ export default class SignUp extends Component {
     }
 
     render() {
-        const { redirect, message } = this.state
+        const { redirect } = this.state
         if (redirect) {
             return <Redirect to='/signin' />
         }

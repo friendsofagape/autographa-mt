@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,18 +12,20 @@ import CreateProjects from '../Assignments/CreateProjects';
 import ListProjects from './ListProjects';
 import AssignUser from '../Assignments/AssignUser';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
+import ListUserProjects from '../Users/ListUserProjects'
+import HomePage from '../Users/Translations/HomePage'
 
 
 const drawerWidth = 240;
 
 const styles = theme => ({
     root: {
-        display: 'flex',
+        // display: 'flex',
     },
-    exp:{
-        backgroundColor:'#100f0ffa',
+    exp: {
+        backgroundColor: '#100f0ffa',
         '&:hover': {
-           background: "#f00",
+            background: "#f00",
         },
     },
     appBar: {
@@ -39,7 +41,7 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing.unit * 1,
     },
     toolbar: theme.mixins.toolbar,
 });
@@ -48,71 +50,92 @@ class AdminPage extends Component {
     state = {
         userData: [],
         userStatus: {},
-        userId:'',
+        userId: '',
         organisationsData: [],
         organisationsStatus: {},
-        projectId:'',
-        projectDetails:{},
+        projectId: '',
+        projectDetails: {},
+        projectLists: [],
         listUsersPane: false,
-        listOrganisationsPane:false,
-        createOrganisationsPane:false,
-        createProjectsPane:false,
+        listOrganisationsPane: false,
+        createOrganisationsPane: false,
+        createProjectsPane: false,
         listProjectsPane: false,
-        assignmentsPane: false
+        assignmentsPane: false,
+        listUserProjectsPane: true,
+        displayDashboard: true,
+        translationPane: false,
+        userProjectsData: [],
+        selectedProject: {},
     }
 
-    updateState = (item) =>{
+    updateState = (item) => {
         this.setState(item)
     }
     render() {
         const { classes } = this.props;
-        console.log(this.state)
+        // console.log(this.state)
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <AppBar position="fixed" className={classes.appBar}>
                     <Header classes={this.props.classes} />
                 </AppBar>
-                <DrawerPane data={{
-                    classes:classes,
-                    updateState:this.updateState,
-                    userStatus:this.state.userStatus,
-                    organisationsData:this.state.organisationsData,
-                    organisationsStatus: this.state.organisationsStatus
-                }} />
+                {
+                    (this.state.displayDashboard) ? (
+                        <DrawerPane data={{
+                            classes: classes,
+                            updateState: this.updateState,
+                            userStatus: this.state.userStatus,
+                            organisationsData: this.state.organisationsData,
+                            organisationsStatus: this.state.organisationsStatus
+                        }} />
+                    ) : null
+                }
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     {(this.state.listUsersPane) ? (<ListUsers data={{
-                        classes:classes,
-                        updateState:this.updateState,
-                        userStatus:this.state.userStatus,
+                        classes: classes,
+                        updateState: this.updateState,
+                        userStatus: this.state.userStatus,
                         userData: this.state.userData
-                        }} />) : null}
+                    }} />) : null}
                     {(this.state.listOrganisationsPane) ? (<ListOrganisations data={{
-                        classes:classes,
-                        updateState:this.updateState,
-                        organisationsData:this.state.organisationsData,
+                        classes: classes,
+                        updateState: this.updateState,
+                        organisationsData: this.state.organisationsData,
                         organisationsStatus: this.state.organisationsStatus
-                        }} />) : null}
+                    }} />) : null}
                     <CreateProjects data={{
-                        classes:classes, 
-                        createProjectsPane:this.state.createProjectsPane,
-                        updateState:this.updateState
-                        }} />
-                    <CreateOrganisations 
+                        classes: classes,
+                        createProjectsPane: this.state.createProjectsPane,
+                        updateState: this.updateState
+                    }} />
+                    <CreateOrganisations
                         classes={classes}
                         createOrganisationsPane={this.state.createOrganisationsPane}
                         updateState={this.updateState}
-                         />
-                    {(this.state.listProjectsPane) ? (<ListProjects updateState={this.updateState} />) : null}
-                    {(this.state.assignmentsPane) ? 
+                    />
+                    {(this.state.listProjectsPane) ? (
+                        <ListProjects
+                            projectLists={this.state.projectLists}
+                            updateState={this.updateState}
+                        />) : null}
+                    {(this.state.listUserProjectsPane) ? (<ListUserProjects userProjectsData={this.state.userProjectsData} updateState={this.updateState} />) : null}
+                    {(this.state.assignmentsPane) ?
                         (
-                        <AssignUser 
-                        updateState={this.updateState} 
-                        projectId={this.state.projectId}
-                        projectDetails={this.state.projectDetails}
-                        userData={this.state.userData} />) : null
-                        }
+                            <AssignUser
+                                updateState={this.updateState}
+                                projectId={this.state.projectId}
+                                projectDetails={this.state.projectDetails}
+                                userData={this.state.userData} />) : null
+                    }
+                    {
+                        (this.state.translationPane) ? (
+                            <HomePage selectedProject={this.state.selectedProject}
+                                classes={classes} />
+                        ) : null
+                    }
                 </main>
             </div>
         );

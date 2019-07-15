@@ -7,16 +7,8 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    Table,
-    TableBody,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableFooter,
-    TablePagination,
     Button,
     Divider,
-    Typography
 
 } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -248,7 +240,7 @@ export default class UploadSource extends Component {
 
     render() {
         console.log(this.state)
-        const { fileContent, parsedUsfm } = this.state
+        // const { fileContent, parsedUsfm } = this.state
         const { classes } = this.props
         // var jsonOutput = grammar.parse(this.state.fileContent)
         // console.log(jsonOutput)

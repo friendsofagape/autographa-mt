@@ -150,7 +150,6 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        // console.log(this.state)
         const { redirect } = this.state
         if (redirect) {
             return <Redirect to='/homepage' />
@@ -158,7 +157,7 @@ export default class LoginPage extends Component {
         const { classes } = this.props
         return (
             <Grid item xs={12}>
-            <Header classes={classes} />
+            <Header />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
                 {/* <Paper className={classes.loginPage}> */}
                 {/* <CssBaseline /> */}
