@@ -49,7 +49,7 @@ export default class SignUp extends Component {
             formData.append(name, apiData[name])
         }
 
-        const data = await fetch('http://127.0.0.1:8000/v1/registrations', {
+        const data = await fetch(apiUrl +  'v1/registrations', {
             method: "POST",
             body: formData
         })

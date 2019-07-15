@@ -103,7 +103,7 @@ class MenuBar extends Component {
         console.log("source", source)
         const sourceId = source.sourceId
         console.log("sourceId", sourceId)
-        var book = await fetch('http://127.0.0.1:8000/v1/sources/books/' + sourceId, {
+        var book = await fetch(apiUrl +  'v1/sources/books/' + sourceId, {
             method: 'GET'
         })
         const myJson = await book.json();
@@ -124,7 +124,7 @@ class MenuBar extends Component {
 
     async getTokenList() {
         const { sourceId, book } = this.state
-        var bookData = await fetch('http://127.0.0.1:8000/v1/tokenlist/' + sourceId + '/' + book, {
+        var bookData = await fetch(apiUrl + 'v1/tokenlist/' + sourceId + '/' + book, {
             method: 'GET'
         })
         const tokenList = await bookData.json();

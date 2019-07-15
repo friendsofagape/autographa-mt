@@ -10,6 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
 import Header from './Header';
 import PopUpMessages from './PopUpMessages';
+import apiUrl from './GlobalUrl';
 var FileSaver = require('file-saver');
 
 
@@ -151,8 +152,8 @@ export default class DownloadDraft extends Component {
         })
         const sourceId = version[0].sourceId
         console.log("targ", targetLanguageId)
-        console.log('http://127.0.0.1:8000/v1/translatedbooks/' + sourceId + '/' + targetLanguageId)
-        var book = await fetch('http://127.0.0.1:8000/v1/translatedbooks/' + sourceId + '/' + targetLanguageId, {
+        // console.log('http://127.0.0.1:8000/v1/translatedbooks/' + sourceId + '/' + targetLanguageId)
+        var book = await fetch(apiUrl + 'v1/translatedbooks/' + sourceId + '/' + targetLanguageId, {
             method: 'GET'
         })
         this.setState({targetLanguageId})

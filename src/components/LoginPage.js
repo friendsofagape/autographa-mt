@@ -42,7 +42,7 @@ export default class LoginPage extends Component {
             formData.append(name, apiData[name])
         }
 
-        const data = await fetch('http://127.0.0.1:8000/v1/auth', {
+        const data = await fetch(apiUrl + 'v1/auth', {
             method: "POST",
             body: formData
         })
@@ -103,7 +103,7 @@ export default class LoginPage extends Component {
         for (var name in apiData) {
             formData.append(name, apiData[name])
         }
-        const data = await fetch('http://127.0.0.1:8000/v1/resetpassword', {
+        const data = await fetch(apiUrl + 'v1/resetpassword', {
             method:'POST',
             body: formData
         })
@@ -130,7 +130,7 @@ export default class LoginPage extends Component {
         for (var name in apiData) {
             formData.append(name, apiData[name])
         }
-        const reset = await fetch('http://127.0.0.1:8000/v1/forgotpassword', {
+        const reset = await fetch(apiUrl + 'v1/forgotpassword', {
             method:'POST',
             body: formData
         });

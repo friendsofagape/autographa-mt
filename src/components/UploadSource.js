@@ -17,6 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Container from '@material-ui/core/Container';
 import Header from './Header';
 import ComponentHeading from './ComponentHeading';
+import apiUrl from './GlobalUrl';
 var grammar = require('usfm-grammar');
 
 
@@ -122,7 +123,7 @@ export default class UploadSource extends Component {
 
     async uploadVersionDetails(apiData) {
         try {
-            const postVersions = await fetch('http://127.0.0.1:8000/v1/uploadsources', {
+            const postVersions = await fetch(apiUrl + 'v1/uploadsources', {
                 method: 'POST',
                 body: JSON.stringify(apiData)
             })
