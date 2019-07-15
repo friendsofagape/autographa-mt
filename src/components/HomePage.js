@@ -123,7 +123,7 @@ export default class HomePage extends Component {
                     </Grid>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={2}
                     >
-                        <Typography color="textSecondary" style={{display: displayTranslationWordSwitch}}>
+                        <Typography variant="subtitle2" color="textSecondary" style={{display: displayTranslationWordSwitch}}>
                             Toggle Translation Words
                         </Typography>
                         <div style={{display: displayTranslationWordSwitch}}>
@@ -137,7 +137,7 @@ export default class HomePage extends Component {
                         </div>
                     </Grid>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={3}>
-                        <Typography color="textSecondary">
+                        <Typography  variant="subtitle2" color="textSecondary" >
                             Toggle Translation Helps
                         </Typography>
                         <Switch

@@ -262,8 +262,8 @@ export default class DownloadDraft extends Component {
                             {this.displayTargetLanguages()}
                         </Select>
                     </FormControl>
-                    <Button onClick={this.selectBooks} variant="raised" color="secondary" className={classes.translationSelectionPane}>Select Books</Button>
-                    <Button onClick={this.handleClick} variant="raised" color="primary" className={classes.translationSelectionPane}>Generate Draft</Button>
+                    <Button onClick={this.selectBooks} size="small" variant="contained" color="secondary" className={classes.translationSelectionPane}>Select Books</Button>
+                    <Button onClick={this.handleClick} size="small" variant="contained" color="primary" className={classes.translationSelectionPane}>Generate Draft</Button>
                     <Dialog
                         open={this.state.open}
                         onClose={this.handleClose}
@@ -276,7 +276,7 @@ export default class DownloadDraft extends Component {
                         </DialogContent>
                         <DialogActions>
                             {/* <Button onClick={this.handleClose} variant="raised" color="primary">Close</Button> */}
-                            <Button onClick={this.handleClose} variant="raised" color="primary" >OK</Button>
+                            <Button onClick={this.handleClose} variant="contained" color="primary" >OK</Button>
                         </DialogActions>
                     </Dialog>
                     {/* <br /> */}

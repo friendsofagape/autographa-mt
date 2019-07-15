@@ -23,7 +23,7 @@ const styles = theme => ({
     // backgroundColor:'#262f3d'
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
@@ -32,7 +32,7 @@ const styles = theme => ({
     marginLeft: '10px'
   },
   textDisplay: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(),
     color: theme.palette.text.secondary,
     backgroundColor: '#fff',
     height: 165,
@@ -65,7 +65,7 @@ const styles = theme => ({
     backgroundColor: '#fff',
   },
   selectButtonPaper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(),
     textAlign: 'center',
     color: theme.palette.text.secondary,
     marginLeft: '20px',
@@ -89,7 +89,7 @@ const styles = theme => ({
     height: 'auto',
   },
   selectTwo: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(),
     textAlign: 'center',
     color: theme.palette.text.secondary,
     marginLeft: '0px',
@@ -167,7 +167,7 @@ const styles = theme => ({
     marginLeft: '130px'
   },
   link: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
   },
   typeG: {
     backgroundColor: '#3e51b5',
