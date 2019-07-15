@@ -17,6 +17,7 @@ import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
 import jwt_decode from 'jwt-decode';
+import apiUrl from './GlobalUrl';
 
 export default class LoginPage extends Component {
     state = {

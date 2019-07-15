@@ -173,7 +173,7 @@ export default class DrawerPane extends Component {
                         {['Statistics', 'My Projects', 'Chart'].map((text, index) => (
                             <ListItem button key={text} className={classes.exp}>
                                 <ListItemText disableTypography divider="true"
-                                    primary={<Typography type="body2" style={{ color: '#FFFFFF' }}
+                                    primary={<Typography variant="caption" style={{ color: '#FFFFFF' }}
                                     onClick={() => this.handleDashboard(text)}
                                     >{text}</Typography>}
                                 />
@@ -190,7 +190,7 @@ export default class DrawerPane extends Component {
                         {drawerItems.map((text, index) => (
                             <ListItem button key={text} className={classes.exp}>
                                 <ListItemText disableTypography divider="true"
-                                    primary={<Typography type="body2" style={{ color: '#FFFFFF' }}
+                                    primary={<Typography type="body2"  variant="caption" style={{ color: '#FFFFFF' }}
                                     onClick={() => this.handleDashboard(text)}
                                     >{text}</Typography>}
                                 />

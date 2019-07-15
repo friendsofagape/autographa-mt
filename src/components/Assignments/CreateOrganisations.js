@@ -168,10 +168,10 @@ export default class CreateOrganisations extends Component {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button size="small" onClick={this.handleClose} variant="raised" color="secondary">
+                    <Button size="small" onClick={this.handleClose} variant="contained" color="secondary">
                         Close
                 </Button>
-                    <Button size="small" onClick={this.handleSend} variant="raised" color="primary">
+                    <Button size="small" onClick={this.handleSend} variant="contained" color="primary">
                     Submit Details
                 </Button>
                 </DialogActions>

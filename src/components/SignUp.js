@@ -17,6 +17,7 @@ import {
 import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
+import apiUrl from './GlobalUrl';
 
 
 function Transition(props) {

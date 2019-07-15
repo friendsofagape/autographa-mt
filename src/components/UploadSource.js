@@ -18,11 +18,30 @@ import Container from '@material-ui/core/Container';
 import Header from './Header';
 import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl';
+import { withStyles } from '@material-ui/core/styles';
 var grammar = require('usfm-grammar');
 
 
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        padding: theme.spacing.unit * 2
+    },
+    cursorPointer: {
+      cursor: 'pointer',
+    },
+    uploadPane:{
+      marginTop:'4%'
+    },
+    textField: {
+        // width: 100,
+        height: 10
+    }
+});
 
-export default class UploadSource extends Component {
+
+
+class UploadSource extends Component {
     constructor(props) {
         super(props)
         var fileReader;
@@ -276,16 +295,16 @@ export default class UploadSource extends Component {
                                 message={this.state.message}
                             />
                         </Snackbar>
-                        {/* <form className={classes.form} onSubmit={this.handleSubmit}> */}
                         <Grid container spacing={1}>
                             <Grid item xs={6}>
                                 <TextField
                                     onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
                                     id="version-content-description"
                                     label="Version Content Description"
-                                    // className={classes.textField}
+                                    className={classes.textField}
                                     margin="normal"
                                     variant="outlined"
+                                    style={{height:'40px'}}
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -342,7 +361,6 @@ export default class UploadSource extends Component {
                                     <InputLabel htmlFor="select-language">Language</InputLabel>
                                     <Select
                                         value={this.state.languageName}
-                                        // className={classes.selectMenu2}
                                         variant="outlined"
                                         onChange={this.setLanguage}
                                         inputProps={{
@@ -359,7 +377,6 @@ export default class UploadSource extends Component {
                                     <InputLabel htmlFor="select-content">Content Type</InputLabel>
                                     <Select
                                         value={this.state.contentType}
-                                        // className={classes.selectMenu2}
                                         variant="outlined"
                                         onChange={this.setContent}
                                         inputProps={{
@@ -401,3 +418,5 @@ export default class UploadSource extends Component {
         )
     }
 }
+
+export default  withStyles(styles)(UploadSource);

@@ -299,10 +299,10 @@ export default class CreateProjects extends Component {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose} variant="raised" color="secondary">
+                    <Button size="small" onClick={this.handleClose} variant="contained" color="secondary">
                         Close
                 </Button>
-                    <Button onClick={this.handleSend} variant="raised" color="primary">
+                    <Button size="small" onClick={this.handleSend} variant="contained" color="primary">
                         Create Project
                 </Button>
                 </DialogActions>

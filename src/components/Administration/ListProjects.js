@@ -86,7 +86,7 @@ class ListProjects extends Component {
         <div className={classes.root}>
             <Grid 
                 container
-                spacing={16}
+                spacing={1}
                 style={{border:'1px solid #eee', padding:'10px'}}
                 >
                     {this.displayProjectCards()}
