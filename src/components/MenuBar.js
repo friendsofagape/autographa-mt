@@ -46,7 +46,7 @@ class MenuBar extends Component {
     }
 
     displayLanguage = () => {
-        console.log("versionDetails", this.state.versionDetails)
+        // console.log("versionDetails", this.state.versionDetails)
         return this.state.languages.map(lang => {
             return (
                 <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
@@ -96,13 +96,13 @@ class MenuBar extends Component {
 
     async getBooks() {
         const { language, version, versionDetails } = this.state
-        console.log("lang", language)
+        // console.log("lang", language)
         const source =  versionDetails.find((ver) => {
             return ver.languageName === language && ver.versionContentCode === version && ver.contentType === 'bible'
         })
-        console.log("source", source)
+        // console.log("source", source)
         const sourceId = source.sourceId
-        console.log("sourceId", sourceId)
+        // console.log("sourceId", sourceId)
         var book = await fetch(apiUrl +  'v1/sources/books/' + sourceId, {
             method: 'GET'
         })
@@ -111,7 +111,7 @@ class MenuBar extends Component {
             bookList: myJson,
             sourceId:sourceId
         })
-        this.props.data.updateState({sourceId:sourceId})
+        this.props.data.updateState({version: version, sourceId:sourceId})
 
     }
     
@@ -119,21 +119,13 @@ class MenuBar extends Component {
         // console.log('state', this.state.sourceId)
         const { version } = this.state
         this.getBooks()
-        this.props.data.updateState({version: version})
+        // this.props.data.updateState({version: version})
     }
 
-    async getTokenList() {
-        const { sourceId, book } = this.state
-        var bookData = await fetch(apiUrl + 'v1/tokenlist/' + sourceId + '/' + book, {
-            method: 'GET'
-        })
-        const tokenList = await bookData.json();
-        this.props.data.updateState({tokenList: tokenList})
-    }
 
     onBookSelection = () => {
         const { book } = this.state
-        this.getTokenList()
+        // this.getTokenList()
         this.props.data.updateState({book: book})
     }
 
@@ -141,8 +133,8 @@ class MenuBar extends Component {
         const selectedLanguage = this.state.languageDetails.find((item) => {
             return item.languageName === value
         })
-        this.props.data.updateState({targetLanguage: value})
-        this.props.data.updateState({targetLanguageId: selectedLanguage.languageId})
+        this.props.data.updateState({targetLanguage: value, targetLanguageId: selectedLanguage.languageId})
+        // this.props.data.updateState({})
         // ({ languagename: value, languageid: value[0].languageId })
     }
 

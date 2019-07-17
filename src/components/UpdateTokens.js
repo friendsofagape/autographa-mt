@@ -13,61 +13,92 @@ export default class UpdateTokens extends Component {
         snackBarOpen: false,
         popupdata: {},
         senses: [],
-        sense: ''
+        sense: '',
+        senses: [],
+        currentToken: ''
     }
 
     async updateTransaltion() {
-        const { sourceId, targetLanguageId, token, tokenTranslation } = this.props.data
+        const { sourceId, targetLanguageId, token } = this.props.data
+        const { translation, sense } = this.state
         const apiData = {
             sourceId: sourceId,
             targetLanguageId: targetLanguageId,
             token: token,
-            translation: tokenTranslation,
-            senses: this.state.sense
+            translation: translation,
+            senses: sense
         }
-        // console.log('api', apiData)
         try {
-
-            const update = await fetch(apiUrl + '/v1/updatetokentranslations', {
+            console.log(apiUrl + '/v1/updatetokentranslations')
+            console.log(apiData)
+            const update = await fetch(apiUrl + 'v1/updatetokentranslations', {
                 method: 'POST',
                 body: JSON.stringify(apiData)
             })
             const myJson = await update.json()
             if (myJson.success) {
-                this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.setState({ translation: '', snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             } else {
                 this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }
         }
         catch (ex) {
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
     }
 
+    componentDidUpdate(){
+        // console.log("updating")
+        const { token } = this.props.data
+        const { currentToken } = this.state
+        // if(token){
 
-    async getTranslatedWords(word) {
-        const { sourceId, targetLanguageId, updateState } = this.props.data
-        const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + word, {
-            method: 'GET'
-        })
-        const translatedWords = await data.json()
-        if (translatedWords.translation) {
-            // console.log("******************", translatedWords)
-            const { translation, senses } = translatedWords
-            updateState({ tokenTranslation: translation, senses: senses })
-        } else {
-            updateState({ tokenTranslation: '', senses: [] })
+        if(token && token !== currentToken){
+            // this.getTranslatedWords()
+            this.setState({currentToken: token})
+            this.getTranslatedWords()
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        const { token } = nextProps.data
+        const { currentToken } = this.state
+        // if(token){
+
+        if(token && token !== currentToken){
+            // this.getTranslatedWords()
+            this.setState({currentToken: token})
+        }
+        
+    }
+
+    async getTranslatedWords() {
+        const { sourceId, targetLanguageId, token } = this.props.data
+        const { currentToken } = this.state
+        if (token !== currentToken) {
+            const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + token, {
+                method: 'GET'
+            })
+            const translatedWords = await data.json()
+            if (translatedWords.translation) {
+                // console.log("******************", translatedWords)
+                const { translation, senses } = translatedWords
+                this.setState({ translation: translation, senses: senses })
+            } else {
+                this.setState({ translation: '', senses: [] })
+            }
         }
     }
 
     displaySenses() {
-        const { senses } = this.props.data
+        const { senses } = this.state
         if (senses) {
             // this.setState({displaySensesPane:'block'})
             return senses.map(item => {
                 return (
 
                     <Chip
+                        key={item}
                         label={item}
                         component="a"
                         clickable
@@ -86,9 +117,6 @@ export default class UpdateTokens extends Component {
         this.setState(item)
     }
 
-    enterTransaltion = (value) => {
-        this.props.data.updateState({ tokenTranslation: value })
-    }
 
     submitSenses = () => {
         const { senses, sense } = this.state
@@ -97,16 +125,21 @@ export default class UpdateTokens extends Component {
             // this.setState({ senses })
             this.updateTransaltion()
             this.setState({ sense: '' })
-            this.getTranslatedWords(this.props.data.token)
+            this.getTranslatedWords()
         }
     }
 
     render() {
-        const { classes, token, targetLanguage, tokenTranslation, updateState } = this.props.data
+        const { classes, token, targetLanguage } = this.props.data
+        // var { tokenTranslation } = this.props.data
+        const { translation } = this.state
         var displayLanguage = ''
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }
+        // if(translation){
+        //     tokenTranslation = translation
+        // }
         // console.log("sense", senses)
         return (
 
@@ -115,6 +148,7 @@ export default class UpdateTokens extends Component {
                     <ComponentHeading data={{ classes: classes, text: `Enter ${displayLanguage} Translation` }} />
                     {/* <form onSubmit={this.handleSubmit}> */}
                 </Grid>
+                {/* {(this.props.token !== this.state.currentToken) ? this.getTranslatedWords(): null} */}
                 {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
                 <Grid container item xs={12}>
                     <Grid item xs={12} sm={6}>
@@ -132,8 +166,8 @@ export default class UpdateTokens extends Component {
                             required
                             label="Enter Translation"
                             // defaultValue="Select a Token"
-                            value={tokenTranslation}
-                            onChange={(e) => updateState({ tokenTranslation: e.target.value })}
+                            value={translation}
+                            onChange={(e) => this.setState({ translation: e.target.value }, () => this.getTranslatedWords())}
                             margin="normal"
                             variant="outlined"
                             className={classes.inputField}
@@ -141,18 +175,18 @@ export default class UpdateTokens extends Component {
                     </Grid>
                 </Grid>
 
-                    {/* <Container> */}
-                    <Button
+                {/* <Container> */}
+                <Button
                     variant="contained"
                     color="primary"
                     // className={classes.button}
-                    style={{ marginLeft:'30%', marginTop:'3%' }}
+                    style={{ marginLeft: '30%', marginTop: '3%' }}
                     onClick={this.handleSubmit}>Update Token</Button>
 
 
-                    {/* </Container> */}
+                {/* </Container> */}
                 <Grid container item xs={12}>
-                    <Grid item xs={12} style={{marginTop:'5%', marginBottom:'5px'}}>
+                    <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}>
                         <Typography variant="inherit" align="center" style={{ color: 'rgb(145, 148, 151)' }}>
                             Add alternate translations
                         </Typography>

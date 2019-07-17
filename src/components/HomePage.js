@@ -15,9 +15,9 @@ export default class HomePage extends Component {
         language: '',
         version: '',
         book: '',
-        tokenList: '',
+        // tokenList: '',
         token: '',
-        concordance: '',
+        // concordance: '',
         targetLanguage: 'abau',
         sourceId: '',
         targetLanguageId: 20,
@@ -32,13 +32,16 @@ export default class HomePage extends Component {
         displayTranslationWords: 'none',
         translationNotesPane: 3,
         displayTranslationNotes: 'none',
-        translationNotes: '',
+        // translationNotes: '',
         displayTranslationWordSwitch: 'none',
         tokenTranslation:'',
-        senses:[]
+        // senses:[],
+        verseNum: '',
+        reference: ''
     }
 
     updateState = (value) => {
+        console.log('updating home states')
         this.setState(value)
     }
     
@@ -97,6 +100,7 @@ export default class HomePage extends Component {
         // console.log("Notes", this.state.translationNotes)
         console.log("Home STate", this.state)
         const {
+            token,
             tokenPane,
             translationPane,
             concordancePane,
@@ -153,11 +157,11 @@ export default class HomePage extends Component {
                     <Grid item xs={tokenPane}>
                         <TokenList data={{
                             updateState: this.updateState,
-                            tokenList: this.state.tokenList,
+                            // tokenList: this.state.tokenList,
                             book: this.state.book,
                             classes: classes,
-                            language: this.state.language,
-                            version: this.state.version,
+                            // language: this.state.language,
+                            // version: this.state.version,
                             targetLanguage: this.state.targetLanguage,
                             sourceId: this.state.sourceId,
                             targetLanguageId: this.state.targetLanguageId
@@ -170,8 +174,8 @@ export default class HomePage extends Component {
                             sourceId: this.state.sourceId,
                             targetLanguageId: this.state.targetLanguageId,
                             book: this.state.book,
-                            tokenTranslation: this.state.tokenTranslation,
-                            senses: this.state.senses,
+                            // tokenTranslation: this.state.tokenTranslation,
+                            // senses: this.state.senses,
                             updateState:this.updateState
                         }} />
                     </Grid>
@@ -182,7 +186,8 @@ export default class HomePage extends Component {
                             classes: classes,
                             book: this.state.book,
                             concordance: this.state.concordance,
-                            token: this.state.token,
+                            token: token,
+                            sourceId: this.state.sourceId,
                             updateState: this.updateState
                         }} />
                     </Grid>
