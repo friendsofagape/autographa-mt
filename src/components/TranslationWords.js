@@ -7,13 +7,40 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import apiUrl from './GlobalUrl'
 
 
 
 export default class TranslationWords extends Component {
-    getTranslationWords = () => {
-        const { classes, translationWords } = this.props.data
-        // console.log("TW", translationWords)
+    state = {
+        translationWords: '',
+        currentToken:''
+    }
+
+    async getTranslationWords(sourceId, token) {
+        // const { sourceId } = this.props.data
+        const data = await fetch(apiUrl + '/v1/translationshelps/words/' + sourceId + '/' + token, {
+            method: 'GET'
+        })
+        const translationWords = await data.json()
+        if (translationWords) {
+            this.setState({ translationWords: translationWords })
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        const { sourceId, token } = nextProps.data
+        const { currentToken } = this.state
+        if(token && token!== currentToken){
+            this.getTranslationWords(sourceId, token)
+        }else{
+            this.setState({translationWords: ''})
+        }
+    }
+
+    displayTranslationWords() {
+        const { classes } = this.props.data
+        const { translationWords } = this.state
         if (translationWords) {
             var tWkeys = Object.keys(translationWords)
             console.log(tWkeys[0])
@@ -54,7 +81,7 @@ export default class TranslationWords extends Component {
                         }} />
                     </Grid>
                     <Grid item xs={12} className={classes.tokenList}>
-                        {this.getTranslationWords()}
+                        {this.displayTranslationWords()}
                         {/* {this.testGit()} */}
                     </Grid>
                 </Grid>

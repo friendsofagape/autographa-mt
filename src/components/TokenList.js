@@ -6,7 +6,8 @@ import apiUrl from './GlobalUrl'
 export default class TokenList extends Component {
     state = {
         tokenList: [],
-        currentBook: ''
+        currentBook: '',
+        currentToken: ''
     }
     async getTranslationWords(word) {
         const { sourceId } = this.props.data
@@ -20,7 +21,6 @@ export default class TokenList extends Component {
     }
 
     async getTokenList(currentBook, sourceId) {
-        // const { sourceId, currentBook } = this.state
         console.log(apiUrl + 'v1/tokenlist/' + sourceId + '/' + currentBook)
         var bookData = await fetch(apiUrl + 'v1/tokenlist/' + sourceId + '/' + currentBook, {
             method: 'GET'
@@ -28,24 +28,17 @@ export default class TokenList extends Component {
         const tokenList = await bookData.json();
         this.setState({ tokenList: tokenList })
     }
-    
+
     componentDidMount(){
-        // const { book, sourceId } = this.state
         this.getTokens()
     }
 
     componentWillReceiveProps(nextProps) {
-        const { book, sourceId } = nextProps.data
-        this.setState({ currentBook: book, sourceId: sourceId})
+        const { book, sourceId, token } = nextProps.data
+        this.setState({ currentBook: book, sourceId: sourceId, currentToken:token})
         if(book){
             this.getTokenList(book, sourceId)
         }
-        
-        // const { currentBook } = this.state
-        // if (book && book !== currentBook) {
-        //     this.setState({ currentBook: book, sourceId: sourceId})
-        //     this.getTokenList()
-        // }
     }
 
     async getTranslatedWords(word) {
@@ -66,19 +59,15 @@ export default class TokenList extends Component {
 
     handleClick = e => {
         var word = e.target.getAttribute('value')
-        // this.getTranslationWords(word)
-        console.log('passing to home')
-        this.props.data.updateState({ token: word })
-        // this.getTranslatedWords(word)
-        // this.getVerseText(word)
+        const { currentToken } =  this.state
+        if(word !== currentToken){
+            console.log('passing to home')
+            this.props.data.updateState({ token: word, reference:'', verseNum: '' })
+        }
     }
 
     getTokens() {
         const { tokenList } = this.state
-        const { targetLanguage } = this.props.data
-        // console.log('getTokesn', targetLanguage)
-        // console.log('TokenLis', tokenList)
-        // if (tokenList && targetLanguage) {
         if (tokenList) {
             return tokenList.map((item, index) => {
                 return (

@@ -58,12 +58,7 @@ export default class Concordance extends Component {
             const { updateState } = this.props.data
             await this.setState({translationNotes:"None"})
             updateState({translationNotes: "No data available"})
-
-            // this.setState({translationNotes:"No data available"})
         }
-        // if(result){
-        //     return result
-        // }
     }
     
 

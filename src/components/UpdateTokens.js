@@ -15,7 +15,7 @@ export default class UpdateTokens extends Component {
         senses: [],
         sense: '',
         senses: [],
-        currentToken: ''
+        token: ''
     }
 
     async updateTransaltion() {
@@ -37,7 +37,16 @@ export default class UpdateTokens extends Component {
             })
             const myJson = await update.json()
             if (myJson.success) {
-                this.setState({ translation: '', snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.setState({ 
+                    translation: '', 
+                    snackBarOpen: true, 
+                    popupdata: { 
+                        variant: "success", 
+                        message: myJson.message, 
+                        snackBarOpen: true, 
+                        closeSnackBar: this.closeSnackBar 
+                    } 
+                }, () => this.getTranslatedWords())
             } else {
                 this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }
@@ -47,35 +56,19 @@ export default class UpdateTokens extends Component {
         }
     }
 
-    componentDidUpdate(){
-        // console.log("updating")
-        const { token } = this.props.data
-        const { currentToken } = this.state
-        // if(token){
-
-        if(token && token !== currentToken){
-            // this.getTranslatedWords()
-            this.setState({currentToken: token})
-            this.getTranslatedWords()
-        }
-    }
-
     componentWillReceiveProps(nextProps){
-        const { token } = nextProps.data
-        const { currentToken } = this.state
-        // if(token){
-
-        if(token && token !== currentToken){
-            // this.getTranslatedWords()
-            this.setState({currentToken: token})
+        const { token, targetLanguageId, sourceId } = nextProps.data
+        if(token){
+            this.setState({token, targetLanguageId, sourceId})
+            this.getTranslatedWords(token,sourceId, targetLanguageId )
         }
         
     }
 
-    async getTranslatedWords() {
-        const { sourceId, targetLanguageId, token } = this.props.data
-        const { currentToken } = this.state
-        if (token !== currentToken) {
+    async getTranslatedWords(token=this.state.token, sourceId=this.state.sourceId, targetLanguageId=this.state.targetLanguageId) {
+        // const { sourceId, targetLanguageId, token } = this.props.data
+        // const { token } = this.state
+        if (token) {
             const data = await fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetLanguageId + '/' + token, {
                 method: 'GET'
             })
@@ -131,16 +124,11 @@ export default class UpdateTokens extends Component {
 
     render() {
         const { classes, token, targetLanguage } = this.props.data
-        // var { tokenTranslation } = this.props.data
         const { translation } = this.state
         var displayLanguage = ''
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }
-        // if(translation){
-        //     tokenTranslation = translation
-        // }
-        // console.log("sense", senses)
         return (
 
             <Grid item xs={12} className={classes.containerGrid}>
@@ -148,7 +136,7 @@ export default class UpdateTokens extends Component {
                     <ComponentHeading data={{ classes: classes, text: `Enter ${displayLanguage} Translation` }} />
                     {/* <form onSubmit={this.handleSubmit}> */}
                 </Grid>
-                {/* {(this.props.token !== this.state.currentToken) ? this.getTranslatedWords(): null} */}
+                {/* {(this.props.token !== this.state.token) ? this.getTranslatedWords(): null} */}
                 {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
                 <Grid container item xs={12}>
                     <Grid item xs={12} sm={6}>
@@ -167,7 +155,7 @@ export default class UpdateTokens extends Component {
                             label="Enter Translation"
                             // defaultValue="Select a Token"
                             value={translation}
-                            onChange={(e) => this.setState({ translation: e.target.value }, () => this.getTranslatedWords())}
+                            onChange={(e) => this.setState({ translation: e.target.value })}
                             margin="normal"
                             variant="outlined"
                             className={classes.inputField}

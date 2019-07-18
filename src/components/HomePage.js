@@ -34,7 +34,7 @@ export default class HomePage extends Component {
         displayTranslationNotes: 'none',
         // translationNotes: '',
         displayTranslationWordSwitch: 'none',
-        tokenTranslation:'',
+        // tokenTranslation:'',
         // senses:[],
         verseNum: '',
         reference: ''
@@ -101,7 +101,10 @@ export default class HomePage extends Component {
         console.log("Home STate", this.state)
         const {
             token,
+            sourceId,
             tokenPane,
+            reference,
+            verseNum,
             translationPane,
             concordancePane,
             displayConcordancePane,
@@ -157,11 +160,9 @@ export default class HomePage extends Component {
                     <Grid item xs={tokenPane}>
                         <TokenList data={{
                             updateState: this.updateState,
-                            // tokenList: this.state.tokenList,
+                            token: this.state.token,
                             book: this.state.book,
                             classes: classes,
-                            // language: this.state.language,
-                            // version: this.state.version,
                             targetLanguage: this.state.targetLanguage,
                             sourceId: this.state.sourceId,
                             targetLanguageId: this.state.targetLanguageId
@@ -174,8 +175,6 @@ export default class HomePage extends Component {
                             sourceId: this.state.sourceId,
                             targetLanguageId: this.state.targetLanguageId,
                             book: this.state.book,
-                            // tokenTranslation: this.state.tokenTranslation,
-                            // senses: this.state.senses,
                             updateState:this.updateState
                         }} />
                     </Grid>
@@ -195,30 +194,23 @@ export default class HomePage extends Component {
                         {/* <Grid item xs={12}> */}
                         <TranslationsWords data={{
                             classes: classes,
-                            translationWords: translationWords
+                            translationWords: translationWords,
+                            token: token,
+                            sourceId: sourceId
                         }} />
-                        {/* </Grid> */}
-                        {/* <Grid item xs={12}> */}
-                        {/* <TranslationsNotes /> */}
-                        {/* </Grid> */}
 
                     </Grid>
                     <Grid item xs={translationNotesPane} style={{ display: this.state.displayTranslationNotes }}>
-                        {/* <Grid item xs={12}> */}
+                        
                         <TranslationsNotes data={{
                             classes: classes,
-                            translationNotes: translationNotes
+                            translationNotes: translationNotes,
+                            reference: reference,
+                            verseNum: verseNum
                         }} />
-                        {/* </Grid> */}
-                        {/* <Grid item xs={12}> */}
-                        {/* <TranslationsNotes /> */}
-                        {/* </Grid> */}
 
                     </Grid>
                 </Grid>
-                {/* <Translations data={{
-                    classes: classes
-                }} /> */}
             </Grid>
         )
     }
