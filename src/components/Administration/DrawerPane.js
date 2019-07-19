@@ -140,6 +140,19 @@ export default class DrawerPane extends Component {
         })
     }
 
+    handleStatistics(){
+        const { updateState } = this.props.data
+        updateState({
+            listUserProjectsPane: true,
+            listProjectsPane:false, 
+            listUsersPane: false,
+            listOrganisationsPane:false,
+            createProjectsPane:false,
+            assignmentsPane: false,
+            projectStatisticsPane:true
+        })
+    }
+
     handleDashboard = (text) => {
         switch(text){
             case 'List Organisations': this.handleOrganisations(); break;

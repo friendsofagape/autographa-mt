@@ -18,7 +18,6 @@ export default class TranslationWords extends Component {
     }
 
     async getTranslationWords(sourceId, token) {
-        // const { sourceId } = this.props.data
         const data = await fetch(apiUrl + '/v1/translationshelps/words/' + sourceId + '/' + token, {
             method: 'GET'
         })
@@ -70,7 +69,6 @@ export default class TranslationWords extends Component {
 
     render() {
         const { classes } = this.props.data
-        // console.log("mark", this.state)
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid container item xs={12}>
@@ -82,7 +80,6 @@ export default class TranslationWords extends Component {
                     </Grid>
                     <Grid item xs={12} className={classes.tokenList}>
                         {this.displayTranslationWords()}
-                        {/* {this.testGit()} */}
                     </Grid>
                 </Grid>
             </Grid>

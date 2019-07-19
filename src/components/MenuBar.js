@@ -1,31 +1,19 @@
 import React, { Component } from 'react';
-import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
+import { FormControl, Grid, MenuItem, Select, InputLabel, Button } from '@material-ui/core';
 import './css/style.css'
-// import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl'
-// import { Link } from 'react-router-dom'
 
 class MenuBar extends Component {
     state = {
-            // languageVersionData: {},
-            // languagesList:[],
             language: '',
-            version: '',
-            bookList: '',
-            book: '',
-            targetLanguage:'',
-            versionDetails:[],
-            languageDetails:[],
             languages: [],
+            languageDetails:[],
+            targetLanguage:'',
+            version: '',
+            versionDetails:[],
+            book: '',
+            bookList: '',
             sourceId:''
-    }
-
-    async getVersionData(languageId) {
-        const data = await fetch(apiUrl + 'v1/versiondetails' + '/1/' + languageId, {
-            method: 'GET'
-        })
-        const versionDetails = await data.json()
-        this.setState({ versionDetails })
     }
 
     async getLanguagesData() {
@@ -41,12 +29,10 @@ class MenuBar extends Component {
     }
 
     componentDidMount() {
-        // this.getVersionData()
         this.getLanguagesData()
     }
 
     displayLanguage = () => {
-        // console.log("versionDetails", this.state.versionDetails)
         return this.state.languages.map(lang => {
             return (
                 <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
@@ -54,13 +40,21 @@ class MenuBar extends Component {
         })
     }
 
+    async getVersionData(languageId) {
+        const data = await fetch(apiUrl + 'v1/versiondetails' + '/1/' + languageId, {
+            method: 'GET'
+        })
+        const versionDetails = await data.json()
+        this.setState({ versionDetails })
+    }
+
     onLanguageSelection = () => {
         const { languages, language } = this.state
         const languageData = languages.find(lang => lang.languageName === language)
         const languageId = languageData.languageId
         this.getVersionData(languageId)
-        this.props.data.updateState({language:language})
-        // updateState({languageId:languageId})
+        // this.setState({language: language})
+        // this.props.data.updateState({language:language})
     }
 
     displayVersions() {
@@ -96,13 +90,10 @@ class MenuBar extends Component {
 
     async getBooks() {
         const { language, version, versionDetails } = this.state
-        // console.log("lang", language)
         const source =  versionDetails.find((ver) => {
             return ver.languageName === language && ver.versionContentCode === version && ver.contentType === 'bible'
         })
-        // console.log("source", source)
         const sourceId = source.sourceId
-        // console.log("sourceId", sourceId)
         var book = await fetch(apiUrl +  'v1/sources/books/' + sourceId, {
             method: 'GET'
         })
@@ -111,31 +102,32 @@ class MenuBar extends Component {
             bookList: myJson,
             sourceId:sourceId
         })
-        this.props.data.updateState({version: version, sourceId:sourceId})
+        // this.props.data.updateState({version: version, sourceId:sourceId})
 
     }
     
     onVersionSelection = () => {
-        // console.log('state', this.state.sourceId)
-        const { version } = this.state
+        // const { version } = this.state
         this.getBooks()
-        // this.props.data.updateState({version: version})
     }
 
 
     onBookSelection = () => {
         const { book } = this.state
-        // this.getTokenList()
-        this.props.data.updateState({book: book})
+        // this.props.data.updateState({book: book})
     }
 
-    onTargetLanguageSelection = (value) => {
+    getTokens = () => {
+        const { language, version, sourceId, book, targetLanguage } = this.state
         const selectedLanguage = this.state.languageDetails.find((item) => {
-            return item.languageName === value
+            return item.languageName === targetLanguage
         })
-        this.props.data.updateState({targetLanguage: value, targetLanguageId: selectedLanguage.languageId})
-        // this.props.data.updateState({})
-        // ({ languagename: value, languageid: value[0].languageId })
+        this.props.data.updateState({
+            book: book,
+            sourceId: sourceId,
+            targetLanguage: targetLanguage, 
+            targetLanguageId: selectedLanguage.languageId
+        })
     }
 
 
@@ -154,15 +146,12 @@ class MenuBar extends Component {
     }
 
     render() {
-        const { classes, language, version, book } = this.props.data
-        // console.log(this.state)
+        const { classes } = this.props.data
+        const { language, version, book } =  this.state
         return (
             <Grid container item xs={12} className={classes.selectionGrid}>
             <Grid container item xs={8}>
                 <Grid item xs={2} md={2}>
-                    {/* <ComponentHeading data={{classes:classes, text:"Language"}} /> */}
-                    {/* <Paper className={classes.selectButtonPaper}> */}
-                        {/* <br /> */}
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="select-language">Language</InputLabel>
                             <Select className={classes.selectMenu}
@@ -179,13 +168,8 @@ class MenuBar extends Component {
                                 {this.displayLanguage()}
                             </Select>
                         </FormControl>
-                        <br />
-                        <br />
-                    {/* </Paper> */}
                 </Grid>
                 <Grid item xs={2} md={2}>
-                    {/* <ComponentHeading data={{classes:classes, text:"Version"}} /> */}
-                    {/* <Paper className={classes.selectButtonPaper}> */}
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="select-version">Version</InputLabel>
                             <Select
@@ -202,13 +186,8 @@ class MenuBar extends Component {
                                 {this.displayVersions()}
                             </Select>
                         </FormControl>
-                        <br />
-                        <br />
-                    {/* </Paper> */}
                 </Grid>
                 <Grid item xs={2} md={2}>
-                    {/* <ComponentHeading data={{classes:classes, text:"Books"}} /> */}
-                    {/* <Paper className={classes.selectButtonPaper}> */}
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="select-book">Books</InputLabel>
                             <Select
@@ -224,13 +203,8 @@ class MenuBar extends Component {
                                 {this.getBookItems()}
                             </Select>
                         </FormControl>
-                        <br />
-                        <br />
-                    {/* </Paper> */}
                 </Grid>
                 <Grid item xs={2} md={2}>
-                    {/* <ComponentHeading data={{classes:classes, text:"Target"}} /> */}
-                    {/* <Paper className={classes.selectButtonPaper}> */}
                         <FormControl>
                             <InputLabel htmlFor="select-target-language">Target</InputLabel>
                             <Select
@@ -238,7 +212,7 @@ class MenuBar extends Component {
                                 value={this.state.targetLanguage}
                                 onChange={(e) => this.setState({
                                     targetLanguage: e.target.value
-                                }, () => { this.onTargetLanguageSelection(e.target.value) })}
+                                })}
                                 inputProps={{
                                     id: 'select-target-language',
                                 }}
@@ -246,9 +220,9 @@ class MenuBar extends Component {
                                 {this.getTargetLanguage()}
                             </Select>
                         </FormControl>
-                        <br />
-                    {/* </Paper> */}
-                        <br />
+                </Grid>
+                <Grid xs={2} md={2}>
+                    <Button size="small" onClick={this.getTokens} variant="contained" color="primary">Get Tokens</Button>
                 </Grid>
                 </Grid>
             </Grid>

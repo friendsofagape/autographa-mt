@@ -23,6 +23,7 @@ export default class Concordance extends Component {
        
     async getVerseText(token, sourceId, book ) {
         if(book){
+            console.log(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token)
             const data = await fetch(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token, {
                 method: 'GET'
             })

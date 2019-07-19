@@ -10,7 +10,7 @@ const styles = theme => ({
   root: {
     display:'flex',
     flexGrow: 1,
-    backgroundColor: '#f8f9fa'
+    // backgroundColor: '#f8f9fa'
   },
   grow: {
     flexGrow: 1,

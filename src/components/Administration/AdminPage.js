@@ -14,6 +14,7 @@ import AssignUser from '../Assignments/AssignUser';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
 import ListUserProjects from '../Users/ListUserProjects'
 import HomePage from '../Users/Translations/HomePage'
+import ProjectStatistics from '../Reports/ProjectStatistics'
 
 
 const drawerWidth = 240;
@@ -65,6 +66,7 @@ class AdminPage extends Component {
         listUserProjectsPane: true,
         displayDashboard: true,
         translationPane: false,
+        projectStatisticsPane: true,
         userProjectsData: [],
         selectedProject: {},
     }
@@ -134,6 +136,11 @@ class AdminPage extends Component {
                         (this.state.translationPane) ? (
                             <HomePage selectedProject={this.state.selectedProject}
                                 classes={classes} />
+                        ) : null
+                    }
+                    {
+                        (this.state.projectStatisticsPane) ? (
+                            <ProjectStatistics />
                         ) : null
                     }
                 </main>
