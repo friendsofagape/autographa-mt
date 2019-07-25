@@ -8,10 +8,36 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import apiUrl from './GlobalUrl'
+import { connect } from 'react-redux'
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+    root: {
+        display:'flex',
+        flexGrow: 1,
+      },
+      tokenList: {
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        height: 360,
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        backgroundColor: '#fff',
+      },
+      containerGrid: {
+        width: '97%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        border: '1px solid #3e51b5',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        height: '100%',
+        backgroundColor: '#fff',
+      },
+});
 
 
 
-export default class TranslationWords extends Component {
+class TranslationWords extends Component {
     state = {
         translationWords: '',
         currentToken:''
@@ -23,12 +49,12 @@ export default class TranslationWords extends Component {
         })
         const translationWords = await data.json()
         if (translationWords) {
-            this.setState({ translationWords: translationWords })
+            this.setState({ translationWords: translationWords, currentToken: this.props.token })
         }
     }
 
     componentWillReceiveProps(nextProps){
-        const { sourceId, token } = nextProps.data
+        const { sourceId, token } = nextProps
         const { currentToken } = this.state
         if(token && token!== currentToken){
             this.getTranslationWords(sourceId, token)
@@ -38,7 +64,7 @@ export default class TranslationWords extends Component {
     }
 
     displayTranslationWords() {
-        const { classes } = this.props.data
+        const { classes } = this.props
         const { translationWords } = this.state
         if (translationWords) {
             var tWkeys = Object.keys(translationWords)
@@ -68,7 +94,7 @@ export default class TranslationWords extends Component {
     }
 
     render() {
-        const { classes } = this.props.data
+        const { classes } = this.props
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid container item xs={12}>
@@ -86,3 +112,12 @@ export default class TranslationWords extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        token: state.sources.token,
+        sourceId: state.sources.sourceId
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(TranslationWords))

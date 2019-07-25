@@ -2,38 +2,67 @@ import React, { Component } from 'react';
 import { FormControl, Grid, MenuItem, Select, InputLabel, Button } from '@material-ui/core';
 import './css/style.css'
 import apiUrl from './GlobalUrl'
+import { connect } from 'react-redux';
+import { createSource } from '../store/actions/sourceActions'
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+    root: {
+        display:'flex',
+        flexGrow: 1,
+      },
+      selectMenu: {
+        width: '120px',
+      },
+      selectionGrid: {
+        marginLeft: '4%',
+        marginTop: '1%'
+      }
+});
 
 class MenuBar extends Component {
     state = {
             language: '',
-            languages: [],
-            languageDetails:[],
+            bibleLanguages: [],
+            allLanguages:[],
             targetLanguage:'',
             version: '',
-            versionDetails:[],
+            // versionDetails:[],
             book: '',
             bookList: '',
-            sourceId:''
+            sourceId:'',
+            biblesDetails:[],
     }
 
     async getLanguagesData() {
+    }
+
+
+    async getBiblesData() {
         const data = await fetch(apiUrl + 'v1/languages', {
             method: 'GET'
         })
-        const lang = await fetch(apiUrl + 'v1/languages/1', {
+        const bibLang = await fetch(apiUrl + 'v1/bibles/languages', {
             method: 'GET'
         })
-        const languageDetails = await data.json()
-        const languages = await lang.json()
-        this.setState({ languageDetails, languages })
+        const lang = await fetch(apiUrl + 'v1/bibles', {
+            method: 'GET'
+        })
+        const allLanguages = await data.json()
+        const biblesDetails = await lang.json()
+        const bibleLanguages = await bibLang.json()
+        this.setState({ allLanguages, bibleLanguages, biblesDetails })
+        // this.setState({ biblesDetails })
     }
 
     componentDidMount() {
-        this.getLanguagesData()
+        // this.getLanguagesData()
+        this.getBiblesData()
     }
 
     displayLanguage = () => {
-        return this.state.languages.map(lang => {
+        return this.state.bibleLanguages.map(lang => {
             return (
                 <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
             )
@@ -49,37 +78,36 @@ class MenuBar extends Component {
     }
 
     onLanguageSelection = () => {
-        const { languages, language } = this.state
-        const languageData = languages.find(lang => lang.languageName === language)
+        const { bibleLanguages, language } = this.state
+        const languageData = bibleLanguages.find(lang => lang.languageName === language)
         const languageId = languageData.languageId
-        this.getVersionData(languageId)
-        // this.setState({language: language})
-        // this.props.data.updateState({language:language})
+        // this.getVersionData(languageId)
     }
 
     displayVersions() {
-        const { language, versionDetails } = this.state
+        const { language, biblesDetails } = this.state
         if (!language) {
             return <MenuItem key="" value="" disabled>Loading Versions</MenuItem>
         }
-        const versions = versionDetails.filter((ver) => {
-            return ver.languageName === language
+        const versions = biblesDetails.filter((ver) => {
+            return ver.language.name === language.toLowerCase()
         })
+        // console.log(versions)
         return versions.map(item => {
-            return <MenuItem key={item.sourceId} value={item.versionContentCode}>{item.versionContentCode.toUpperCase()}</MenuItem>
+            return <MenuItem key={item.sourceId} value={item.version.longName}>{item.version.longName.toUpperCase()}</MenuItem>
         })
     }
 
 
     getTargetLanguage(){
-        const { book, languageDetails} = this.state
+        const { book, allLanguages} = this.state
         if(!book){
             return <MenuItem disabled>Load Book to get Language data</MenuItem>
         }
-        if(!languageDetails){
+        if(!allLanguages){
             return <MenuItem disabled>Loading</MenuItem>
         }else{
-            return languageDetails.map((lang) => {
+            return allLanguages.map((lang) => {
                 return (
                     <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
                 )
@@ -89,12 +117,12 @@ class MenuBar extends Component {
     }
 
     async getBooks() {
-        const { language, version, versionDetails } = this.state
-        const source =  versionDetails.find((ver) => {
-            return ver.languageName === language && ver.versionContentCode === version && ver.contentType === 'bible'
+        const { language, version, biblesDetails } = this.state
+        const source =  biblesDetails.find((ver) => {
+            return ver.language.name === language.toLowerCase() && ver.version.longName === version
         })
         const sourceId = source.sourceId
-        var book = await fetch(apiUrl +  'v1/sources/books/' + sourceId, {
+        var book = await fetch(apiUrl +  'v1/bibles/' + sourceId +  '/books' , {
             method: 'GET'
         })
         const myJson = await book.json();
@@ -102,8 +130,6 @@ class MenuBar extends Component {
             bookList: myJson,
             sourceId:sourceId
         })
-        // this.props.data.updateState({version: version, sourceId:sourceId})
-
     }
     
     onVersionSelection = () => {
@@ -114,15 +140,14 @@ class MenuBar extends Component {
 
     onBookSelection = () => {
         const { book } = this.state
-        // this.props.data.updateState({book: book})
     }
 
     getTokens = () => {
         const { language, version, sourceId, book, targetLanguage } = this.state
-        const selectedLanguage = this.state.languageDetails.find((item) => {
+        const selectedLanguage = this.state.allLanguages.find((item) => {
             return item.languageName === targetLanguage
         })
-        this.props.data.updateState({
+        this.props.createSource({
             book: book,
             sourceId: sourceId,
             targetLanguage: targetLanguage, 
@@ -133,9 +158,9 @@ class MenuBar extends Component {
 
     getBookItems() {
         if (this.state.bookList) {
-            return this.state.bookList.map(item => {
+            return this.state.bookList[0].books.map(item => {
                 return (
-                    <MenuItem key={item} value={item}>{item}</MenuItem>
+                    <MenuItem key={item.bibleBookID} value={item.abbreviation}>{item.abbreviation}</MenuItem>
                 )
             })
         } else {
@@ -146,8 +171,9 @@ class MenuBar extends Component {
     }
 
     render() {
-        const { classes } = this.props.data
+        const { classes } = this.props
         const { language, version, book } =  this.state
+        console.log("menu", this.state)
         return (
             <Grid container item xs={12} className={classes.selectionGrid}>
             <Grid container item xs={8}>
@@ -221,7 +247,7 @@ class MenuBar extends Component {
                             </Select>
                         </FormControl>
                 </Grid>
-                <Grid xs={2} md={2}>
+                <Grid item xs={2} md={2}>
                     <Button size="small" onClick={this.getTokens} variant="contained" color="primary">Get Tokens</Button>
                 </Grid>
                 </Grid>
@@ -230,6 +256,18 @@ class MenuBar extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        sourceId: state.sources.sourceId,
+        book: state.sources.book,
+        targetLanguage: state.sources.targetLanguage,
+        targetLanguageId: state.sources.targetLanguageId
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return{
+        createSource: (source) => dispatch(createSource(source))
+    }
+}
 
-
-export default MenuBar;
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MenuBar));

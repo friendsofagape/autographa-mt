@@ -36,7 +36,7 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 1,
+        padding: theme.spacing(1),
     },
     toolbar: theme.mixins.toolbar,
 });

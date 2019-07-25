@@ -2,8 +2,36 @@ import React, { Component } from 'react';
 import { Grid, ListItem, Divider } from '@material-ui/core';
 import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl'
+import { connect } from 'react-redux'
+import { saveToken } from '../store/actions/sourceActions'
+import { withStyles } from '@material-ui/core/styles';
 
-export default class TokenList extends Component {
+const styles = theme => ({
+    root: {
+        display:'flex',
+        flexGrow: 1,
+      },
+      tokenList: {
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+        height: 360,
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        backgroundColor: '#fff',
+      },
+      containerGrid: {
+        width: '97%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        border: '1px solid #3e51b5',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        height: '100%',
+        backgroundColor: '#fff',
+      },
+});
+
+
+class TokenList extends Component {
     state = {
         tokenList: [],
         currentBook: '',
@@ -19,10 +47,12 @@ export default class TokenList extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { book, sourceId, token } = nextProps.data
-        this.setState({ currentBook: book, sourceId: sourceId, currentToken:token})
+        const { book, sourceId } = nextProps
+        // this.setState({ currentBook: book, sourceId: sourceId, currentToken:token})
         if(book){
             this.getTokenList(book, sourceId)
+        }else{
+            this.setState({tokenList: []})
         }
     }
 
@@ -30,7 +60,7 @@ export default class TokenList extends Component {
         var word = e.target.getAttribute('value')
         const { currentToken } =  this.state
         if(word !== currentToken){
-            this.props.data.updateState({ token: word, reference:'', verseNum: '' })
+            this.props.saveToken({ token: word, reference:'', verseNum: '' })
         }
     }
 
@@ -56,7 +86,8 @@ export default class TokenList extends Component {
     }
 
     render() {
-        const { classes } = this.props.data
+        const { classes } = this.props
+        // console.log("REDUX - toeknlidt", this.props)
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid item xs={12}>
@@ -69,3 +100,20 @@ export default class TokenList extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) =>{
+    return {
+        sourceId: state.sources.sourceId,
+        book: state.sources.book,
+        token: state.sources.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        saveToken: (token) => dispatch(saveToken(token))
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TokenList))

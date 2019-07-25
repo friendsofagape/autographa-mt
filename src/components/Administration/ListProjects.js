@@ -12,7 +12,7 @@ const accessToken = localStorage.getItem('access_token')
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 2
+        padding: theme.spacing(2)
     },
     cursorPointer: {
       cursor: 'pointer',

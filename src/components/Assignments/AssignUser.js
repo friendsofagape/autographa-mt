@@ -27,7 +27,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 2
+        padding: theme.spacing(2)
     },
     toolbar: theme.mixins.toolbar,
     gridSize:{

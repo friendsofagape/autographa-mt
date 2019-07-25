@@ -184,10 +184,12 @@ export default class DrawerPane extends Component {
                     </ExpansionPanelSummary>
                     <List>
                         {['Statistics', 'My Projects', 'Chart'].map((text, index) => (
-                            <ListItem button key={text} className={classes.exp}>
+                            <ListItem button key={text} className={classes.exp}
+                            onClick={() => this.handleDashboard(text)}
+                            >
                                 <ListItemText disableTypography divider="true"
                                     primary={<Typography variant="caption" style={{ color: '#FFFFFF' }}
-                                    onClick={() => this.handleDashboard(text)}
+                                    
                                     >{text}</Typography>}
                                 />
                             </ListItem>
@@ -201,10 +203,12 @@ export default class DrawerPane extends Component {
                     </ExpansionPanelSummary>
                     <List>
                         {drawerItems.map((text, index) => (
-                            <ListItem button key={text} className={classes.exp}>
+                            <ListItem button key={text} className={classes.exp}
+                            onClick={() => this.handleDashboard(text)}
+                            >
                                 <ListItemText disableTypography divider="true"
                                     primary={<Typography type="body2"  variant="caption" style={{ color: '#FFFFFF' }}
-                                    onClick={() => this.handleDashboard(text)}
+                                    
                                     >{text}</Typography>}
                                 />
                             </ListItem>

@@ -33,7 +33,7 @@ const styles = theme => ({
   
     },
     paper: {
-      padding: theme.spacing.unit * 2,
+      padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
@@ -42,7 +42,7 @@ const styles = theme => ({
       marginLeft:'10px'
     },
     textDisplay: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(),
       color: theme.palette.text.secondary,
       // marginBottom: '10px',
       height: 165,
@@ -81,7 +81,7 @@ const styles = theme => ({
       height:'100%'
     },
     selectButtonPaper: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(),
       textAlign: 'center',
       color: theme.palette.text.secondary,
       marginLeft: '20px',
@@ -102,7 +102,7 @@ const styles = theme => ({
       height: 'auto',
     },
     selectTwo: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(),
       textAlign: 'center',
       color: theme.palette.text.secondary,
       marginLeft: '0px',

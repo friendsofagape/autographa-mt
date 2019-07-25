@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
+import { connect } from 'react-redux'
+import { displaySnackBar } from '../store/actions/sourceActions'
 
-export default class PopUpMessages extends Component {
-
-    state = {
-        snackBarOpen: false,
-    }
+class PopUpMessages extends Component {
 
     snackBarHandleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -14,14 +12,18 @@ export default class PopUpMessages extends Component {
         }
 
         // this.setState({ snackBarOpen: false }, () => this.props.data.updatePopUpState({popup:false}));
-        this.setState({snackBarOpen:false}, () => this.props.data.closeSnackBar({snackBarOpen: false}))
-        
+        // this.setState({snackBarOpen:false}, () => this.props.data.closeSnackBar({snackBarOpen: false}))
+        this.props.displaySnackBar({
+            snackBarOpen: false,
+            snackBarMessage: null,
+            snackBarVariant: null
+        })
     };
     render() {
-
-        const { variant, snackBarOpen, message} = this.props.data
+        console.log('snack', this.props)
+        const { snackBarVariant, snackBarOpen, snackBarMessage} = this.props
         let snackColor;
-        if(variant === "success"){
+        if(snackBarVariant === "success"){
             snackColor = '#43a047'
         }else{
             snackColor = '#d32f2f'
@@ -40,9 +42,25 @@ export default class PopUpMessages extends Component {
                     style={{ backgroundColor: snackColor }}
                     onClose={this.snackBarHandleClose}
                     // variant={variant}
-                    message={message}
+                    message={snackBarMessage}
                 />
             </Snackbar>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        snackBarOpen: state.sources.snackBarOpen,
+        snackBarMessage: state.sources.snackBarMessage,
+        snackBarVariant: state.sources.snackBarVariant
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PopUpMessages)

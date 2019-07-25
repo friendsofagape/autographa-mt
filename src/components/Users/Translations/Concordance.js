@@ -10,7 +10,7 @@ const styles = theme => ({
         display: 'flex',
     },
     textDisplay: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(),
       color: theme.palette.text.secondary,
       backgroundColor: '#fff',
       height: 165,

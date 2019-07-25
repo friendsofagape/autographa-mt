@@ -225,7 +225,7 @@ export default class DownloadDraft extends Component {
         return (
             // <Grid container item xs={12}>
                 <Grid item xs={12} container>
-                <Header classes={classes} />
+                <Header  />
                 <PopUpMessages data={{varian:this.state.variant, snackBarOpen:this.state.snackBarOpen, message:this.state.message, closeSnackBar:this.closeSnackBar }} />
                     <FormControl className={classes.translationSelectionPane}>
                     <InputLabel htmlFor="select-language">Language</InputLabel>

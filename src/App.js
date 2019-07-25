@@ -202,18 +202,9 @@ const styles = theme => ({
 function App(props) {
   const { classes } = props;
   return (
-    // <BrowserRouter>
       <Grid container className={classes.root}>
-        {/* <Grid item xs={12}>
-          <Header classes={classes} />
-        </Grid> */}
-        {/* <Grid item xs={12} style={{ backgroundColor: '#fbfbfb' }}> */}
-        {/* <Grid item xs={12} style={{ backgroundColor: '#f8f9fa' }}> */}
-        
           <Routes classes={classes} />
-        {/* </Grid> */}
       </Grid>
-    // </BrowserRouter>
   );
 }
 

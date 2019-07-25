@@ -118,13 +118,7 @@ export default class HomePage extends Component {
             <Grid container item xs={12}>
                 {/* <Grid item xs={2}> */}
                 <Header />
-                <MenuBar data={{
-                    updateState: this.updateState,
-                    classes: classes,
-                    language: this.state.language,
-                    version: this.state.version,
-                    book: this.state.book
-                }} />
+                <MenuBar />
                 <Grid container item xs={12}>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={7}>
                     </Grid>
@@ -137,7 +131,6 @@ export default class HomePage extends Component {
                             <Switch
                                 checked={this.state.tWswitchChecked}
                                 onChange={this.handleTWSwitchChange}
-                                // value={this.handleTWSwitchChange}
                             >
                                 Toggle
                             </Switch>
@@ -150,7 +143,6 @@ export default class HomePage extends Component {
                         <Switch
                             checked={this.state.tNswitchChecked}
                             onChange={this.handleTNSwitchChange}
-                            // value={this.handleTNSwitchChange}
                         >
                             Toggle
                         </Switch>
@@ -158,68 +150,24 @@ export default class HomePage extends Component {
                 </Grid>
                 <Grid container item xs={12}>
                     <Grid item xs={tokenPane}>
-                        <TokenList data={{
-                            updateState: this.updateState,
-                            token: this.state.token,
-                            book: this.state.book,
-                            classes: classes,
-                            targetLanguage: this.state.targetLanguage,
-                            sourceId: this.state.sourceId,
-                            targetLanguageId: this.state.targetLanguageId
-                        }} />
+                        <TokenList />
                     </Grid>
                     <Grid item xs={translationPane}>
-                        <UpdateTokens data={{
-                            classes: classes,
-                            token: this.state.token,
-                            sourceId: this.state.sourceId,
-                            targetLanguageId: this.state.targetLanguageId,
-                            book: this.state.book,
-                            updateState:this.updateState
-                        }} />
+                        <UpdateTokens />
                     </Grid>
                     <Grid item xs={concordancePane}
                     style={{display: displayConcordancePane}}
                     >
-                        <Concordance data={{
-                            classes: classes,
-                            book: this.state.book,
-                            concordance: this.state.concordance,
-                            token: token,
-                            sourceId: this.state.sourceId,
-                            updateState: this.updateState
-                        }} />
+                        <Concordance />
                     </Grid>
                     <Grid item xs={translationWordsPane} style={{ display: this.state.displayTranslationWords }}>
-                        {/* <Grid item xs={12}> */}
-                        <TranslationsWords data={{
-                            classes: classes,
-                            translationWords: translationWords,
-                            token: token,
-                            sourceId: sourceId
-                        }} />
-
+                        <TranslationsWords />
                     </Grid>
                     <Grid item xs={translationNotesPane} style={{ display: this.state.displayTranslationNotes }}>
-                        
-                        <TranslationsNotes data={{
-                            classes: classes,
-                            translationNotes: translationNotes,
-                            reference: reference,
-                            verseNum: verseNum
-                        }} />
-
+                        <TranslationsNotes  />
                     </Grid>
                 </Grid>
             </Grid>
         )
     }
 }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         createLanguages: (languages) => dispatch(createLanguages(languages))
-//     }
-// }
-
-// export default connect(null, mapDispatchToProps)(HomePage);

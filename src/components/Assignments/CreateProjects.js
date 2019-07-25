@@ -15,10 +15,22 @@ import {
 import apiUrl from '../GlobalUrl';
 import ComponentHeading from '../ComponentHeading';
 import PopUpMessages from '../PopUpMessages';
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+    root: {
+        display:'flex',
+        flexGrow: 1,
+      },
+      selectMenu: {
+        width: '120px',
+      }
+});
 
 const accessToken = localStorage.getItem('access_token')
 
-export default class CreateProjects extends Component {
+class CreateProjects extends Component {
     state = {
         versionDetails: [],
         languageDetails: [],
@@ -207,7 +219,8 @@ export default class CreateProjects extends Component {
 
     render() {
         const { language, version, organisation, popupdata } = this.state
-        const { createProjectsPane, classes } = this.props.data
+        const { createProjectsPane } = this.props.data
+        const { classes } =  this.props
         return (
 
             <Dialog
@@ -310,3 +323,5 @@ export default class CreateProjects extends Component {
         )
     }
 }
+
+export default withStyles(styles)(CreateProjects)

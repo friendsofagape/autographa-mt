@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import jwt_decode from 'jwt-decode';
-import { Link, List, ListItem, Menu, MenuItem } from '@material-ui/core';
+import { Link, Menu, MenuItem } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
-// import Label from '@material-ui/core/Label';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 let decoded;
 let tokenAliveFlag = false
@@ -14,7 +12,6 @@ if (accessToken) {
     let currentDate = new Date().getTime()
     let expiry = decoded.exp * 1000
     var firstName = decoded.firstName
-    var lastName = decoded.LastName
     var hours = (expiry - currentDate) / 36e5
     if(hours > 0){
         tokenAliveFlag = true
@@ -41,7 +38,6 @@ const SignedInLinks = ({classes}) => {
     }
 
     function getMenuItems(){
-        const options = ["Log Out"]
         return  (
             <Menu
             anchorEl={anchorEl}

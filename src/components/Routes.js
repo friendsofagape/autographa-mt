@@ -57,11 +57,11 @@ export default class Routes extends Component {
                         <Route exact path="/" component={() => <LoginPage classes={classes} />} />
                         <Route path="/signin" component={() => <LoginPage classes={classes} />} />
                         <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                        <Route path="/homepage" component={() => <HomePage classes={classes} />} />
-                        <Route path="/upload" component={() => <UploadSource classes={classes} />} />
-                        <Route path="/assignment" component={() => <AdminPage classes={classes} />} />
+                        <Route path="/homepage" component={() => <HomePage  />} />
+                        <Route path="/upload" component={() => <UploadSource />} />
+                        <Route path="/assignment" component={() => <AdminPage />} />
                         <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
-                        <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                        <Route path="/viewsources" component={() => <ViewSources />} />
                         
                         {/* <Route path="/createprojects" component={() => <OrganisationRequest classes={classes} />} /> */}
                     </Switch>
@@ -71,11 +71,11 @@ export default class Routes extends Component {
                             <Route exact path="/" component={() => <LoginPage classes={classes} />} />
                             <Route path="/signin" component={() => <LoginPage classes={classes} />} />
                             <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                            <Route path="/homepage" component={() => <HomePage classes={classes} />} />
-                            <Route path="/dashboard" component={() => <AdminPage classes={classes} />} />
-                            <Route path="/upload" component={() => <UploadSource classes={classes} />} />
+                            <Route path="/homepage" component={() => <HomePage />} />
+                            <Route path="/dashboard" component={() => <AdminPage />} />
+                            <Route path="/upload" component={() => <UploadSource />} />
                             <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
-                            <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                            <Route path="/viewsources" component={() => <ViewSources  />} />
                         </Switch>
                     ) : (
                         (accessToken && decoded.role === 'm' && tokenAliveFlag) ? (
@@ -83,9 +83,9 @@ export default class Routes extends Component {
                             <Route exact path="/" component={() => <LoginPage classes={classes} />} />
                             <Route path="/signin" component={() => <LoginPage classes={classes} />} />
                             <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                            <Route path="/homepage" component={() => <HomePage classes={classes} />} />
+                            <Route path="/homepage" component={() => <HomePage />} />
                             <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
-                            <Route path="/viewsources" component={() => <ViewSources classes={classes} />} />
+                            <Route path="/viewsources" component={() => <ViewSources />} />
                             <Route path="/dashboard" component={() => <UserDashboard  />} />
                             </Switch>
                         ) : (

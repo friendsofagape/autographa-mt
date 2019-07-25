@@ -14,14 +14,15 @@ import AssignUser from '../Assignments/AssignUser';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
 import ListUserProjects from '../Users/ListUserProjects'
 import HomePage from '../Users/Translations/HomePage'
-import ProjectStatistics from '../Reports/ProjectStatistics'
+// import ProjectStatistics from '../Reports/ProjectStatistics'
 
 
 const drawerWidth = 240;
 
 const styles = theme => ({
     root: {
-        // display: 'flex',
+        display:'flex',
+        flexGrow: 1,
     },
     exp: {
         backgroundColor: '#100f0ffa',
@@ -42,7 +43,7 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 1,
+        padding: theme.spacing(1),
     },
     toolbar: theme.mixins.toolbar,
 });
@@ -66,7 +67,7 @@ class AdminPage extends Component {
         listUserProjectsPane: true,
         displayDashboard: true,
         translationPane: false,
-        projectStatisticsPane: true,
+        // projectStatisticsPane: true,
         userProjectsData: [],
         selectedProject: {},
     }
@@ -138,11 +139,11 @@ class AdminPage extends Component {
                                 classes={classes} />
                         ) : null
                     }
-                    {
+                    {/* {
                         (this.state.projectStatisticsPane) ? (
                             <ProjectStatistics />
                         ) : null
-                    }
+                    } */}
                 </main>
             </div>
         );

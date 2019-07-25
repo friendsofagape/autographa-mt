@@ -5,20 +5,42 @@ import ComponentHeading from './ComponentHeading';
 import PopUpMessages from './PopUpMessages';
 import Chip from '@material-ui/core/Chip';
 import apiUrl from './GlobalUrl';
+import { connect } from 'react-redux'
+import { withStyles } from '@material-ui/core/styles';
 
-export default class UpdateTokens extends Component {
+
+const styles = theme => ({
+    root: {
+        display:'flex',
+        flexGrow: 1,
+      },
+      inputField: {
+        width: '90%',
+        marginLeft: '10px'
+      },
+      containerGrid: {
+        width: '97%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        border: '1px solid #3e51b5',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        height: '100%',
+        backgroundColor: '#fff',
+      },
+});
+
+ class UpdateTokens extends Component {
     state = {
         translation: '',
         snackBarOpen: false,
         popupdata: {},
         senses: [],
         sense: '',
-        senses: [],
         token: ''
     }
 
     async updateTransaltion() {
-        const { sourceId, targetLanguageId, token } = this.props.data
+        const { sourceId, targetLanguageId, token } = this.props
         const { translation, sense } = this.state
         const apiData = {
             sourceId: sourceId,
@@ -113,13 +135,13 @@ export default class UpdateTokens extends Component {
     }
 
     render() {
-        const { classes, token, targetLanguage } = this.props.data
+        const { classes, token, targetLanguage } =  this.props
         const { translation } = this.state
         var displayLanguage = ''
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }
-        console.log(this.state)
+        // console.log(this.props)
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid item xs={12}>
@@ -191,3 +213,14 @@ export default class UpdateTokens extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        token: state.sources.token,
+        targetLanguageId: state.sources.targetLanguageId,
+        sourceId: state.sources.sourceId,
+        targetLanguage: state.sources.targetLanguage
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(UpdateTokens))

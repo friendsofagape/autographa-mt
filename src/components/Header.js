@@ -9,7 +9,7 @@ const styles = theme => ({
         display: 'flex',
     },
     link: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(),
     },
     h1: {
       backgroundColor: 'black',
