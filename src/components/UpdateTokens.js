@@ -76,7 +76,7 @@ const styles = theme => ({
     }
 
     componentWillReceiveProps(nextProps) {
-        const { token, targetLanguageId, sourceId } = nextProps.data
+        const { token, targetLanguageId, sourceId } = nextProps
         if (token) {
             this.setState({ token, targetLanguageId, sourceId })
             this.getTranslatedWords(token, sourceId, targetLanguageId)
