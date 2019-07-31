@@ -28,7 +28,6 @@ class MenuBar extends Component {
             allLanguages:[],
             targetLanguage:'',
             version: '',
-            // versionDetails:[],
             book: '',
             bookList: '',
             sourceId:'',

@@ -8,20 +8,31 @@ import { Checkbox, Paper } from '@material-ui/core';
 import ComponentHeading from '../ComponentHeading';
 import apiUrl from '../GlobalUrl'
 import PopUpMessages from '../PopUpMessages'
+import { displaySnackBar } from '../../store/actions/sourceActions'
+import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux'
 
-const accessToken = localStorage.getItem('access_token')
+const accessToken = localStorage.getItem('accessToken')
 
-export default class ListUsers extends Component {
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexGrow: 1,
+    },
+});
+
+class ListUsers extends Component {
     state = {
         userId: '',
         admin: '',
         snackBarOpen: false,
         popupdata: {},
+        userData:[], 
+        userStatus: {}
     }
 
-
     async getUsers(){
-        const {updateState, userStatus} = this.props.data
+        const { userStatus} = this.state
         const data = await fetch(apiUrl + '/v1/autographamt/users', {
             method:'GET',
             headers: {
@@ -42,7 +53,11 @@ export default class ListUsers extends Component {
                 }
             }
         })
-        updateState({userData:userData, userStatus:userStatus})
+        this.setState({userData:userData, userStatus:userStatus})
+    }
+
+    componentDidMount(){
+        this.getUsers()
     }
 
     async userAdminAssignment(admin, userId){
@@ -61,25 +76,41 @@ export default class ListUsers extends Component {
             const response = await data.json()
             if(response.success){
                 this.getUsers()
-                this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                // this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
                 // this.getOrganisations()
-
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "success"
+                    
+                })
             }else{
-                this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                    
+                })
+                // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }
         }
         catch(ex){
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+                
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
     }
 
     handleChange = (userId) => {
-        const { userStatus, updateState } = this.props.data
+        const { userStatus } = this.state
         const admin = !userStatus[userId]["admin"]
         this.userAdminAssignment(admin, userId)
         userStatus[userId]["admin"] = admin
         this.setState({ userId, admin: !admin })
-        updateState({ userStatus: userStatus })
     }
 
     closeSnackBar = (item) => {
@@ -88,7 +119,7 @@ export default class ListUsers extends Component {
 
 
     getTableRows() {
-        const { userData, userStatus } = this.props.data
+        const { userData, userStatus } = this.state
         console.log(userData, userStatus)
         return userData.map(user => {
             console.log(user)
@@ -116,11 +147,12 @@ export default class ListUsers extends Component {
         })
     }
     render() {
-        const { classes } = this.props.data
+        const { classes } = this.props
+        console.log(this.props)
         return (
             <Paper>
                 <ComponentHeading data={{ classes: classes, text: "Users List", styleColor:"#2a2a2fbd" }} />
-                {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
+                <PopUpMessages />
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -128,7 +160,6 @@ export default class ListUsers extends Component {
                             <TableCell align="right">Email Id</TableCell>
                             <TableCell align="right">Administrator</TableCell>
                             <TableCell align="right">Verified User</TableCell>
-                            {/* <TableCell align="right">Upload</TableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -139,3 +170,17 @@ export default class ListUsers extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        accessToken: state.auth.accessToken,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ListUsers))

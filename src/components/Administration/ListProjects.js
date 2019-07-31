@@ -6,9 +6,13 @@ import { Typography, CardContent } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
+import { displaySnackBar } from '../../store/actions/sourceActions'
+import { connect } from 'react-redux'
+import PopUpMessages from '../PopUpMessages';
 
 
-const accessToken = localStorage.getItem('access_token')
+const accessToken = localStorage.getItem('accessToken')
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -25,16 +29,25 @@ class ListProjects extends Component {
     }
 
     async getProjectsList(){
-        const { updateState } = this.props
-        const data = await fetch(apiUrl + '/v1/autographamt/projects', {
-            method:'GET',
-            headers: {
-                "Authorization": 'bearer ' + accessToken
-            }
-        })
-        const projectLists = await data.json()
-        this.setState({projectLists})
-        updateState({projectLists: projectLists})
+        try{
+            const { updateState } = this.props
+            const data = await fetch(apiUrl + '/v1/autographamt/projects', {
+                method:'GET',
+                headers: {
+                    "Authorization": 'bearer ' + accessToken
+                }
+            })
+            const projectLists = await data.json()
+            this.setState({projectLists})
+            updateState({projectLists: projectLists})
+        }
+        catch(ex){
+            this.props.displaySnackBar({
+            snackBarMessage: "Server error",
+            snackBarOpen: true,
+            snackBarVariant: "error"
+            })
+        }
     }
 
     componentDidMount(){
@@ -82,19 +95,25 @@ class ListProjects extends Component {
     render() {
         const { classes } = this.props;
         return (
-
         <div className={classes.root}>
+            <PopUpMessages />
             <Grid 
                 container
                 spacing={1}
                 style={{border:'1px solid #eee', padding:'10px'}}
                 >
                     {this.displayProjectCards()}
-
             </Grid>
         </div>
         )
     }
 }
 
-export default withStyles(styles)(ListProjects);
+const mapDispatchToProps = (dispatch) => {
+    return{
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ListProjects));

@@ -18,10 +18,22 @@ import { Redirect } from 'react-router-dom';
 import Header from './Header';
 import jwt_decode from 'jwt-decode';
 import apiUrl from './GlobalUrl';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
+import { setAccessToken } from '../store/actions/authActions';
 
-export default class LoginPage extends Component {
+
+const styles = theme => ({
+    loginPage: {
+      marginTop: '5%'
+    },
+    forgot: {
+      cursor: 'pointer',
+    },
+});
+
+class LoginPage extends Component {
     state = {
-        redirect: false,
         message: '',
         email: '',
         password: '',
@@ -42,30 +54,30 @@ export default class LoginPage extends Component {
         for (var name in apiData) {
             formData.append(name, apiData[name])
         }
-
         const data = await fetch(apiUrl + 'v1/auth', {
             method: "POST",
             body: formData
         })
         const myJson = await data.json()
-        console.log(myJson.message)
-        if ('access_token' in myJson) {
-            await localStorage.setItem('access_token', myJson.access_token)
-            this.setState({ redirect: true })
+        // console.log(myJson.message)
+        if ('accessToken' in myJson) {
+            await localStorage.setItem('accessToken', myJson.accessToken)
+            this.props.setAccessToken({
+                accessToken: myJson.accessToken
+            })
+            // setTimeout(
+            //     () => {
+                    this.props.updateRedirect();
+            //     }, 2000
+            // )
         } else {
             alert(myJson.message)
         }
-
-
     }
-
-
 
     handleLoginSubmit = (e) => {
         e.preventDefault();
         this.authenticate()
-
-        // this.setState({redirect:true})
     }
 
     componentDidMount(){
@@ -81,7 +93,7 @@ export default class LoginPage extends Component {
             if(hours > 0){
                 console.log(hours)
                 console.log("logged in")
-                this.setState({redirect:true})
+                // this.props.redirect = true;
             }else{
                 console.log("logged out")
             }
@@ -151,17 +163,18 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        const { redirect } = this.state
+        console.log(this.props);
+        const { redirect } = this.props;
         if (redirect) {
-            return <Redirect to='/homepage' />
+            console.log("redirect")
+            return <Redirect to='/dashboard' />
         }
+        //cons
         const { classes } = this.props
         return (
             <Grid item xs={12}>
             <Header />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
-                {/* <Paper className={classes.loginPage}> */}
-                {/* <CssBaseline /> */}
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
@@ -177,7 +190,6 @@ export default class LoginPage extends Component {
                         name="email"
                         autoComplete="email"
                         onChange={(e) => this.setState({ email: e.target.value })}
-                    // autoFocus
                     />
                     <TextField
                         variant="outlined"
@@ -201,7 +213,6 @@ export default class LoginPage extends Component {
                         fullWidth
                         variant="contained"
                         color="primary"
-                    // className={classes.submit}
                     >
                         Sign In
                 </Button>
@@ -250,7 +261,6 @@ export default class LoginPage extends Component {
                 </Dialog>
                 <Dialog
                     open={this.state.verificationCodeDialogOpen}
-                    // onClose={this.handleClose}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">Enter Verification Code</DialogTitle>
@@ -290,12 +300,8 @@ export default class LoginPage extends Component {
                 </Dialog>
                 <Dialog
                     open={this.state.verifiedSuccess}
-                    // onClose={this.handleClose}
                     aria-labelledby="form-dialog-title"
-                    // keepMounted
                     onClose={this.handleClose}
-                    // aria-labelledby="alert-dialog-slide-title"
-                    // aria-describedby="alert-dialog-slide-description"
                 >
                     <DialogTitle id="form-dialog-title">Successful</DialogTitle>
                     <DialogContent>
@@ -310,12 +316,15 @@ export default class LoginPage extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                {/* </Paper> */}
             </Container>
             </Grid>
         )
     }
 }
 
-
-// export default LoginPage;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setAccessToken: (token) => dispatch(setAccessToken(token))
+    }
+}
+export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginPage));

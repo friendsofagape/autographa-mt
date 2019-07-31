@@ -23,6 +23,8 @@ import { Divider } from '@material-ui/core';
 import PopUpMessages from '../PopUpMessages';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { displaySnackBar } from '../../store/actions/sourceActions';
+import { connect } from 'react-redux'
 
 const styles = theme => ({
     root: {
@@ -36,13 +38,13 @@ const styles = theme => ({
     }
 });
 
+const accessToken = localStorage.getItem('accessToken')
+
 class AssignUser extends Component {
 
     state = {
         userListing: false,
-        snackBarOpen: false,
         listBooks: false,
-        popupdata: {},
         availableBooks:[],
         assignedUsers: [],
         availableBooksData: {},
@@ -54,7 +56,10 @@ class AssignUser extends Component {
         console.log('Im getting')
         const projectId = this.props.projectId
         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments/' + projectId, {
-            method:'GET'
+            method:'GET',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            }
         })
         const assignedUsers = await data.json()
         if(!assignedUsers.message){
@@ -76,10 +81,6 @@ class AssignUser extends Component {
         this.setState({userListing:true})
     }
 
-    closeSnackBar = (item) => {
-        this.setState(item)
-    }
-
     async assignUserToProject(apiData){
         // console.log(apiData)
         // console.log(apiUrl + '/v1/autographamt/projects/assignments')
@@ -89,25 +90,17 @@ class AssignUser extends Component {
                 body: JSON.stringify(apiData)
             })
             const myJson = await data.json()
-            this.setState({ 
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "success", 
-                    message: myJson.message, 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: "success"
             })
             this.getAssignedUsers()
         }catch(ex){
-            this.setState({ 
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "error", 
-                    message: "Server Error", 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
             })
         }
     }
@@ -151,26 +144,19 @@ class AssignUser extends Component {
         const response = await data.json()
         if(response.success){
             console.log('deleted')
-            await this.setState({ 
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "success", 
-                    message: response.message, 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
-            }, () => this.getAssignedUsers())
+            this.props.displaySnackBar({
+                snackBarMessage: response.message,
+                snackBarOpen: true,
+                snackBarVariant: "success"
+            })
+            this.getAssignedUsers()
             
             
         }else{
-            this.setState({ 
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "error", 
-                    message: response.message, 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
+            this.props.displaySnackBar({
+                snackBarMessage: response.message,
+                snackBarOpen: true,
+                snackBarVariant: "error"
             })
 
         }
@@ -196,24 +182,18 @@ class AssignUser extends Component {
             this.setState({ 
                 listBooks:true, 
                 availableBooksData: response,
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "success", 
-                    message: "Books Fetched", 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
+            })
+            this.props.displaySnackBar({
+                snackBarMessage: "Books Fetched",
+                snackBarOpen: true,
+                snackBarVariant: "success"
             })
         }
         catch(ex){
-            this.setState({ 
-                snackBarOpen: true, 
-                popupdata: { 
-                    variant: "error", 
-                    message: "Server Error", 
-                    snackBarOpen: true, 
-                    closeSnackBar: this.closeSnackBar 
-                } 
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
             })
 
         }
@@ -290,7 +270,7 @@ class AssignUser extends Component {
             <div className={classes.root}>
                 <Grid
                     container
-                    spacing={16}
+                    spacing={1}
                     style={{ border: '1px solid #eee', padding: '10px' }}
                 >
                     <Grid item xs={12} style={{ gridRowGap: '2px' }}>
@@ -335,7 +315,7 @@ class AssignUser extends Component {
                         </TableBody>
                     </Table>
                 </Paper>
-                {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
+                <PopUpMessages />
                 <Dialog
                     open={userListing}
                     // onClose={this.closeUserListing}
@@ -377,4 +357,10 @@ class AssignUser extends Component {
     }
 }
 
-export default withStyles(styles)(AssignUser);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(AssignUser))

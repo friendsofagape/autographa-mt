@@ -16,74 +16,72 @@ import apiUrl from '../GlobalUrl';
 import ComponentHeading from '../ComponentHeading';
 import PopUpMessages from '../PopUpMessages';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { displaySnackBar } from '../../store/actions/sourceActions'
 
 
 const styles = theme => ({
     root: {
-        display:'flex',
+        display: 'flex',
         flexGrow: 1,
-      },
-      selectMenu: {
+    },
+    selectMenu: {
         width: '120px',
-      }
+    }
 });
 
-const accessToken = localStorage.getItem('access_token')
+
+const accessToken = localStorage.getItem('accessToken')
 
 class CreateProjects extends Component {
     state = {
-        versionDetails: [],
-        languageDetails: [],
         language: '',
+        bibleLanguages: [],
+        biblesDetails:[],
+        allLanguages:[],
         version: '',
         targetLanguage: '',
-        targetLanguageId:'',
-        languageId: '',
-        languages: [],
-        sourceId:'',
-        organisationDetails:[],
-        organisation:'',
-        organisationId:'',
-        snackBarOpen: false,
-        popupdata: {},
+        targetLanguageId: '',
+        sourceId: '',
+        organisationDetails: [],
+        organisation: '',
+        organisationId: '',
     }
 
-    async getVersionData(languageId) {
-        const data = await fetch(apiUrl + 'v1/versiondetails' + '/1/' + languageId, {
+    async getBiblesData() {
+        const data = await fetch(apiUrl + 'v1/languages', {
             method: 'GET'
         })
-        const versionDetails = await data.json()
-        this.setState({ versionDetails })
+        const bibLang = await fetch(apiUrl + 'v1/bibles/languages', {
+            method: 'GET'
+        })
+        const lang = await fetch(apiUrl + 'v1/bibles', {
+            method: 'GET'
+        })
+        const allLanguages = await data.json()
+        const biblesDetails = await lang.json()
+        const bibleLanguages = await bibLang.json()
+        this.setState({ allLanguages, bibleLanguages, biblesDetails })
     }
 
-    async getLanguagesData() {
-        const lang = await fetch(apiUrl + 'v1/languages', {
-            method: 'GET'
-        })
-        const data = await fetch(apiUrl + 'v1/languages/1', {
-            method: 'GET'
-        })
-        const languageDetails = await data.json()
-        const languages = await lang.json()
-        this.setState({ languageDetails, languages })
-    }
 
-    async getOrganisations(){
+    async getOrganisations() {
+        console.log('here')
         const org = await fetch(apiUrl + '/v1/autographamt/organisations', {
-            method:'GET',
+            method: 'GET',
             headers: {
                 Authorization: 'bearer ' + accessToken
             }
         })
         const organisationDetails = await org.json()
-        if(!organisationDetails.success === false){
-            this.setState({organisationDetails})
-        }
+        console.log(organisationDetails)
+            this.setState({ organisationDetails })
     }
 
     componentDidMount() {
-        this.getLanguagesData()
+        console.log('here')
         this.getOrganisations()
+        this.getBiblesData()
     }
 
     displayOrganisation = () => {
@@ -93,99 +91,99 @@ class CreateProjects extends Component {
             return (
                 <MenuItem key={org.organisationId} value={org.organisationName}>{org.organisationName}</MenuItem>
             )
-        }) 
+        })
     }
 
     onOrganisationSelection = () => {
         const { organisation, organisationDetails } = this.state
         const organisationData = organisationDetails.find(org => org.organisationName === organisation)
         const organisationId = organisationData.organisationId
-        this.setState({organisationId})
+        this.setState({ organisationId })
     }
 
     displayLanguage = () => {
-        const { languageDetails } = this.state
-        return languageDetails.map(lang => {
+        return this.state.bibleLanguages.map(lang => {
             return (
                 <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
             )
         })
     }
 
-    onLanguageSelection = () => {
-        const { languages, language } = this.state
-        const languageData = languages.find(lang => lang.languageName === language)
-        const languageId = languageData.languageId
-        this.getVersionData(languageId)
-        this.setState({ languageId })
-    }
-
     displayVersions() {
-        const { language, versionDetails } = this.state
+        const { language, biblesDetails } = this.state
         if (!language) {
             return <MenuItem key="" value="" disabled>Loading Versions</MenuItem>
         }
-        const versions = versionDetails.filter((ver) => {
-            return ver.languageName === language
+        const versions = biblesDetails.filter((ver) => {
+            return ver.language.name === language.toLowerCase()
         })
         return versions.map(item => {
-            return <MenuItem key={item.sourceId} value={item.versionContentCode}>{item.versionContentCode.toUpperCase()}</MenuItem>
+            return <MenuItem key={item.sourceId} value={item.version.longName}>{item.version.longName.toUpperCase()}</MenuItem>
         })
     }
 
     onVersionSelection = () => {
-        const { language, version, versionDetails } = this.state
-        const source =  versionDetails.find((ver) => {
-            return ver.languageName === language && ver.versionContentCode === version && ver.contentType === 'bible'
+        const { language, version, biblesDetails } = this.state
+        console.log(language, version)
+        console.log(biblesDetails)
+        const source = biblesDetails.find((ver) => {
+            return ver.language.name === language.toLowerCase() && ver.version.longName === version
         })
-        this.setState({sourceId:source.sourceId})
-    }
-    
-    displayTargetLanguage = () => {
-        return this.state.languages.map(lang => {
-            return (
-                <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
-            )
-        })
+        this.setState({ sourceId: source.sourceId })
     }
 
-    onTargetLanguageSelection(){
-        const { languages, targetLanguage } = this.state
-        const languageData = languages.find(lang => lang.languageName === targetLanguage)
-        const targetLanguageId = languageData.languageId
+    getTargetLanguage() {
+        const { version, allLanguages } = this.state
+        if (!version) {
+            return <MenuItem disabled>Load Book to get Language data</MenuItem>
+        }
+        if (!allLanguages) {
+            return <MenuItem disabled>Loading</MenuItem>
+        } else {
+            return allLanguages.map((lang) => {
+                return (
+                    <MenuItem key={lang.languageId} value={lang.languageName}>{lang.languageName}</MenuItem>
+                )
+            })
+        }
+    }
+
+    onTargetLanguageSelection() {
+        const { allLanguages, targetLanguage } = this.state
+        const languagesData = allLanguages.find(lang => lang.languageName === targetLanguage)
+        const targetLanguageId = languagesData.languageId
         this.setState({ targetLanguageId })
     }
 
     handleClose = () => {
         const { updateState } = this.props.data
         console.log(updateState)
-        updateState({ createProjectsPane: false})
-        this.setState({language:'', version:'', targetLanguage:'', sourceId:'' })
+        updateState({ createProjectsPane: false })
+        this.setState({ language: '', version: '', targetLanguage: '', sourceId: '' })
     }
 
-    
-    async getProjectsList(){
+
+    async getProjectsList() {
         const { updateState } = this.props.data
         const data = await fetch(apiUrl + '/v1/autographamt/projects', {
-            method:'GET',
+            method: 'GET',
             headers: {
                 "Authorization": 'bearer ' + accessToken
             }
         })
         const projectLists = await data.json()
-        // this.setState({projectLists})
-        updateState({projectLists: projectLists})
+        updateState({ projectLists: projectLists })
     }
 
-    async createProject(){
+    async createProject() {
         const { sourceId, targetLanguageId } = this.state
         const apiData = {
             sourceId: sourceId,
             targetLanguageId: targetLanguageId
         }
-        try{
+        try {
             const data = await fetch(apiUrl + '/v1/autographamt/organisations/projects', {
-                method:'POST',
+                method: 'POST',
                 body: JSON.stringify(apiData),
                 headers: {
                     Authorization: 'bearer ' + accessToken
@@ -193,43 +191,50 @@ class CreateProjects extends Component {
             })
             const myJson = await data.json()
             console.log(myJson)
-            if(myJson.success){
-                this.setState({ organisation:'', snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
-                this.getProjectsList()
-                // this.props.data.updateState({listProjectsPane:true,})
-            }else{
-                this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            if (myJson.success) {
+                this.props.displaySnackBar({
+                    snackBarMessage: myJson.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "success"
+                })
+            } else {
+                this.props.displaySnackBar({
+                    snackBarMessage: myJson.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
             }
         }
-        catch(ex){
+        catch (ex) {
             this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+                
+            })
         }
-        // this.handleClose()
     }
 
     handleSend = () => {
         this.createProject()
     }
 
-
     closeSnackBar = (item) => {
         this.setState(item)
     }
 
-
     render() {
         const { language, version, organisation, popupdata } = this.state
         const { createProjectsPane } = this.props.data
-        const { classes } =  this.props
+        const { classes } = this.props
         return (
-
             <Dialog
                 open={createProjectsPane}
-                // onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-            <PopUpMessages data={popupdata} />
-                <ComponentHeading data={{classes:classes, text:"Create Project", styleColor:'#2a2a2fbd'}} />
+                <PopUpMessages />
+                <ComponentHeading data={{ classes: classes, text: "Create Project", styleColor: '#2a2a2fbd' }} />
                 <DialogTitle id="form-dialog-title"> </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -246,7 +251,7 @@ class CreateProjects extends Component {
                                     value={organisation}
                                     onChange={(e) => this.setState({
                                         organisation: e.target.value,
-                                        language:'',
+                                        language: '',
                                         version: '',
                                         targetLanguage: ''
                                     }, () => this.onOrganisationSelection())
@@ -268,7 +273,7 @@ class CreateProjects extends Component {
                                         language: e.target.value,
                                         version: '',
                                         targetLanguage: ''
-                                    }, () => this.onLanguageSelection())
+                                    })
                                     }>
                                     {this.displayLanguage()}
                                 </Select>
@@ -305,7 +310,7 @@ class CreateProjects extends Component {
                                         targetLanguage: e.target.value
                                     }, () => this.onTargetLanguageSelection())
                                     }>
-                                    {this.displayTargetLanguage()}
+                                    {this.getTargetLanguage()}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -324,4 +329,20 @@ class CreateProjects extends Component {
     }
 }
 
-export default withStyles(styles)(CreateProjects)
+const mapStateToProps = (state) => {
+    return {
+        accessToken: state.auth.accessToken,
+        sourceId: state.sources.sourceId,
+        book: state.sources.book,
+        targetLanguage: state.sources.targetLanguage,
+        targetLanguageId: state.sources.targetLanguageId
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CreateProjects))

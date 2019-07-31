@@ -12,8 +12,17 @@ import {
 import apiUrl from '../GlobalUrl';
 import ComponentHeading from '../ComponentHeading';
 import PopUpMessages from '../PopUpMessages';
+import { withStyles } from '@material-ui/styles';
+import { connect } from 'react-redux'
+import { displaySnackBar } from '../../store/actions/sourceActions';
 
-export default class CreateOrganisations extends Component {
+const styles = theme => ({
+    root:{
+        display:'flex',
+    }
+});
+
+class CreateOrganisations extends Component {
     state = {
         organisationName: '',
         organisationAddress: '',
@@ -38,12 +47,22 @@ export default class CreateOrganisations extends Component {
             method:'POST',
             body: JSON.stringify(apiData)
         })
-        const myJson = data.json()
+        const myJson = await data.json()
         console.log(myJson)
         if(myJson.success){
-            this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: "success"
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }else{
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
     }
 
@@ -87,7 +106,7 @@ export default class CreateOrganisations extends Component {
 
 
     render() {
-        const { popupdata } = this.state
+        // const { popupdata } = this.state
         const { createOrganisationsPane, classes } = this.props
         return (
 
@@ -96,7 +115,7 @@ export default class CreateOrganisations extends Component {
                 // onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-            <PopUpMessages data={popupdata} />
+            <PopUpMessages />
                 <ComponentHeading data={{classes:classes, text:"Create Organisation", styleColor:'#2a2a2fbd'}} />
                 <form className={classes.form} onSubmit={this.handleSubmit}>
                 <DialogTitle id="form-dialog-title"> </DialogTitle>
@@ -180,3 +199,11 @@ export default class CreateOrganisations extends Component {
         )
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(CreateOrganisations))

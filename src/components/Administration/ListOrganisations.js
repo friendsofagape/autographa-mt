@@ -6,20 +6,28 @@ import TableRow from '@material-ui/core/TableRow';
 import TableHead from '@material-ui/core/TableHead';
 import { Checkbox, Paper } from '@material-ui/core';
 import ComponentHeading from '../ComponentHeading';
+import { withStyles } from '@material-ui/styles';
 import apiUrl from '../GlobalUrl';
 import PopUpMessages from '../PopUpMessages';
+import { connect } from 'react-redux';
+import { displaySnackBar } from '../../store/actions/sourceActions';
 
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexGrow: 1,
+    },
+});
 
-const accessToken = localStorage.getItem('access_token')
+const accessToken = localStorage.getItem('accessToken')
 
-export default class ListOrganisations extends Component {
+class ListOrganisations extends Component {
     state = {
         organisationId: '',
         admin: '',
         snackBarOpen: false,
         popupdata: {},
     }
-
 
     async getOrganisations(){
         const {updateState, organisationsStatus} = this.props.data
@@ -55,6 +63,8 @@ export default class ListOrganisations extends Component {
                 organisationId: organisationId,
                 verified: verified
             }
+            console.log(organisationId)
+            console.log(apiUrl + 'v1/autographamt/approvals/organisations')
             const data = await fetch(apiUrl + 'v1/autographamt/approvals/organisations', {
                 method: 'POST',
                 body: JSON.stringify(apiData),
@@ -65,22 +75,34 @@ export default class ListOrganisations extends Component {
             const response = await data.json()
             if(response.success){
                 this.getOrganisations()
-                this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
-                // this.getOrganisations()
-
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "success"
+                })
+                // this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }else{
-                this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
+                // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: response.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
             }
         }
         catch(ex){
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: "Server error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: "Server Error", snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
     }
 
     closeSnackBar = (item) => {
         this.setState(item)
     }
-
 
     handleChange = (organisationId) => {
         const { organisationsStatus, updateState } = this.props.data
@@ -93,9 +115,7 @@ export default class ListOrganisations extends Component {
 
     getTableRows() {
         const { organisationsData, organisationsStatus } = this.props.data
-        // console.log(organisationsData, organisationsStatus)
         return organisationsData.map(org => {
-            // console.log(org)
             return (
                 <TableRow key={org.organisationId}>
                     <TableCell align="right">{org.organisationName}</TableCell>
@@ -107,7 +127,6 @@ export default class ListOrganisations extends Component {
                         <Checkbox
                             checked={organisationsStatus[org.organisationId]["verified"]}
                             onChange={(e) => this.handleChange(org.organisationId)}
-                        // value={}
                         />
                     </TableCell>
                 </TableRow>
@@ -120,7 +139,7 @@ export default class ListOrganisations extends Component {
         return (
             <Paper>
             <ComponentHeading data={{classes:classes, text:"Organisations List", styleColor:"#2a2a2fbd"}} />
-            {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
+            <PopUpMessages />
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -130,7 +149,6 @@ export default class ListOrganisations extends Component {
                             <TableCell align="right">Phone</TableCell>
                             <TableCell align="right">User Id</TableCell>
                             <TableCell align="right">Verified</TableCell>
-                            {/* <TableCell align="right">Upload</TableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -141,3 +159,11 @@ export default class ListOrganisations extends Component {
         )
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ListOrganisations))

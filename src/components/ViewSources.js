@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import jwt_decode from 'jwt-decode';
 import {
     Grid,
     Paper,
@@ -9,6 +10,7 @@ import {
     TableRow,
     TableCell,
     Divider,
+    Link,
 
 } from '@material-ui/core';
 import Header from './Header';
@@ -16,6 +18,9 @@ import UploadTexts from './UploadTexts';
 import apiUrl from './GlobalUrl';
 import { withStyles } from '@material-ui/core/styles';
 import ComponentHeading from './ComponentHeading';
+import { uploadDialog } from '../store/actions/dialogActions';
+import { connect } from 'react-redux'
+import CreateSources from './CreateSources';
 
 
 
@@ -24,27 +29,29 @@ const styles = theme => ({
         flexGrow: 1,
     },
     versionDisplay: {
-      width: '98%',
-      marginLeft: '1%',
-      marginTop:'1%'
+        width: '98%',
+        marginLeft: '1%',
+        marginTop: '1%'
     },
     typeG: {
-      backgroundColor: '#3e51b5',
-      // backgroundColor:'#262f3d',
-      color: 'white',
-      padding: '10px 0px'
+        backgroundColor: '#3e51b5',
+        // backgroundColor:'#262f3d',
+        color: 'white',
+        padding: '10px 0px'
     },
 });
 
 class ViewSources extends Component {
     state = {
-        biblesDetails:[],
+        biblesDetails: [],
         dialogOpen: false,
         sourceId: '',
+        decoded: {},
+        accessToken: ''
     }
 
     closeDialog = () => {
-        this.setState({dialogOpen: false})
+        this.setState({ dialogOpen: false })
     }
 
     async getBiblesData() {
@@ -55,23 +62,41 @@ class ViewSources extends Component {
         this.setState({ biblesDetails })
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getBiblesData()
+        var accessToken = localStorage.getItem('accessToken')
+        if (accessToken) {
+            this.setState({ decoded: jwt_decode(accessToken), accessToken })
+            // this.setState({});
+
+        }
     }
+
 
 
     handleSelect = (sourceId) => (e) => {
         console.log(sourceId)
-        this.setState({dialogOpen: true, sourceId})
+        this.setState({ dialogOpen: true, sourceId })
     }
     render() {
-        const {classes} = this.props
+        const { classes } = this.props
         console.log(this.state)
         return (
             <Grid item xs={12} md={12} >
                 <Header />
+                {
+                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                        <Grid container justify="flex-end">
+                            <Link variant="body2" onClick={() => this.props.uploadDialog({ uploadPane: true })}>
+                                {"Can't find source from the listed? Create new."}
+                            </Link>
+                        </Grid>
+                    ) : null
+                }
+                <CreateSources />
+                {/* <Link onClick={this.createSourceDialog}>Can't find source from the listed? Create new.</Link> */}
                 <Paper >
-                    <ComponentHeading  data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
+                    <ComponentHeading data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
                     <Divider />
                     <Table className={classes.table}>
                         <TableHead>
@@ -83,8 +108,16 @@ class ViewSources extends Component {
                                 <TableCell align="right">Script</TableCell>
                                 <TableCell align="right">Language Name</TableCell>
                                 <TableCell align="right">Language Code</TableCell>
-                                <TableCell align="right">Books</TableCell>
-                                <TableCell align="right">Action</TableCell>
+                                {
+                                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                        <TableCell align="right">Books</TableCell>
+                                    ) : null
+                                }
+                                {
+                                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                        <TableCell align="right">Action</TableCell>
+                                    ) : null
+                                }
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -97,12 +130,21 @@ class ViewSources extends Component {
                                     <TableCell align="right">{row.script}</TableCell>
                                     <TableCell align="right">{row.language.name}</TableCell>
                                     <TableCell align="right">{row.language.code}</TableCell>
-                                    <TableCell align="right">
-                                        <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Books</Button>
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Upload</Button>
-                                    </TableCell>
+                                    {
+                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                            
+                                                <TableCell align="right">
+                                                    <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Books</Button>
+                                                </TableCell>
+                                        ) : null
+                                    }
+                                    {
+                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                                <TableCell align="right">
+                                                    <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Upload</Button>
+                                                </TableCell>
+                                        ) : null
+                                    }
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -114,4 +156,10 @@ class ViewSources extends Component {
     }
 }
 
-export default  withStyles(styles)(ViewSources);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        uploadDialog: (status) => dispatch(uploadDialog(status))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ViewSources));

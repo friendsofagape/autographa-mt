@@ -15,11 +15,12 @@ import jwt_decode from 'jwt-decode';
 let decoded;
 var role;
 // let tokenAliveFlag = false
-var accessToken = localStorage.getItem('access_token')
+var accessToken = localStorage.getItem('accessToken')
 if (accessToken) {
     decoded = jwt_decode(accessToken)
     role = decoded.role
 }
+console.log(decoded)
 var drawerItems;
 if(role === 'sa'){
     drawerItems = ['List Organisations', 'List Users', 'List Projects', 'Create Projects', 'Create Organisation']

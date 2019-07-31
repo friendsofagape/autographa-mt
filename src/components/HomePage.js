@@ -12,16 +12,6 @@ import Header from './Header';
 
 export default class HomePage extends Component {
     state = {
-        language: '',
-        version: '',
-        book: '',
-        // tokenList: '',
-        token: '',
-        // concordance: '',
-        targetLanguage: 'abau',
-        sourceId: '',
-        targetLanguageId: 20,
-        translationWords: '',
         tNswitchChecked: false,
         tWswitchChecked:false,
         tokenPane: 3,
@@ -32,17 +22,7 @@ export default class HomePage extends Component {
         displayTranslationWords: 'none',
         translationNotesPane: 3,
         displayTranslationNotes: 'none',
-        // translationNotes: '',
         displayTranslationWordSwitch: 'none',
-        // tokenTranslation:'',
-        // senses:[],
-        verseNum: '',
-        reference: ''
-    }
-
-    updateState = (value) => {
-        console.log('updating home states')
-        this.setState(value)
     }
     
     handleTNSwitchChange = e => {
@@ -100,18 +80,12 @@ export default class HomePage extends Component {
         // console.log("Notes", this.state.translationNotes)
         console.log("Home STate", this.state)
         const {
-            token,
-            sourceId,
             tokenPane,
-            reference,
-            verseNum,
             translationPane,
             concordancePane,
             displayConcordancePane,
             translationWordsPane,
-            translationWords,
             translationNotesPane,
-            translationNotes,
             displayTranslationWordSwitch
         } = this.state
         return (

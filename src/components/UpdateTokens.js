@@ -141,7 +141,6 @@ const styles = theme => ({
         if (targetLanguage) {
             displayLanguage = targetLanguage
         }
-        // console.log(this.props)
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid item xs={12}>

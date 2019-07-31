@@ -4,25 +4,26 @@ import {
     TextField,
     Paper,
     Button,
-    FormControlLabel,
-    Checkbox,
-    Link,
-    Typography,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Slide
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import { Redirect } from 'react-router-dom';
 import Header from '../Header';
 import ComponentHeading from '../ComponentHeading';
 import apiUrl from '../GlobalUrl';
 import PopUpMessages from '../PopUpMessages';
+import { withStyles } from '@material-ui/styles';
+import { displaySnackBar } from '../../store/actions/sourceActions';
+import { connect } from 'react-redux'
 
-export default class OrganisationRequest extends Component {
+const styles = theme => ({
+    loginPage: {
+      marginTop: '5%'
+    },
+    forgot: {
+      cursor: 'pointer',
+    },
+});
+
+class OrganisationRequest extends Component {
     state = {
         organisationName: '',
         organisationAddress: '',
@@ -50,14 +51,20 @@ export default class OrganisationRequest extends Component {
         const myJson = data.json()
         console.log(myJson)
         if(myJson.success){
-            this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: "success"
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "success", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }else{
-            this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
+            this.props.displaySnackBar({
+                snackBarMessage: "Server error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+            // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
-    }
-
-    closeSnackBar = (item) => {
-        this.setState(item)
     }
 
     handleSubmit = (e) => {
@@ -81,7 +88,7 @@ export default class OrganisationRequest extends Component {
                 <Container component="main" maxWidth="xs" className={classes.loginPage}>
                 <ComponentHeading data={{ classes: classes, text: "Request to Create Organisation" }} />
                 <Paper className={classes.paper}>
-                {(this.state.snackBarOpen) ? (<PopUpMessages data={this.state.popupdata} />) : null}
+                <PopUpMessages />
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <Grid container spacing={8}>
                             <Grid item xs={12} sm={6}>
@@ -164,3 +171,11 @@ export default class OrganisationRequest extends Component {
         )
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(OrganisationRequest))

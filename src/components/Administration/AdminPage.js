@@ -1,4 +1,5 @@
 import React from 'react';
+import jwt_decode from 'jwt-decode';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,6 +17,23 @@ import ListUserProjects from '../Users/ListUserProjects'
 import HomePage from '../Users/Translations/HomePage'
 // import ProjectStatistics from '../Reports/ProjectStatistics'
 
+
+let decoded;
+let tokenAliveFlag = false
+var accessToken = localStorage.getItem('accessToken')
+if (accessToken) {
+    decoded = jwt_decode(accessToken)
+    let currentDate = new Date().getTime()
+    let expiry = decoded.exp * 1000
+    var firstName = decoded.firstName
+    var hours = (expiry - currentDate) / 36e5
+    if(hours > 0){
+        tokenAliveFlag = true
+    }else{
+        console.log("logged out")
+    }
+}
+console.log(decoded)
 
 const drawerWidth = 240;
 
@@ -64,7 +82,7 @@ class AdminPage extends Component {
         createProjectsPane: false,
         listProjectsPane: false,
         assignmentsPane: false,
-        listUserProjectsPane: true,
+        // listUserProjectsPane: true,
         displayDashboard: true,
         translationPane: false,
         // projectStatisticsPane: true,
@@ -77,12 +95,12 @@ class AdminPage extends Component {
     }
     render() {
         const { classes } = this.props;
-        // console.log(this.state)
+        console.log(this.state)
         return (
             <div className={classes.root}>
                 <CssBaseline />
                 <AppBar position="fixed" className={classes.appBar}>
-                    <Header classes={this.props.classes} />
+                    <Header />
                 </AppBar>
                 {
                     (this.state.displayDashboard) ? (
@@ -112,7 +130,8 @@ class AdminPage extends Component {
                     <CreateProjects data={{
                         classes: classes,
                         createProjectsPane: this.state.createProjectsPane,
-                        updateState: this.updateState
+                        updateState: this.updateState,
+                        role: decoded.role
                     }} />
                     <CreateOrganisations
                         classes={classes}

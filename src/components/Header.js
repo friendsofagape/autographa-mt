@@ -13,7 +13,6 @@ const styles = theme => ({
     },
     h1: {
       backgroundColor: 'black',
-      // backgroundColor:'#262f3d'
     },
     grow: {
       flexGrow: 1,
@@ -24,7 +23,7 @@ function Header({ classes }) {
     return (
         <AppBar position="static" className={classes.h1}>
             <Toolbar>
-                <Link color="inherit" variant="body2" href="/homepage">
+                <Link color="inherit" variant="body2" href="/">
                     <Typography variant="h5" color="inherit" className={classes.grow}>
                         AutographaMT
                     </Typography>
