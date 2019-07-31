@@ -39,6 +39,10 @@ const styles = theme => ({
         color: 'white',
         padding: '10px 0px'
     },
+    cursorPointer: {
+        margin: 10,
+        cursor: 'pointer',
+    },
 });
 
 class ViewSources extends Component {
@@ -87,7 +91,7 @@ class ViewSources extends Component {
                 {
                     (this.state.decoded && this.state.decoded.role !== 'm') ? (
                         <Grid container justify="flex-end">
-                            <Link variant="body2" onClick={() => this.props.uploadDialog({ uploadPane: true })}>
+                            <Link className={classes.cursorPointer} variant="body2" onClick={() => this.props.uploadDialog({ uploadPane: true })}>
                                 {"Can't find source from the listed? Create new."}
                             </Link>
                         </Grid>

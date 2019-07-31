@@ -74,8 +74,20 @@ class CreateProjects extends Component {
             }
         })
         const organisationDetails = await org.json()
-        console.log(organisationDetails)
+        if("success" in organisationDetails){
+            if(organisationDetails.success === false){
+                this.props.displaySnackBar({
+                    snackBarMessage: organisationDetails.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                    
+                })
+            }
+        }else{
             this.setState({ organisationDetails })
+        }
+        // console.log(organisationDetails)
+            
     }
 
     componentDidMount() {
