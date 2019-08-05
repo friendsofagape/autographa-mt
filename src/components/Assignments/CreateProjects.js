@@ -18,15 +18,16 @@ import PopUpMessages from '../PopUpMessages';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { displaySnackBar } from '../../store/actions/sourceActions'
-
-
+import VirtualizedSelect from 'react-virtualized-select';
+import "react-select/dist/react-select.css";
+import "react-virtualized-select/styles.css";
 const styles = theme => ({
     root: {
         display: 'flex',
         flexGrow: 1,
     },
     selectMenu: {
-        width: '120px',
+        width: '100px',
     }
 });
 
@@ -177,6 +178,7 @@ class CreateProjects extends Component {
 
     async createProject() {
         const { sourceId, targetLanguageId } = this.state
+        
         const apiData = {
             sourceId: sourceId,
             targetLanguageId: targetLanguageId
@@ -225,9 +227,24 @@ class CreateProjects extends Component {
     }
 
     render() {
+        var languageData = [];
+        if (this.state.allLanguages != null) {
+			{
+				Object.values(this.state.allLanguages).map(lang => {
+					languageData.push({
+						label: lang.languageName,
+						value: lang.languageId,
+						code: lang.languageCode,
+					});
+				});
+			}
+		}
+        // console.log("TARGET LANG", languageData)
+       
         const { language, version, organisation, popupdata } = this.state
         const { createProjectsPane } = this.props.data
         const { classes } = this.props
+        // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",this.state)
         return (
             <Dialog
                 open={createProjectsPane}
@@ -299,9 +316,17 @@ class CreateProjects extends Component {
                         </Grid>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={2}>
-                            <FormControl className={classes.formControl}>
+                            {/* <FormControl className={classes.formControl}> */}
                                 <InputLabel htmlFor="select-target">Target</InputLabel>
-                                <Select className={classes.selectMenu}
+                                <VirtualizedSelect className={classes.selectMenu}   
+                                options={languageData}
+                                onChange={(e) => this.setState({ targetLanguage: e.label,
+                                    targetLanguageId:e.value})}
+                                value={this.state.targetLanguageId} 
+                                />
+                                {console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",this.state.targetLanguage, this.state.targetLanguageId)}
+                                        
+                                {/* <Select className={classes.selectMenu}
                                     inputProps={{
                                         id: 'select-target'
                                     }}
@@ -310,9 +335,10 @@ class CreateProjects extends Component {
                                         targetLanguage: e.target.value
                                     }, () => this.onTargetLanguageSelection())
                                     }>
+                                        {console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",this.state.targetLanguageId)}
                                     {this.getTargetLanguage()}
-                                </Select>
-                            </FormControl>
+                                </Select> */}
+                            {/* </FormControl> */}
                         </Grid>
                     </Grid>
                 </DialogContent>
