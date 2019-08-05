@@ -6,6 +6,8 @@ import { Typography, CardContent } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
+import { selectProject } from '../../store/actions/sourceActions';
+import { connect } from 'react-redux';
 
 
 const accessToken = localStorage.getItem('accessToken')
@@ -58,12 +60,12 @@ class ListUserProjects extends Component {
         const { updateState } = this.props
         // console.log(project)
         updateState({
-            selectedProject: project,
+            // selectedProject: project,
             listUserProjectsPane: false,
             displayDashboard: false,
             translationPane: true,
         })
-
+        this.props.selectProject({project: project})
     }
 
     displayProjectCards(){
@@ -109,4 +111,11 @@ class ListUserProjects extends Component {
     }
 }
 
-export default withStyles(styles)(ListUserProjects);
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectProject : (project) => dispatch(selectProject(project))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ListUserProjects))
