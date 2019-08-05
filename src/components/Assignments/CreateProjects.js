@@ -239,12 +239,10 @@ class CreateProjects extends Component {
 				});
 			}
 		}
-        // console.log("TARGET LANG", languageData)
        
         const { language, version, organisation, popupdata } = this.state
         const { createProjectsPane } = this.props.data
         const { classes } = this.props
-        // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",this.state)
         return (
             <Dialog
                 open={createProjectsPane}
@@ -316,7 +314,6 @@ class CreateProjects extends Component {
                         </Grid>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={2}>
-                            {/* <FormControl className={classes.formControl}> */}
                                 <InputLabel htmlFor="select-target">Target</InputLabel>
                                 <VirtualizedSelect className={classes.selectMenu}   
                                 options={languageData}
@@ -324,21 +321,6 @@ class CreateProjects extends Component {
                                     targetLanguageId:e.value})}
                                 value={this.state.targetLanguageId} 
                                 />
-                                {console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",this.state.targetLanguage, this.state.targetLanguageId)}
-                                        
-                                {/* <Select className={classes.selectMenu}
-                                    inputProps={{
-                                        id: 'select-target'
-                                    }}
-                                    value={this.state.targetLanguage}
-                                    onChange={(e) => this.setState({
-                                        targetLanguage: e.target.value
-                                    }, () => this.onTargetLanguageSelection())
-                                    }>
-                                        {console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",this.state.targetLanguageId)}
-                                    {this.getTargetLanguage()}
-                                </Select> */}
-                            {/* </FormControl> */}
                         </Grid>
                     </Grid>
                 </DialogContent>
