@@ -54,7 +54,7 @@ const styles = theme => ({
         }
         console.log(apiData)
         try {
-            const update = await fetch(apiUrl + 'v1/autographamt/projects/translationss', {
+            const update = await fetch(apiUrl + 'v1/autographamt/projects/translations', {
                 method: 'POST',
                 body: JSON.stringify(apiData),
                 headers: {
