@@ -119,7 +119,6 @@ class UploadSource extends Component {
     }
 
     displayTargetlanguage = e => {
-		// console.log('printing eeee', e);
 		if (e != null) {
 			this.setState({
 				languageName: e.label,
@@ -145,7 +144,6 @@ class UploadSource extends Component {
         console.log(value[0]);
         this.setState({ contentid: value[0].contentId, contentType: e.target.value });
     }
-
 
 
 

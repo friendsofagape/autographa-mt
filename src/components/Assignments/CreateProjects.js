@@ -75,20 +75,8 @@ class CreateProjects extends Component {
             }
         })
         const organisationDetails = await org.json()
-        if("success" in organisationDetails){
-            if(organisationDetails.success === false){
-                this.props.displaySnackBar({
-                    snackBarMessage: organisationDetails.message,
-                    snackBarOpen: true,
-                    snackBarVariant: "error"
-                    
-                })
-            }
-        }else{
+        console.log(organisationDetails)
             this.setState({ organisationDetails })
-        }
-        // console.log(organisationDetails)
-            
     }
 
     componentDidMount() {
@@ -106,6 +94,15 @@ class CreateProjects extends Component {
             )
         })
     }
+
+    displayTargetlanguage = e => {
+		if (e != null) {
+			this.setState({ targetLanguage: e.label,
+                targetLanguageId:e.value})
+        }else{
+            this.setState({targetLanguageId:''})
+        }
+	};
 
     onOrganisationSelection = () => {
         const { organisation, organisationDetails } = this.state
@@ -329,8 +326,7 @@ class CreateProjects extends Component {
                                 <InputLabel htmlFor="select-target">Target</InputLabel>
                                 <VirtualizedSelect className={classes.selectMenu}   
                                 options={languageData}
-                                onChange={(e) => this.setState({ targetLanguage: e.label,
-                                    targetLanguageId:e.value})}
+                                onChange={this.displayTargetlanguage}
                                 value={this.state.targetLanguageId} 
                                 />
                         </Grid>
