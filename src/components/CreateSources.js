@@ -118,6 +118,19 @@ class UploadSource extends Component {
         })
     }
 
+    displayTargetlanguage = e => {
+		// console.log('printing eeee', e);
+		if (e != null) {
+			this.setState({
+				languageName: e.label,
+				languageid: e.value,
+				languageCode: e.code,
+			});
+        }else{
+            this.setState({languageid:''})
+        }
+	};
+
     setLanguage = e => {
         const value = this.state.languageDetails.filter((item) => {
             return item.languageName === e.target.value
@@ -284,10 +297,7 @@ class UploadSource extends Component {
                                         <InputLabel htmlFor="select-language">Language</InputLabel>
                                         <VirtualizedSelect className={classes.selectMenu}   
                                         options={languageData}
-                                        onChange={(e) => this.setState({ 
-                                            languageName: e.label,
-                                            languageid:e.value,
-                                            languageCode:e.code})}
+                                        onChange={this.displayTargetlanguage}
                                         value={this.state.languageid} 
                                         />
                                 </Grid>
