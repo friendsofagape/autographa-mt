@@ -70,26 +70,29 @@ class ListProjects extends Component {
     }
 
     displayProjectCards(){
-        const { projectLists, classes } = this.props
-        return projectLists.map(project => {
-            return (
-                <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'3px'}}>
-                    <Card onClick={() => this.handleProjects(project.projectId)} className={classes.cursorPointer}>
-                        <CardHeader
-                            title={`Organisation: ${project.organisationName}`}
-                            subheader={`Organisation: ${project.organisationName}`} />
-                        <CardContent>
-                            <Typography varian="h5" gutterBottom>
-                                {project.projectName.split(" ")[0]}
-                            </Typography>
-                            <Typography varian="h5" gutterBottom>
-                                {project.projectName.split(" ")[1]}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )
-        })
+        const { classes } = this.props
+        const { projectLists } = this.state
+        if(projectLists){
+            return projectLists.map(project => {
+                return (
+                    <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'3px'}}>
+                        <Card onClick={() => this.handleProjects(project.projectId)} className={classes.cursorPointer}>
+                            <CardHeader
+                                title={`Organisation: ${project.organisationName}`}
+                                subheader={`Organisation: ${project.organisationName}`} />
+                            <CardContent>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split(" ")[0]}
+                                </Typography>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split(" ")[1]}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                )
+            })
+        }
     }
 
     render() {

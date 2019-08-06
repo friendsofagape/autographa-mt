@@ -1,5 +1,6 @@
 const initState = {
-    uploadPane: false
+    uploadPane: false,
+    booksPane: false
 }
 
 const dialogReducer = (state=initState, action) => {
@@ -11,7 +12,13 @@ const dialogReducer = (state=initState, action) => {
             }
         default:
             return state
+        case 'TOGGLE_BOOKS_CHECKBOX':
+            return {
+                ...state,
+                booksPane: action.status.booksPane
+            }
     }
 }
+
 
 export default dialogReducer;

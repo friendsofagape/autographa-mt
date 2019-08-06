@@ -4,38 +4,43 @@ import ComponentHeading from '../../ComponentHeading';
 import { ListItem } from '@material-ui/core';
 import { Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import apiUrl from '../../GlobalUrl';
+import { saveReference } from '../../../store/actions/sourceActions';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
     root: {
-        display: 'flex',
-    },
-    textDisplay: {
-      padding: theme.spacing(),
-      color: theme.palette.text.secondary,
-      backgroundColor: '#fff',
-      height: 165,
-      overflow: 'auto',
-      textAlign: 'justify',
-      lineHeight: '20px',
-    },
-    containerGrid: {
-      width: '97%',
-      marginLeft: '2%',
-      marginRight: '2%',
-      border: '1px solid "#2a2a2fbd"',
-      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-      height: '100%',
-      backgroundColor: '#fff',
-    },
-    highlightToken: {
-      color: 'blue',
-      backgroundColor: 'yellow'
-    },
+        display:'flex',
+        flexGrow: 1,
+      },
+      highlightToken: {
+        color: 'blue',
+        backgroundColor: 'yellow'
+      },
+      textDisplay: {
+        padding: theme.spacing(),
+        color: theme.palette.text.secondary,
+        backgroundColor: '#fff',
+        height: 165,
+        overflow: 'auto',
+        textAlign: 'justify',
+        lineHeight: '20px',
+      },
+      containerGrid: {
+        width: '97%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        border: '1px solid "#2a2a2fbd"',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        height: '100%',
+        backgroundColor: '#fff',
+      },
 });
 
 class Concordance extends Component {
     state = {
-        translationNotes:''
+        concordance: '',
+        currentToken: ''
     }
 
     lengthCheck(item){
@@ -47,39 +52,33 @@ class Concordance extends Component {
         }
     }
 
-    async getTranslationNotes(book, chapter, verse){
-        // const result
-        try{
-            const data = await await fetch('https://git.door43.org/api/v1/repos/BCS-EXEGETICAL/hi_tN/raw/Content%2F' + book.toUpperCase() +  '%2F' + chapter + '%2F' + verse + '.md', {
-                // const data = await await fetch("https://git.door43.org/api/v1/repos/BCS-EXEGETICAL/hi_tN/raw/Content%2F1CO%2F01%2F01.md", {
-                
-                method:'GET',
-                // mode: "no-cors",
-                header: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-                }
-              })
-            // console.log('https://git.door43.org/BCS-EXEGETICAL/hi_tN/raw/branch/master/Content/' + book.toUpperCase() +'/' + chapter + '/' + verse + '.md')
-            const result = await data.text()
-            const { updateState } = this.props.data
-            await this.setState({translationNotes:result})
-            updateState({translationNotes: result})
-        }
-        catch(ex){
-            console.log('No data')
-            console.log(ex)
-            const { updateState } = this.props.data
-            await this.setState({translationNotes:"None"})
-            updateState({translationNotes: "No data available"})
+    async getVerseText(token, sourceId, book ) {
+        if(book){
+            console.log(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token)
+            const data = await fetch(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token, {
+                method: 'GET'
+            })
+            const concordance = await data.json()
+            await this.setState({ concordance: concordance })
         }
     }
-    
+
+    componentWillReceiveProps(nextProps){
+        const { token, project, book } = nextProps
+        if(token){
+            this.getVerseText(token, project.sourceId, book )
+        }
+    }
 
     storeBCV = (book, chapter, verse) => {
-        const { updateState } = this.props.data
-        this.getTranslationNotes(book, this.lengthCheck(chapter), this.lengthCheck(verse))
-        updateState({translationNotes:this.state.translationNotes})
+        this.props.saveReference({
+            reference: book + this.lengthCheck(chapter) + this.lengthCheck(verse),
+            verseNum:{
+                book:book,
+                chapter: this.lengthCheck(chapter),
+                verse: this.lengthCheck(verse)
+            }
+        })
     }
 
     displayConcordance(value, token) {
@@ -121,16 +120,20 @@ class Concordance extends Component {
         }
     }
     render() {
-        const { concordance, book, token } = this.props.data
         const { classes } = this.props
+        const { book, token } = this.props
+        const { concordance } = this.state
+        console.log(this.props)
+        console.log(this.state)
         return (
             <Grid container item xs={12} className={classes.containerGrid}>
+                {/* <Paper className={classes.tokenList}> */}
                 <Grid item xs={12}>
                     <Grid item xs={12}>
                         <ComponentHeading data={{
                             classes: classes,
                             text: `${book.toUpperCase()} Concordance`,
-                            styleColor:"#2a2a2fbd" 
+                            styleColor: "#2a2a2fbd"
                         }} />
                     </Grid>
                     <Grid item xs={12} className={classes.textDisplay}>
@@ -143,16 +146,32 @@ class Concordance extends Component {
                         <ComponentHeading data={{
                             classes: classes,
                             text: `All Books Concordance`,
-                            styleColor:"#2a2a2fbd" 
+                            styleColor: "#2a2a2fbd"
                         }} />
                     </Grid>
                     <Grid item xs={12} className={classes.textDisplay}>
                         {this.displayConcordance(concordance.all, token)}
                     </Grid>
                 </Grid>
+                {/* </Paper> */}
             </Grid>
         )
     }
 }
 
-export default withStyles(styles)(Concordance);
+
+const mapStateToProps = (state) => {
+    return {
+        project: state.sources.project,
+        token: state.sources.token,
+        book: state.sources.book
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        saveReference: (reference) => dispatch(saveReference(reference))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps )(withStyles(styles)(Concordance))

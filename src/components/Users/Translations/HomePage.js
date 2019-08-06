@@ -62,9 +62,7 @@ export default class ProjectHomePage extends Component {
                 displayTranslationNotes: 'block',
                 displayTranslationWordSwitch: 'block'
             })
-
         }
-
     }
 
     handleTWSwitchChange = e => {
@@ -114,16 +112,13 @@ export default class ProjectHomePage extends Component {
                 {/* <Header classes={classes} /> */}
                 <MenuBar
                     updateState={this.updateState}
-                    books={books}
-                    book={book}
-                    sourceId={sourceId}
                  />
                 <Grid container item xs={12}>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={7}>
                     </Grid>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={2}
                     >
-                        <Typography color="textSecondary" style={{display: displayTranslationWordSwitch}}>
+                        <Typography variant="subtitle2" color="textSecondary"  style={{display: displayTranslationWordSwitch}}>
                             Toggle Translation Words
                         </Typography>
                         <div style={{display: displayTranslationWordSwitch}}>
@@ -132,12 +127,10 @@ export default class ProjectHomePage extends Component {
                                 onChange={this.handleTWSwitchChange}
                                 // value={this.handleTWSwitchChange}
                             />
-                                {/* Toggle
-                            </Switch> */}
                         </div>
                     </Grid>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={3}>
-                        <Typography color="textSecondary">
+                        <Typography variant="subtitle2" color="textSecondary" >
                             Toggle Translation Helps
                         </Typography>
                         <Switch
@@ -145,59 +138,25 @@ export default class ProjectHomePage extends Component {
                             onChange={this.handleTNSwitchChange}
                             // value={this.handleTNSwitchChange}
                         />
-                            {/* Toggle
-                        </Switch> */}
                     </Grid>
                 </Grid>
                 <Grid container item xs={12}>
                     <Grid item xs={tokenPane}>
-                        <TokenList data={{
-                            updateState: this.updateState,
-                            tokenList: tokenList,
-                            book: book,
-                            classes: classes,
-                            sourceId: sourceId,
-                            targetLanguageId: targetId,
-                            projectId:projectId
-
-                        }} />
+                        <TokenList  />
                     </Grid>
                     <Grid item xs={translationPane}>
-                        <UpdateTokens data={{
-                            classes: classes,
-                            token: token,
-                            sourceId: sourceId,
-                            targetLanguageId: targetId,
-                            book: book,
-                            tokenTranslation: tokenTranslation,
-                            senses: senses,
-                            updateState:this.updateState,
-                            projectId:projectId
-                        }} />
+                        <UpdateTokens  />
                     </Grid>
                     <Grid item xs={concordancePane}
                     style={{display: displayConcordancePane}}
                     >
-                        <Concordance data={{
-                            classes: classes,
-                            book: book,
-                            concordance: concordance,
-                            token: token,
-                            updateState: this.updateState
-                        }} />
+                        <Concordance  />
                     </Grid>
                     <Grid item xs={translationWordsPane} style={{ display: this.state.displayTranslationWords }}>
-                        <TranslationsWords data={{
-                            classes: classes,
-                            translationWords: translationWords
-                        }} />
+                        <TranslationsWords />
                     </Grid>
                     <Grid item xs={translationNotesPane} style={{ display: this.state.displayTranslationNotes }}>
-                        <TranslationsNotes data={{
-                            classes: classes,
-                            translationNotes: translationNotes
-                        }} />
-
+                        <TranslationsNotes  />
                     </Grid>
                 </Grid>
             </Grid>

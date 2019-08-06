@@ -10,43 +10,72 @@ import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
 import Header from './Header';
 import PopUpMessages from './PopUpMessages';
+// import { Card } from '@material-ui/core';
+// import { CardHeader } from '@material-ui/core';
 import apiUrl from './GlobalUrl';
+import { connect } from 'react-redux'
+import { displaySnackBar, selectProject } from '../store/actions/sourceActions';
+import { withStyles } from '@material-ui/core/styles';
+import { Card } from '@material-ui/core';
+import { CardHeader } from '@material-ui/core';
+import { Typography, CardContent } from '@material-ui/core';
+import { booksDialog } from '../store/actions/dialogActions';
+import BooksDownloadable from './BooksDownloadable';
 var FileSaver = require('file-saver');
 
+var accessToken = localStorage.getItem('accessToken')
 
-export default class DownloadDraft extends Component {
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        padding: theme.spacing(2)
+    },
+    cursorPointer: {
+      cursor: 'pointer',
+    },
+});
+
+class DownloadDraft extends Component {
     state = {
-            languageVersionData: {},
-            languagesList:[],
-            language: '',
-            languageDetails:[],
-            version: '',
-            bookList: '',
-            book: '',
-            targetLanguage:'',
-            targetLanguageId:'',
-            sourceId:'',
-            open:false,
-            checked:false,
-            translatedTokenInfo:{},
-            versionDetails:[],
-            targetBooksChecked: {},
-            targetBooks: [],
-            varian:'',
-            snackBarOpen:false,
-            message:''
+        projects: [],
+        translatedTokenInfo: [],
+        booksDialogOpen: false, 
+        selectedProject: {}
     }
 
-    async getTranslatedTokenInfo(){
-        const data = await fetch('http://localhost:8000/v1/info/translatedtokens', {
-            method:'GET'
-        })
-        const translatedTokenInfo = await data.json()
-        this.setState({translatedTokenInfo})
+    async getTranslatedTokenInfo() {
+        try {
+            const data = await fetch(apiUrl + 'v1/info/translatedtokens', {
+                method: 'GET',
+                headers: {
+                    Authorization: 'bearer ' + accessToken
+                }
+            })
+            const translatedTokenInfo = await data.json()
+            // const response = await data.json()
+            if ('success' in translatedTokenInfo) {
+                this.props.displaySnackBar({
+                    snackBarMessage: translatedTokenInfo.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
+            } else {
+
+                this.setState({ translatedTokenInfo })
+            }
+        }
+        catch (ex) {
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+
+        }
     }
 
     async getVersionData() {
-        const data = await fetch('http://localhost:8000/v1/versiondetails', {
+        const data = await fetch(apiUrl + 'v1/versiondetails', {
             method: 'GET'
         })
         const versionDetails = await data.json()
@@ -58,7 +87,7 @@ export default class DownloadDraft extends Component {
         // const data = await fetch('http://localhost:8000/v1/languages', {
         //     method: 'GET'
         // })
-        const lang = await fetch('http://localhost:8000/v1/languages', {
+        const lang = await fetch(apiUrl + 'v1/languages', {
             method: 'GET'
         })
         const languageDetails = await lang.json()
@@ -66,38 +95,40 @@ export default class DownloadDraft extends Component {
         this.setState({ languageDetails })
     }
 
-    componentDidMount(){
-        this.getVersionData()
-        this.getTranslatedTokenInfo()
-        this.getLanguagesData()
+    async getProjectData() {
+        try {
+            const data = await fetch(apiUrl + 'v1/autographamt/users/projects', {
+                method: 'GET',
+                headers: {
+                    Authorization: 'bearer ' + accessToken
+                }
+            })
+            const response = await data.json()
+            if ('success' in response) {
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
+            } else {
+                this.setState({ projects: response })
+            }
+        }
+        catch (ex) {
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+
+        }
     }
 
-    async getTranslatedText(){
-        const { sourceId, targetLanguage, targetBooksChecked, targetBooks, version, targetLanguageId } = this.state
-        var bookList = []
-        targetBooks.map(book => {
-            if (targetBooksChecked[book]['checked']){
-                bookList.push(book)
-            }
-        })
-        const apiData = {
-            sourceId: sourceId,
-            targetLanguageId: targetLanguageId,
-            bookList: bookList
-        }
-        console.log(apiData)
-        try{
-            const data = await fetch('http://localhost:8000/v1/downloaddraft', {
-                method:'POST',
-                body: JSON.stringify(apiData)
-            })
-            const myJson = await data.json()
-            var blob = new Blob([myJson.translatedUsfmText], {type: "text/plain;charset=utf-8"});
-            FileSaver.saveAs(blob, targetLanguage + "_" + version + "_.usfm");
-        }
-        catch(ex){
-            this.setState({variant:"error", message:"server Error", snackBarOpen:true})
-        }
+    componentDidMount() {
+        this.getProjectData()
+        // this.getVersionData()
+        this.getTranslatedTokenInfo()
+        // this.getLanguagesData()
     }
 
     handleClick = e => {
@@ -106,24 +137,24 @@ export default class DownloadDraft extends Component {
     }
 
     selectBooks = () => {
-        this.setState({open:true})
+        this.setState({ open: true })
     }
 
     handleClose = () => {
-        this.setState({open:false})
+        this.setState({ open: false })
     }
 
 
 
     displayLanguage = () => {
-        const languages =  Object.keys(this.state.translatedTokenInfo)
+        const languages = Object.keys(this.state.translatedTokenInfo)
         return languages.map(lang => {
             return (
                 <MenuItem key={lang} value={lang}>{lang.charAt(0).toUpperCase() + lang.slice(1)}</MenuItem>
             )
         })
     }
-    
+
     displayVersions(language) {
         if (!language) {
             return <MenuItem key="" value="" disabled>Loading Versions</MenuItem>
@@ -134,8 +165,8 @@ export default class DownloadDraft extends Component {
         })
     }
 
-    displayTargetLanguages(){
-        if(!this.state.version){
+    displayTargetLanguages() {
+        if (!this.state.version) {
             return <MenuItem key="" value="" disabled>Loading Target</MenuItem>
         }
         const targetLanguages = this.state.translatedTokenInfo[this.state.language][this.state.version]
@@ -147,7 +178,7 @@ export default class DownloadDraft extends Component {
     }
 
     async getTargetBooks(targetLanguageId) {
-        const version =  this.state.versionDetails.filter((ver) => {
+        const version = this.state.versionDetails.filter((ver) => {
             return ver.languageName === this.state.language && ver.versionContentCode === this.state.version && ver.contentType === 'bible'
         })
         const sourceId = version[0].sourceId
@@ -156,15 +187,15 @@ export default class DownloadDraft extends Component {
         var book = await fetch(apiUrl + 'v1/translatedbooks/' + sourceId + '/' + targetLanguageId, {
             method: 'GET'
         })
-        this.setState({targetLanguageId})
+        this.setState({ targetLanguageId })
         const targetBooks = await book.json();
         const targetBooksChecked = this.state.targetBooksChecked
-        targetBooks.forEach(item => targetBooksChecked[item] = {checked:false})
-        this.setState({targetBooks, targetBooksChecked, sourceId})
+        targetBooks.forEach(item => targetBooksChecked[item] = { checked: false })
+        this.setState({ targetBooks, targetBooksChecked, sourceId })
     }
-    
+
     onTargetLanguageSelection = () => {
-        const { targetLanguage,languageDetails  } = this.state
+        const { targetLanguage, languageDetails } = this.state
         console.log("DONE", targetLanguage)
         console.log("langDetails", languageDetails)
         const selectedLanguage = languageDetails.find((item) => {
@@ -179,109 +210,66 @@ export default class DownloadDraft extends Component {
         // ({ languagename: value, languageid: value[0].languageId })
     }
 
-    async setChecked(targetBooksChecked){
-        this.setState({targetBooksChecked})
+    async setChecked(targetBooksChecked) {
+        this.setState({ targetBooksChecked })
     }
 
-    handleChange = (book) => {
-        const targetBooksChecked = this.state.targetBooksChecked
-        console.log('book', book)
-        console.log("check", targetBooksChecked[book]['checked'])
-        // const temp = targetBooksChecked.book
-        targetBooksChecked[book]['checked'] = !targetBooksChecked[book]['checked']
-        this.setState({targetBooksChecked})
-        // this.setChecked(targetBooksChecked)
+
+    handleCardClick = (project) => {
+        this.props.selectProject({project: project})
+        this.props.booksDialog({booksPane: true})
     }
-    getBooksCheckbox(){
-        const { targetBooks, targetBooksChecked } = this.state
-        // console.log('targ',targetBooks)
-        if(targetBooks){
-            return targetBooks.map((book, index) => {
-                // console.log(index)
+
+
+    displayDraftCards(){
+        const { projects } = this.state
+        const { classes } = this.props
+        if(projects){
+            return projects.map(project => {
                 return (
-                    <FormControlLabel key={book}
-                        control={
-                            <Checkbox 
-                            checked={targetBooksChecked[book]['checked']}
-                            onChange={() => this.handleChange(book)}
-                            value={this.state.book.checked}
-                            
-                            />
-                        }
-                        label={book}
-                        />
+                    <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
+                        {/* <div className={classes.toolbar} /> */}
+                        <Card onClick={() => this.handleCardClick(project)} className={classes.cursorPointer}>
+                            <CardHeader
+                                // title={`Organisation: ${project.organisationName}`}
+                                subheader={`Organisation: ${project.organisationName}`} />
+                            <CardContent>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split("|")[0]}
+                                </Typography>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.version.name}
+                                </Typography>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split("|")[1]}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 )
             })
+
         }
     }
 
-    closeSnackBar = (value) => {
-        this.setState(value)
-    }
-
     render() {
-        // console.log("state",this.state)
+        console.log("state", this.state)
         const { classes } = this.props
         return (
-            // <Grid container item xs={12}>
-                <Grid item xs={12} container>
-                <Header  />
-                <PopUpMessages data={{varian:this.state.variant, snackBarOpen:this.state.snackBarOpen, message:this.state.message, closeSnackBar:this.closeSnackBar }} />
-                    <FormControl className={classes.translationSelectionPane}>
-                    <InputLabel htmlFor="select-language">Language</InputLabel>
-                        <Select className={classes.selectMenu}
-                        inputProps={{
-                            id:'select-language'
-                        }}
-                        value={this.state.language}
-                        onChange={e => this.setState({language:e.target.value})}
-                        >
-                        {this.displayLanguage()}
-                        </Select>
-                    </FormControl>
-                    <FormControl className={classes.translationSelectionPane}>
-                    <InputLabel htmlFor="select-version">Version</InputLabel>
-                        <Select className={classes.selectMenu}
-                        inputProps={{
-                            id:'select-version'
-                        }}
-                        value={this.state.version}
-                        onChange={e => this.setState({version:e.target.value})}
-                        >
-                        {this.displayVersions(this.state.language)}
-                        </Select>
-                    </FormControl>
-                    <FormControl className={classes.translationSelectionPane}>
-                    <InputLabel htmlFor="select-target">Target</InputLabel>
-                        <Select className={classes.selectMenu}
-                        inputProps={{
-                            id:'select-target'
-                        }}
-                        value={this.state.targetLanguage}
-                        onChange={e => this.setState({targetLanguage:e.target.value}, () => this.onTargetLanguageSelection())}
-                        >
-                            {this.displayTargetLanguages()}
-                        </Select>
-                    </FormControl>
-                    <Button onClick={this.selectBooks} size="small" variant="contained" color="secondary" className={classes.translationSelectionPane}>Select Books</Button>
-                    <Button onClick={this.handleClick} size="small" variant="contained" color="primary" className={classes.translationSelectionPane}>Generate Draft</Button>
-                    <Dialog
-                        open={this.state.open}
-                        onClose={this.handleClose}
-                        value={this.state.value}
+
+            <Grid item xs={12} container>
+            <Header />
+            <BooksDownloadable />
+                <Grid 
+                    container
+                    spacing={1}
+                    style={{border:'1px solid #eee', padding:'10px', margin: '5px'}}
                     >
-                        <DialogContent>
-                            {this.getBooksCheckbox()}
-
-
-                        </DialogContent>
-                        <DialogActions>
-                            {/* <Button onClick={this.handleClose} variant="raised" color="primary">Close</Button> */}
-                            <Button onClick={this.handleClose} variant="contained" color="primary" >OK</Button>
-                        </DialogActions>
-                    </Dialog>
-                    {/* <br /> */}
+                        {this.displayDraftCards()}
+            <PopUpMessages />
                 </Grid>
+            </Grid>
+            // <Grid container item xs={12}>
         )
     }
 }
@@ -293,10 +281,12 @@ export default class DownloadDraft extends Component {
 //     }
 // }
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         setLanguage: () => { dispatch({type:'SET_LANGUAGE'})}
-//     }
-// }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp)),
+        selectProject: (project) => dispatch(selectProject(project)),
+        booksDialog: (status) => dispatch(booksDialog(status))
+    }
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(DownloadDraft);
+export default connect(null, mapDispatchToProps)(withStyles(styles)(DownloadDraft));

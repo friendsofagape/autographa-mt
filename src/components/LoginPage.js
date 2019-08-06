@@ -65,11 +65,7 @@ class LoginPage extends Component {
             this.props.setAccessToken({
                 accessToken: myJson.accessToken
             })
-            // setTimeout(
-            //     () => {
-                    this.props.updateRedirect();
-            //     }, 2000
-            // )
+            this.props.updateRedirect();
         } else {
             alert(myJson.message)
         }

@@ -16,6 +16,9 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
 import { displaySnackBar } from '../../store/actions/sourceActions';
 
+
+var accessToken = localStorage.getItem('accessToken')
+
 const styles = theme => ({
     root:{
         display:'flex',
@@ -45,7 +48,10 @@ class CreateOrganisations extends Component {
         }
         const data = await fetch(apiUrl + '/v1/autographamt/organisations', {
             method:'POST',
-            body: JSON.stringify(apiData)
+            body: JSON.stringify(apiData),
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            }
         })
         const myJson = await data.json()
         console.log(myJson)

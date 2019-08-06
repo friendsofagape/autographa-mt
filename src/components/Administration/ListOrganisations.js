@@ -23,6 +23,8 @@ const accessToken = localStorage.getItem('accessToken')
 
 class ListOrganisations extends Component {
     state = {
+        organisationDetails:[],
+        organisationsStatus: '',
         organisationId: '',
         admin: '',
         snackBarOpen: false,
@@ -30,7 +32,7 @@ class ListOrganisations extends Component {
     }
 
     async getOrganisations(){
-        const {updateState, organisationsStatus} = this.props.data
+        // const {organisationsStatus} = this.props.data
 
         const data = await fetch(apiUrl + '/v1/autographamt/organisations', {
             method:'GET',
@@ -39,23 +41,85 @@ class ListOrganisations extends Component {
             }
         })
         const organisationsData = await data.json()
+        let organisationsStatus = {}
         console.log(organisationsData, organisationsStatus)
-        organisationsData.map(item => {
-            organisationsStatus[item.organisationId] = {
-                "verified":item.verified
-            }
-        })
-        updateState({
-            organisationsStatus:organisationsStatus, 
-            organisationsData: organisationsData, 
-            listOrganisationsPane:true, 
-            listUsersPane: false,
-            createProjectsPane:false,
-            listProjectsPane: false,
-            assignmentsPane: false,
-            listUserProjectsPane: false,
-        })
+        if("success" in organisationsData){
+            this.props.displaySnackBar({
+
+                snackBarMessage: organisationsData.message,
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+        }else{
+            organisationsData.map(item => {
+                organisationsStatus[item.organisationId] = {
+                    "verified":item.verified
+                }
+            })
+            this.setState({
+                organisationsStatus:organisationsStatus, 
+                organisationsData: organisationsData,
+            })
+
+        }
     }
+
+    componentDidMount(){
+        this.getOrganisations()
+    }
+
+    // async getOrganisations() {
+    //     console.log('here')
+    //     const org = await fetch(apiUrl + '/v1/autographamt/organisations', {
+    //         method: 'GET',
+    //         headers: {
+    //             Authorization: 'bearer ' + accessToken
+    //         }
+    //     })
+    //     const organisationDetails = await org.json()
+    //     if("success" in organisationDetails){
+    //         if(organisationDetails.success === false){
+    //             this.props.displaySnackBar({
+    //                 snackBarMessage: organisationDetails.message,
+    //                 snackBarOpen: true,
+    //                 snackBarVariant: "error"
+                    
+    //             })
+    //         }
+    //     }else{
+    //         this.setState({ organisationDetails })
+    //     }
+    //     // console.log(organisationDetails)
+            
+    // }
+
+    // async getOrganisations(){
+    //     const {updateState, organisationsStatus} = this.props.data
+
+    //     const data = await fetch(apiUrl + '/v1/autographamt/organisations', {
+    //         method:'GET',
+    //         headers: {
+    //             Authorization: 'bearer ' + accessToken
+    //         }
+    //     })
+    //     const organisationsData = await data.json()
+    //     console.log(organisationsData, organisationsStatus)
+    //     organisationsData.map(item => {
+    //         organisationsStatus[item.organisationId] = {
+    //             "verified":item.verified
+    //         }
+    //     })
+    //     updateState({
+    //         organisationsStatus:organisationsStatus, 
+    //         organisationsData: organisationsData, 
+    //         listOrganisationsPane:true, 
+    //         listUsersPane: false,
+    //         createProjectsPane:false,
+    //         listProjectsPane: false,
+    //         assignmentsPane: false,
+    //         listUserProjectsPane: false,
+    //     })
+    // }
 
     async verifyOrganisation(verified, organisationId){
         try{
@@ -105,36 +169,39 @@ class ListOrganisations extends Component {
     }
 
     handleChange = (organisationId) => {
-        const { organisationsStatus, updateState } = this.props.data
+        const { organisationsStatus } = this.state
         const verified = !organisationsStatus[organisationId]["verified"]
         this.verifyOrganisation(verified, organisationId)
         organisationsStatus[organisationId]["verified"] = verified
-        this.setState({ organisationId })
-        updateState({ organisationsStatus: organisationsStatus })
+        this.setState({ organisationId, organisationsStatus: organisationsStatus })
+        // updateState({  })
     }
 
     getTableRows() {
-        const { organisationsData, organisationsStatus } = this.props.data
-        return organisationsData.map(org => {
-            return (
-                <TableRow key={org.organisationId}>
-                    <TableCell align="right">{org.organisationName}</TableCell>
-                    <TableCell align="right">{org.organisationAddress}</TableCell>
-                    <TableCell align="right">{org.organisationEmail}</TableCell>
-                    <TableCell align="right">{org.organisationPhone}</TableCell>
-                    <TableCell align="right">{org.userId}</TableCell>
-                    <TableCell align="right">
-                        <Checkbox
-                            checked={organisationsStatus[org.organisationId]["verified"]}
-                            onChange={(e) => this.handleChange(org.organisationId)}
-                        />
-                    </TableCell>
-                </TableRow>
-            )
-        })
+        const { organisationsData, organisationsStatus } = this.state
+        if (organisationsData){
+            return organisationsData.map(org => {
+                return (
+                    <TableRow key={org.organisationId}>
+                        <TableCell align="right">{org.organisationName}</TableCell>
+                        <TableCell align="right">{org.organisationAddress}</TableCell>
+                        <TableCell align="right">{org.organisationEmail}</TableCell>
+                        <TableCell align="right">{org.organisationPhone}</TableCell>
+                        <TableCell align="right">{org.userId}</TableCell>
+                        <TableCell align="right">
+                            <Checkbox
+                                checked={organisationsStatus[org.organisationId]["verified"]}
+                                onChange={(e) => this.handleChange(org.organisationId)}
+                            />
+                        </TableCell>
+                    </TableRow>
+                )
+            })
+
+        }
     }
     render() {
-        const {  classes } = this.props.data
+        const {  classes } = this.props
         console.log(this.state)
         return (
             <Paper>
