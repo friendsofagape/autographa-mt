@@ -22,6 +22,9 @@ import { displaySnackBar } from '../store/actions/sourceActions'
 import PopUpMessages from './PopUpMessages';
 import { uploadDialog } from '../store/actions/dialogActions';
 
+import VirtualizedSelect from 'react-virtualized-select';
+import "react-virtualized-select/styles.css";
+import 'react-virtualized/styles.css'
 
 const styles = theme => ({
     root: {
@@ -155,6 +158,20 @@ class UploadSource extends Component {
     render() {
         console.log(this.state)
         const { classes } = this.props
+
+        var languageData = [];
+        if (this.state.languageDetails != null) {
+			{
+				Object.values(this.state.languageDetails).map(lang => {
+					languageData.push({
+						label: lang.languageName,
+						value: lang.languageId,
+						code: lang.languageCode,
+					});
+				});
+			}
+		}
+
         return (
                 <Dialog
                     open={this.props.uploadPane}
@@ -238,21 +255,15 @@ class UploadSource extends Component {
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <FormControl className={classes.formControl}>
                                         <InputLabel htmlFor="select-language">Language</InputLabel>
-                                        <Select
-                                            value={this.state.languageName}
-                                            variant="outlined"
-                                            onChange={this.setLanguage}
-                                            inputProps={{
-                                                name: 'language',
-                                                id: 'select-language'
-                                            }}
-                                            className={classes.selectMenu}
-                                        >
-                                            {this.displayLanguage()}
-                                        </Select>
-                                    </FormControl>
+                                        <VirtualizedSelect className={classes.selectMenu}   
+                                        options={languageData}
+                                        onChange={(e) => this.setState({ 
+                                            languageName: e.label,
+                                            languageid:e.value,
+                                            languageCode:e.code})}
+                                        value={this.state.languageid} 
+                                        />
                                 </Grid>
                             </Grid>
                         </DialogContent>
