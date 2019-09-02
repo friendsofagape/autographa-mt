@@ -86,7 +86,7 @@ class ViewSources extends Component {
         const { classes } = this.props
         console.log(this.state)
         return (
-            <Grid item xs={12} md={12} >
+            <Grid item xs={12} md={12} container>
                 <Header />
                 {
                     (this.state.decoded && this.state.decoded.role !== 'm') ? (

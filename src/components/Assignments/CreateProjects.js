@@ -27,7 +27,17 @@ const styles = theme => ({
         flexGrow: 1,
     },
     selectMenu: {
-        width: '100px',
+        width: '110px',
+    },
+    // dialog:{
+    //     height: 500
+    // },
+    dialogContent: {
+        height: 400,
+        // width: '120%'
+    },
+    virtualSelect: {
+        width: '150px'
     }
 });
 
@@ -189,11 +199,12 @@ class CreateProjects extends Component {
     }
 
     async createProject() {
-        const { sourceId, targetLanguageId } = this.state
+        const { sourceId, targetLanguageId, organisationId } = this.state
         
         const apiData = {
             sourceId: sourceId,
-            targetLanguageId: targetLanguageId
+            targetLanguageId: targetLanguageId,
+            organisationId: organisationId
         }
         try {
             const data = await fetch(apiUrl + '/v1/autographamt/organisations/projects', {
@@ -252,21 +263,22 @@ class CreateProjects extends Component {
 			}
 		}
        
-        const { language, version, organisation, popupdata } = this.state
+        const { language, version, organisation } = this.state
         const { createProjectsPane } = this.props.data
         const { classes } = this.props
         return (
             <Dialog
                 open={createProjectsPane}
                 aria-labelledby="form-dialog-title"
+                className={classes.dialog}
             >
                 <PopUpMessages />
                 <ComponentHeading data={{ classes: classes, text: "Create Project", styleColor: '#2a2a2fbd' }} />
                 <DialogTitle id="form-dialog-title"> </DialogTitle>
-                <DialogContent>
+                <DialogContent className={classes.dialogContent}>
                     <DialogContentText>
                         Select the project under the organisation you wish to create, from the below list of options and click Create Project.
-                </DialogContentText>
+                    </DialogContentText>
                     <Grid container item xs={12}>
                         <Grid item xs={2}>
                             <FormControl className={classes.formControl}>
@@ -327,7 +339,7 @@ class CreateProjects extends Component {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={2}>
                                 <InputLabel htmlFor="select-target">Target</InputLabel>
-                                <VirtualizedSelect className={classes.selectMenu}   
+                                <VirtualizedSelect className={classes.virtualSelect}   
                                 options={languageData}
                                 onChange={(e) => this.setState({ targetLanguage: e.label,
                                     targetLanguageId:e.value})}

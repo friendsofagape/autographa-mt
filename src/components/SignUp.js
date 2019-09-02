@@ -18,14 +18,25 @@ import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
 import apiUrl from './GlobalUrl';
+import { withStyles } from '@material-ui/core/styles';
 
+
+const styles = theme => ({
+    loginPage: {
+      marginTop: '5%'
+    },
+    form: {
+      // backgroundColor:'blue',
+      padding: '0px 5px'
+    },
+});
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
 
-export default class SignUp extends Component {
+class SignUp extends Component {
     state = {
         firstName: '',
         lastName: '',
@@ -86,8 +97,6 @@ export default class SignUp extends Component {
             <Grid item xs={12}>
             <Header classes={classes} />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
-                {/* <Paper className={classes.loginPage}> */}
-                {/* <CssBaseline /> */}
                 <Typography component="h1" variant="h5">
                     Sign Up
                 </Typography>
@@ -161,7 +170,6 @@ export default class SignUp extends Component {
                         fullWidth
                         variant="contained"
                         color="primary"
-                    // className={classes.submit}
                     >
                         Sign Up
                         </Button>
@@ -201,3 +209,5 @@ export default class SignUp extends Component {
         )
     }
 }
+
+export default  withStyles(styles)(SignUp)

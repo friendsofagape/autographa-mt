@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
     Grid,
-    Paper,
     TextField,
     FormControl,
     InputLabel,
     MenuItem,
     Select,
     Button,
-    Divider,
     Dialog,
     DialogActions,
     DialogContent,
@@ -16,22 +14,18 @@ import {
     DialogTitle,
 
 } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import Header from './Header';
 import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { displaySnackBar } from '../store/actions/sourceActions'
 import PopUpMessages from './PopUpMessages';
-import { stat } from 'fs';
 import { uploadDialog } from '../store/actions/dialogActions';
 
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: theme.spacing(2)
     },
     cursorPointer: {
         cursor: 'pointer',
@@ -40,8 +34,6 @@ const styles = theme => ({
         marginTop: '4%'
     },
     textField: {
-        // width: 180,
-        // height: 20,
         margin: 10,
     },
     resize: {
@@ -53,8 +45,6 @@ const styles = theme => ({
     },
 });
 
-
-
 class UploadSource extends Component {
     constructor(props) {
         super(props)
@@ -65,7 +55,6 @@ class UploadSource extends Component {
     state = {
         versionDetails: [],
         languageDetails: [],
-        // contentDetails: [],
         versionContentCode: '',
         versionContentDescription: '',
         contentType: '',
@@ -81,9 +70,7 @@ class UploadSource extends Component {
         loading: false,
         display: 'none',
         counter: 0,
-        // message:[]
     }
-
 
     async getVersionData() {
         const data = await fetch(apiUrl + 'v1/bibles', {
@@ -104,7 +91,6 @@ class UploadSource extends Component {
     componentDidMount() {
         this.getVersionData()
         this.getLanguagesData()
-        // this.getcontentTypesData()
     }
 
     displayLanguage = () => {
@@ -130,9 +116,6 @@ class UploadSource extends Component {
         this.setState({ contentid: value[0].contentId, contentType: e.target.value });
     }
 
-
-
-
     async uploadVersionDetails(apiData) {
         try {
             const postVersions = await fetch(apiUrl + 'v1/sources/bibles', {
@@ -140,8 +123,6 @@ class UploadSource extends Component {
                 body: JSON.stringify(apiData)
             })
             const myJson = await postVersions.json()
-            // this.setState({ message: myJson.message })
-
             this.props.displaySnackBar({
                 snackBarMessage: myJson.message,
                 snackBarOpen: true,
@@ -149,7 +130,6 @@ class UploadSource extends Component {
             })
         }
         catch (ex) {
-            // this.setState({ variant: "error", snackBarOpen: true, message: "Upload Process Failed", snackColor: '#d32f2f' })
             this.props.displaySnackBar({
                 snackBarMessage: "Upload Process Failed",
                 snackBarOpen: true,
@@ -170,24 +150,18 @@ class UploadSource extends Component {
             'license': this.state.license,
         }
         this.uploadVersionDetails(apiData)
-        // console.log("APIIIIIIIII", result)
     }
 
     render() {
         console.log(this.state)
         const { classes } = this.props
         return (
-            // <div>
-            // <Grid item xs={12}>
-                // <Header />
                 <Dialog
                     open={this.props.uploadPane}
-                    // onClose={this.handleClose}
                     aria-labelledby="form-dialog-title"
                 >
                     <PopUpMessages />
                     <ComponentHeading data={{ classes, text: "Create Source", styleColor: '#2a2a2fbd' }} />
-                    {/* <ComponentHeading data={{classes:classes, text:"Create Organisation", styleColor:'#2a2a2fbd'}} /> */}
                     <form className={classes.form} onSubmit={this.handleSubmit}>
                         <DialogTitle id="form-dialog-title"> </DialogTitle>
                         <DialogContent>
@@ -293,8 +267,6 @@ class UploadSource extends Component {
                         </DialogActions>
                     </form>
                 </Dialog>
-
-            // </Grid>
         )
     }
 }

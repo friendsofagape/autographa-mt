@@ -1,8 +1,8 @@
 import React from 'react';
 import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import SignedInLinks from './SignedInLinks';
-import { Link } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom'
 
 const styles = theme => ({
     root: {
@@ -10,9 +10,11 @@ const styles = theme => ({
     },
     link: {
       margin: theme.spacing(),
+      textDecoration: 'none', 
+      color: 'white'
     },
     h1: {
-      backgroundColor: 'black',
+      backgroundColor: 'green',
     },
     grow: {
       flexGrow: 1,
@@ -23,9 +25,10 @@ function Header({ classes }) {
     return (
         <AppBar position="static" className={classes.h1}>
             <Toolbar>
-                <Link color="inherit" variant="body2" href="/">
-                    <Typography variant="h5" color="inherit" className={classes.grow}>
-                        AutographaMT
+                {/* <Link color="inherit" variant="body2" href="/"> */}
+                <Link to="/dashboard" className={classes.link}>
+                    <Typography variant="h5" className={classes.grow}>
+                        AutographaMT new
                     </Typography>
                 </Link>
             <div className={classes.grow}>
