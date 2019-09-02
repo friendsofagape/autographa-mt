@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import jwt_decode from 'jwt-decode';
-import { Link, Menu, MenuItem } from '@material-ui/core';
+import {  Menu, MenuItem } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
+import { Link } from 'react-router-dom'
 
 let decoded;
 let tokenAliveFlag = false
@@ -45,7 +46,7 @@ const SignedInLinks = ({ classes }) => {
                 onClose={handleClose}
             >
                 <MenuItem>
-                    <Link color="inherit" variant="body2" href="/" onClick={LogOut} className={classes.link}>Log Out</Link>
+                    <Link to="/" onClick={LogOut} className={classes.link}>Log Out</Link>
                 </MenuItem>
             </Menu>
         )
@@ -56,10 +57,10 @@ const SignedInLinks = ({ classes }) => {
         <div>
             {(accessToken && decoded.role === 'sa' && tokenAliveFlag) ? (
                 <div>
-                    <Link color="inherit" variant="body2" href="/dashboard" className={classes.link}>Dashboard</Link>
-                    {/* <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link> */}
-                    <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
-                    <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
+                    <Link to="/dashboard" className={classes.link}>Dashboard</Link>
+                    {/* <Link to="/upload" className={classes.link}>Upload Souce</Link> */}
+                    <Link to="/viewsources" className={classes.link}>View Available Sources</Link>
+                    <Link to="/download" className={classes.link}>Download Draft</Link>
                     <label color="inherit" style={{ padding: '5px' }}>Welcome, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}</label>
                     <IconButton
                         aria-label="Account of current user"
@@ -75,11 +76,11 @@ const SignedInLinks = ({ classes }) => {
             ) : (
                     (accessToken && decoded.role === 'ad' && tokenAliveFlag) ? (
                         <div>
-                            <Link color="inherit" variant="body2" href="/dashboard" className={classes.link}>Dashboard</Link>
-                            {/* <Link color="inherit" variant="body2" href="/upload" className={classes.link}>Upload Souce</Link> */}
-                            <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
-                            <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                            {/* <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
+                            <Link to="/dashboard" className={classes.link}>Dashboard</Link>
+                            {/* <Link to="/upload" className={classes.link}>Upload Souce</Link> */}
+                            <Link to="/viewsources" className={classes.link}>View Available Sources</Link>
+                            <Link to="/download" className={classes.link}>Download Draft</Link>
+                            {/* <Link to="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
                             <label color="inherit" style={{ padding: '5px' }}>Welcome, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}</label>
                             <IconButton
                                 aria-label="Account of current user"
@@ -95,10 +96,10 @@ const SignedInLinks = ({ classes }) => {
                     ) : (
                             (accessToken && decoded.role === 'm' && tokenAliveFlag) ? (
                                 <div>
-                                    <Link color="inherit" variant="body2" href="/dashboard" className={classes.link}>Dashboard</Link>
-                                    <Link color="inherit" variant="body2" href="/viewsources" className={classes.link}>View Available Sources</Link>
-                                    <Link color="inherit" variant="body2" href="/download" className={classes.link}>Download Draft</Link>
-                                    {/* <Link color="inherit" variant="body2" href="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
+                                    <Link to="/dashboard" className={classes.link}>Dashboard</Link>
+                                    <Link to="/viewsources" className={classes.link}>View Available Sources</Link>
+                                    <Link to="/download" className={classes.link}>Download Draft</Link>
+                                    {/* <Link to="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
                                     <label color="inherit" style={{ padding: '5px' }}>Welcome, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}</label>
                                     <IconButton
                                         aria-label="Account of current user"
@@ -113,8 +114,8 @@ const SignedInLinks = ({ classes }) => {
                                 </div>
                             ) : (
                                     <div>
-                                        <Link color="inherit" variant="body2" href="/signin" className={classes.link}>Sign In</Link>
-                                        <Link color="inherit" variant="body2" href="/signup" className={classes.link}>Sign Up</Link>
+                                        <Link to="/signin" className={classes.link}>Sign In</Link>
+                                        <Link to="/signup" className={classes.link}>Sign Up</Link>
                                     </div>
                                 )
                         )

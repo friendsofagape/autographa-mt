@@ -6,7 +6,7 @@ import SignUp from './SignUp';
 // import UploadSource from './UploadSource';
 import AdminPage from './Administration/AdminPage'
 import DownloadDraft from './DownloadDraft';
-import HomePage from './HomePage';
+// import HomePage from './HomePage';
 import ViewSources from './ViewSources';
 // import OrganisationRequest from './Assignments/OrganisationRequest';
 import UserDashboard from './Users/UserDashboard';
@@ -76,25 +76,19 @@ export default class Routes extends Component {
                     <Switch>
                         <Route exact path="/" component={() => <LoginPage redirect={redirect} updateRedirect={this.updateRedirect} />} />
                         <Route path="/signin" component={() => <LoginPage redirect={redirect} updateRedirect={this.updateRedirect} />} />
-                        <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                        {/* <Route path="/homepage" component={() => <HomePage  />} /> */}
-                        {/* <Route path="/upload" component={() => <UploadSource />} /> */}
+                        <Route path="/signup" component={() => <SignUp />} />
                         <Route path="/dashboard" component={() => <AdminPage />} />
-                        <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
+                        <Route path="/download" component={() => <DownloadDraft />} />
                         <Route path="/viewsources" component={() => <ViewSources />} />
-                        
-                        {/* <Route path="/createprojects" component={() => <OrganisationRequest classes={classes} />} /> */}
                     </Switch>
                 ) : (
                     (accessToken && decoded.role === 'ad' && tokenAliveFlag) ? (
                         <Switch>
                             <Route exact path="/" component={() => <LoginPage redirect={redirect} updateRedirect={this.updateRedirect} />} />
                             <Route path="/signin" component={() => <LoginPage redirect={redirect} updateRedirect={this.updateRedirect} />} />
-                            <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                            {/* <Route path="/homepage" component={() => <HomePage />} /> */}
+                            <Route path="/signup" component={() => <SignUp />} />
                             <Route path="/dashboard" component={() => <AdminPage />} />
-                            {/* <Route path="/upload" component={() => <UploadSource />} /> */}
-                            <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
+                            <Route path="/download" component={() => <DownloadDraft />} />
                             <Route path="/viewsources" component={() => <ViewSources  />} />
                         </Switch>
                     ) : (
@@ -102,8 +96,7 @@ export default class Routes extends Component {
                             <Switch>
                             <Route exact path="/" component={() => <LoginPage  redirect={redirect} updateRedirect={this.updateRedirect} />} />
                             <Route path="/signin" component={() => <LoginPage redirect={redirect} updateRedirect={this.updateRedirect} />} />
-                            <Route path="/signup" component={() => <SignUp classes={classes} />} />
-                            {/* <Route path="/homepage" component={() => <HomePage />} /> */}
+                            <Route path="/signup" component={() => <SignUp />} />
                             <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
                             <Route path="/viewsources" component={() => <ViewSources />} />
                             <Route path="/dashboard" component={() => <UserDashboard  />} />
@@ -112,7 +105,7 @@ export default class Routes extends Component {
                         <Switch>
                             <Route exact path="/" component={() => <LoginPage  redirect={redirect} updateRedirect={this.updateRedirect} />} />
                             <Route path="/signin" component={() => <LoginPage  redirect={redirect} updateRedirect={this.updateRedirect} />} />
-                            <Route path="/signup" component={() => <SignUp classes={classes} />} />
+                            <Route path="/signup" component={() => <SignUp />} />
                         </Switch>
                         )
                     )
