@@ -49,7 +49,43 @@ class AssignUser extends Component {
         assignedUsers: [],
         availableBooksData: {},
         userId:'',
-        projectId: ''
+        projectId: '',
+        userStatus: {},
+        userData: []
+    }
+
+    async getUsers(){
+        const { userStatus} = this.state
+        const data = await fetch(apiUrl + '/v1/autographamt/users', {
+            method:'GET',
+            headers: {
+                "Authorization": 'bearer ' + accessToken
+            }
+        })
+        const userData = await data.json()
+        console.log(userData)
+        if("success" in userData){
+            this.props.displaySnackBar({
+                snackBarMessage: userData.message,
+                snackBarOpen: true,
+                snackBarVariant: (userData.success) ? "success" : "error"
+            })
+        }else{
+            userData.map(item => {
+                if(item.roleId > 1){
+                    userStatus[item.userId] = {
+                        "admin":true,
+                        "verified":item.verified
+                    }
+                }else{
+                    userStatus[item.userId] = {
+                        "admin":false,
+                        "verified":item.verified
+                    }
+                }
+            })
+            this.setState({userData:userData, userStatus:userStatus})
+        }
     }
 
     async getAssignedUsers(){
@@ -69,7 +105,7 @@ class AssignUser extends Component {
     }
 
     componentDidMount(){
-        // this.getAvailableBooks()
+        this.getUsers()
         this.getAssignedUsers()
     }
 
@@ -125,7 +161,7 @@ class AssignUser extends Component {
     }
 
     getUserNames = () => {
-        const { userData } = this.props
+        const { userData } = this.state
         return userData.map(user => {
             return (
                 <div key={user.userId}>

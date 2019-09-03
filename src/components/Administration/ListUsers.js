@@ -40,20 +40,29 @@ class ListUsers extends Component {
             }
         })
         const userData = await data.json()
-        userData.map(item => {
-            if(item.roleId > 1){
-                userStatus[item.userId] = {
-                    "admin":true,
-                    "verified":item.verified
+        console.log(userData)
+        if("success" in userData){
+            this.props.displaySnackBar({
+                snackBarMessage: userData.message,
+                snackBarOpen: true,
+                snackBarVariant: (userData.success) ? "success" : "error"
+            })
+        }else{
+            userData.map(item => {
+                if(item.roleId > 1){
+                    userStatus[item.userId] = {
+                        "admin":true,
+                        "verified":item.verified
+                    }
+                }else{
+                    userStatus[item.userId] = {
+                        "admin":false,
+                        "verified":item.verified
+                    }
                 }
-            }else{
-                userStatus[item.userId] = {
-                    "admin":false,
-                    "verified":item.verified
-                }
-            }
-        })
-        this.setState({userData:userData, userStatus:userStatus})
+            })
+            this.setState({userData:userData, userStatus:userStatus})
+        }
     }
 
     componentDidMount(){

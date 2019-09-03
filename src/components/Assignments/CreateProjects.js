@@ -57,6 +57,7 @@ class CreateProjects extends Component {
         organisationDetails: [],
         organisation: '',
         organisationId: '',
+        versionDetails: {}
     }
 
     async getBiblesData() {
@@ -138,19 +139,26 @@ class CreateProjects extends Component {
             return <MenuItem key="" value="" disabled>Loading Versions</MenuItem>
         }
         const versions = biblesDetails.filter((ver) => {
-            return ver.language.name === language.toLowerCase()
+            console.log("new", ver)
+            return ver.language === language.toLowerCase()
         })
-        return versions.map(item => {
+        // console.log(versions)
+        // this.setState({versionDetails: versions[0]["languageVersions"]})
+        return versions[0]["languageVersions"].map(item => {
             return <MenuItem key={item.sourceId} value={item.version.longName}>{item.version.longName.toUpperCase()}</MenuItem>
         })
     }
 
     onVersionSelection = () => {
-        const { language, version, biblesDetails } = this.state
+        const { language, version, biblesDetails, versionDetails } = this.state
         console.log(language, version)
         console.log(biblesDetails)
-        const source = biblesDetails.find((ver) => {
-            return ver.language.name === language.toLowerCase() && ver.version.longName === version
+        const versions = biblesDetails.filter((ver) => {
+            // console.log("new", ver)
+            return ver.language === language.toLowerCase()
+        })
+        const source = versions[0]["languageVersions"].find((ver) => {
+            return ver.version.longName === version
         })
         this.setState({ sourceId: source.sourceId })
     }
@@ -266,6 +274,7 @@ class CreateProjects extends Component {
         const { language, version, organisation } = this.state
         const { createProjectsPane } = this.props.data
         const { classes } = this.props
+        console.log(this.state)
         return (
             <Dialog
                 open={createProjectsPane}

@@ -11,8 +11,14 @@ import {
     TableCell,
     Divider,
     Link,
+    Typography,
 
 } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
 import Header from './Header';
 import UploadTexts from './UploadTexts';
 import apiUrl from './GlobalUrl';
@@ -21,8 +27,7 @@ import ComponentHeading from './ComponentHeading';
 import { uploadDialog } from '../store/actions/dialogActions';
 import { connect } from 'react-redux'
 import CreateSources from './CreateSources';
-
-
+import { displaySnackBar } from '../store/actions/sourceActions';
 
 const styles = theme => ({
     root: {
@@ -35,7 +40,6 @@ const styles = theme => ({
     },
     typeG: {
         backgroundColor: '#3e51b5',
-        // backgroundColor:'#262f3d',
         color: 'white',
         padding: '10px 0px'
     },
@@ -51,7 +55,9 @@ class ViewSources extends Component {
         dialogOpen: false,
         sourceId: '',
         decoded: {},
-        accessToken: ''
+        accessToken: '',
+        availableBooksData: [],
+        listBooks: false,
     }
 
     closeDialog = () => {
@@ -71,16 +77,61 @@ class ViewSources extends Component {
         var accessToken = localStorage.getItem('accessToken')
         if (accessToken) {
             this.setState({ decoded: jwt_decode(accessToken), accessToken })
-            // this.setState({});
+        }
+    }
+
+    async getBooks(){
+        try{
+            const { sourceId } = this.state
+            const data = await fetch(apiUrl + 'v1/sources/books/' + sourceId, {
+                method:'GET'
+            })
+            const response = await data.json()
+            this.setState({ 
+                listBooks:true, 
+                availableBooksData: response,
+            })
+            this.props.displaySnackBar({
+                snackBarMessage: "Books Fetched",
+                snackBarOpen: true,
+                snackBarVariant: "success"
+            })
+        }
+        catch(ex){
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
 
         }
     }
 
+    displayBooks = () => {
+        const { availableBooksData } = this.state
+        // const allBooks = Object.keys(availableBooksData)
+        return availableBooksData.map(book => {
+            return (
+                <Grid item xs={2} key={book}>
+                    <Typography>{book}</Typography>
+                </Grid>
+            )
+        })
+    }
 
+
+    closeBookListing = () => {
+        this.setState({userId: '', projectId:'', listBooks:false})
+    }
 
     handleSelect = (sourceId) => (e) => {
         console.log(sourceId)
         this.setState({ dialogOpen: true, sourceId })
+    }
+
+    handleBookSelect = (sourceId) => (e) => {
+        console.log(sourceId)
+        this.setState({ listBooks: true, sourceId }, () => this.getBooks())
     }
     render() {
         const { classes } = this.props
@@ -125,34 +176,51 @@ class ViewSources extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.state.biblesDetails.map(row => (
-                                <TableRow key={row.sourceId}>
-                                    <TableCell align="right">{row.version.name}</TableCell>
-                                    <TableCell align="right">{row.version.code}</TableCell>
-                                    <TableCell align="right">{row.version.longName}</TableCell>
-                                    <TableCell align="right">{row.updatedDate}</TableCell>
-                                    <TableCell align="right">{row.script}</TableCell>
-                                    <TableCell align="right">{row.language.name}</TableCell>
-                                    <TableCell align="right">{row.language.code}</TableCell>
-                                    {
-                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                            
-                                                <TableCell align="right">
-                                                    <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Books</Button>
-                                                </TableCell>
-                                        ) : null
-                                    }
-                                    {
-                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                                <TableCell align="right">
-                                                    <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Upload</Button>
-                                                </TableCell>
-                                        ) : null
-                                    }
-                                </TableRow>
+                            {this.state.biblesDetails.map(items => (
+                                items["languageVersions"].map(row => (
+                                    <TableRow key={row.sourceId}>
+                                        <TableCell align="right">{row.version.name}</TableCell>
+                                        <TableCell align="right">{row.version.code}</TableCell>
+                                        <TableCell align="right">{row.version.longName}</TableCell>
+                                        <TableCell align="right">{row.updatedDate}</TableCell>
+                                        <TableCell align="right">{row.script}</TableCell>
+                                        <TableCell align="right">{row.language.name}</TableCell>
+                                        <TableCell align="right">{row.language.code}</TableCell>
+                                        {
+                                            (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                                
+                                                    <TableCell align="right">
+                                                        <Button size="small" variant="contained" color="primary" onClick={this.handleBookSelect(row.sourceId)}>Books</Button>
+                                                    </TableCell>
+                                            ) : null
+                                        }
+                                        {
+                                            (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                                    <TableCell align="right">
+                                                        <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Upload</Button>
+                                                    </TableCell>
+                                            ) : null
+                                        }
+                                    </TableRow>
+
+                                ))
                             ))}
                         </TableBody>
                     </Table>
+                <Dialog
+                        open={this.state.listBooks}
+                    >
+                        <DialogContent>
+                            <Grid container item>
+                                {this.displayBooks()}
+                            </Grid>
+
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
+                        </DialogActions>
+                    </Dialog>
                     <UploadTexts sourceId={this.state.sourceId} dialogOpen={this.state.dialogOpen} close={this.closeDialog} />
                 </Paper>
             </Grid>
@@ -162,7 +230,8 @@ class ViewSources extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        uploadDialog: (status) => dispatch(uploadDialog(status))
+        uploadDialog: (status) => dispatch(uploadDialog(status)),
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
     }
 }
 

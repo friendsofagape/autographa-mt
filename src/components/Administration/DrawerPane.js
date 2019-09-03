@@ -31,34 +31,34 @@ if(role === 'sa'){
 export default class DrawerPane extends Component {
 
 
-    async getUsers(){
-        const {updateState, userStatus} = this.props.data
-        const data = await fetch(apiUrl + '/v1/autographamt/users', {
-            method:'GET',
-            headers: {
-                "Authorization": 'bearer ' + accessToken
-            }
-        })
-        const userData = await data.json()
-        userData.map(item => {
-            if(item.roleId > 1){
-                userStatus[item.userId] = {
-                    "admin":true,
-                    "verified":item.verified
-                }
-            }else{
-                userStatus[item.userId] = {
-                    "admin":false,
-                    "verified":item.verified
-                }
-            }
-        })
-        updateState({userData:userData, userStatus:userStatus})
-    }
+    // async getUsers(){
+    //     const {updateState, userStatus} = this.props.data
+    //     const data = await fetch(apiUrl + '/v1/autographamt/users', {
+    //         method:'GET',
+    //         headers: {
+    //             "Authorization": 'bearer ' + accessToken
+    //         }
+    //     })
+    //     const userData = await data.json()
+    //     userData.map(item => {
+    //         if(item.roleId > 1){
+    //             userStatus[item.userId] = {
+    //                 "admin":true,
+    //                 "verified":item.verified
+    //             }
+    //         }else{
+    //             userStatus[item.userId] = {
+    //                 "admin":false,
+    //                 "verified":item.verified
+    //             }
+    //         }
+    //     })
+    //     updateState({userData:userData, userStatus:userStatus})
+    // }
 
-    componentDidMount(){
-        this.getUsers()
-    }
+    // componentDidMount(){
+    //     this.getUsers()
+    // }
     
     handleUsers(){
         const {updateState} = this.props.data

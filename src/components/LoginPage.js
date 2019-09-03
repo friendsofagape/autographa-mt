@@ -21,6 +21,8 @@ import apiUrl from './GlobalUrl';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 import { setAccessToken } from '../store/actions/authActions';
+import { displaySnackBar } from '../store/actions/sourceActions';
+import PopUpMessages from './PopUpMessages';
 
 
 const styles = theme => ({
@@ -67,7 +69,13 @@ class LoginPage extends Component {
             })
             this.props.updateRedirect();
         } else {
-            alert(myJson.message)
+            // alert(myJson.message)
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: (myJson.success) ? "success" : "error"
+
+            })
         }
     }
 
@@ -121,7 +129,12 @@ class LoginPage extends Component {
         if (myJson.success){
             this.setState({message:myJson.message, forgotPasswordDailogOpen:false, verificationCodeDialogOpen:true})
         }else{
-            alert(myJson.message)
+            // alert(myJson.message)
+            this.props.displaySnackBar({
+                snackBarMessage: myJson.message,
+                snackBarOpen: true,
+                snackBarVariant: (myJson.success) ? "success" : "error"
+            })
         }
     }
 
@@ -170,6 +183,7 @@ class LoginPage extends Component {
         return (
             <Grid item xs={12}>
             <Header />
+            <PopUpMessages />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
                 <Typography component="h1" variant="h5">
                     Sign in
@@ -320,7 +334,8 @@ class LoginPage extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setAccessToken: (token) => dispatch(setAccessToken(token))
+        setAccessToken: (token) => dispatch(setAccessToken(token)),
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
     }
 }
 export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginPage));
