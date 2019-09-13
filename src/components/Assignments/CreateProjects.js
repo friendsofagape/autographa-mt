@@ -79,12 +79,14 @@ class CreateProjects extends Component {
 
     async getOrganisations() {
         console.log('here')
-        const org = await fetch(apiUrl + '/v1/autographamt/organisations', {
+        console.log(accessToken)
+        const org = await fetch(apiUrl + 'v1/autographamt/organisations', {
             method: 'GET',
             headers: {
                 Authorization: 'bearer ' + accessToken
             }
         })
+        console.log(org)
         const organisationDetails = await org.json()
         if("success" in organisationDetails){
             if(organisationDetails.success === false){

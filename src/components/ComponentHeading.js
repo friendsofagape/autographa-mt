@@ -6,7 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
     root: {
         backgroundColor: '#3e51b5',
-        color: 'white',
+        // backgroundColor: '#ededf4',
+        color: 'black',
         padding: '10px 0px'
       },
 });
@@ -16,13 +17,13 @@ class ComponentHeading extends Component {
         const { classes  } =  this.props
         var { color, styleColor, text } = this.props.data
         if(!color){
-            color  = "inherit"
+            color  = "white"
         }
         if(!styleColor){
             styleColor = null
         }
         return (
-            <Typography  color={color} style={{backgroundColor: styleColor}} align="center" className={classes.root}>
+            <Typography variant="h5" style={{backgroundColor: styleColor, color: color}} align="center" className={classes.root}>
                 {text}
             </Typography>
         )

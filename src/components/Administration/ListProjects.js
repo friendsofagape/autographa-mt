@@ -6,7 +6,7 @@ import { Typography, CardContent } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
-import { displaySnackBar } from '../../store/actions/sourceActions'
+import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
 import { connect } from 'react-redux'
 import PopUpMessages from '../PopUpMessages';
 
@@ -16,10 +16,22 @@ const accessToken = localStorage.getItem('accessToken')
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        // backgroundColor: '#ededf4',
+        // minHeight: '100%'
     },
     cursorPointer: {
       cursor: 'pointer',
+      backgroundColor: '#fff',
+      '&:hover': {
+          background: '#ededf4',
+      },
+    },
+    cardHover: {
+        backgroundColor: '#100f0ffa',
+        '&:hover': {
+            background: "#f00",
+        },
     },
 });
 
@@ -55,7 +67,7 @@ class ListProjects extends Component {
     }
 
     handleProjects = (projectId) => {
-        const { updateState, projectLists } = this.props
+        const { updateState, projectLists, selectProject } = this.props
         const project = projectLists.find(item => item.projectId === projectId)
 
         updateState({
@@ -64,8 +76,9 @@ class ListProjects extends Component {
             createProjectsPane:false,
             listProjectsPane: false,
             assignmentsPane: true,
-            projectId:projectId,
-            projectDetails: project
+        })
+        selectProject({
+            project
         })
     }
 
@@ -114,7 +127,8 @@ class ListProjects extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp)),
+        selectProject: (project) => dispatch(selectProject(project))
     }
 }
 

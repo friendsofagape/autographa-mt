@@ -24,7 +24,6 @@ import { setAccessToken } from '../store/actions/authActions';
 import { displaySnackBar } from '../store/actions/sourceActions';
 import PopUpMessages from './PopUpMessages';
 
-
 const styles = theme => ({
     loginPage: {
       marginTop: '5%'

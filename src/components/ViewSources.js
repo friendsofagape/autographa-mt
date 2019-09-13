@@ -12,12 +12,9 @@ import {
     Divider,
     Link,
     Typography,
-
 } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Header from './Header';
 import UploadTexts from './UploadTexts';
@@ -32,11 +29,14 @@ import { displaySnackBar } from '../store/actions/sourceActions';
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        overflowY:'hidden'
     },
     versionDisplay: {
-        width: '98%',
-        marginLeft: '1%',
-        marginTop: '1%'
+        maxHeight: '80vh',
+        overflow:'auto',
+        // backgroundColor:'red',
+        // marginLeft: '1%',
+        // marginTop: '1%'
     },
     typeG: {
         backgroundColor: '#3e51b5',
@@ -80,15 +80,15 @@ class ViewSources extends Component {
         }
     }
 
-    async getBooks(){
-        try{
+    async getBooks() {
+        try {
             const { sourceId } = this.state
             const data = await fetch(apiUrl + 'v1/sources/books/' + sourceId, {
-                method:'GET'
+                method: 'GET'
             })
             const response = await data.json()
-            this.setState({ 
-                listBooks:true, 
+            this.setState({
+                listBooks: true,
                 availableBooksData: response,
             })
             this.props.displaySnackBar({
@@ -97,7 +97,7 @@ class ViewSources extends Component {
                 snackBarVariant: "success"
             })
         }
-        catch(ex){
+        catch (ex) {
             this.props.displaySnackBar({
                 snackBarMessage: "Server Error",
                 snackBarOpen: true,
@@ -121,7 +121,7 @@ class ViewSources extends Component {
 
 
     closeBookListing = () => {
-        this.setState({userId: '', projectId:'', listBooks:false})
+        this.setState({ userId: '', projectId: '', listBooks: false })
     }
 
     handleSelect = (sourceId) => (e) => {
@@ -137,92 +137,97 @@ class ViewSources extends Component {
         const { classes } = this.props
         console.log(this.state)
         return (
-            <Grid item xs={12} md={12} container>
+            <Grid item xs={12} md={12} container justify="center" className={classes.root}>
                 <Header />
-                {
-                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                        <Grid container justify="flex-end">
-                            <Link className={classes.cursorPointer} variant="body2" onClick={() => this.props.uploadDialog({ uploadPane: true })}>
-                                {"Can't find source from the listed? Create new."}
-                            </Link>
-                        </Grid>
-                    ) : null
-                }
-                <CreateSources />
+                <Grid item>
+                    {
+                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                            <Grid container justify="flex-end">
+                                <Link className={classes.cursorPointer} variant="body2" onClick={() => this.props.uploadDialog({ uploadPane: true })}>
+                                    {"Can't find source from the listed? Create new."}
+                                </Link>
+                            </Grid>
+                        ) : null
+                    }
+                    <CreateSources />
+
+                </Grid>
                 {/* <Link onClick={this.createSourceDialog}>Can't find source from the listed? Create new.</Link> */}
-                <Paper >
-                    <ComponentHeading data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
-                    <Divider />
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="right">Version Name</TableCell>
-                                <TableCell align="right">Version Code</TableCell>
-                                <TableCell align="right">Version Long Name</TableCell>
-                                <TableCell align="right">Updated Date</TableCell>
-                                <TableCell align="right">Script</TableCell>
-                                <TableCell align="right">Language Name</TableCell>
-                                <TableCell align="right">Language Code</TableCell>
-                                {
-                                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                        <TableCell align="right">Books</TableCell>
-                                    ) : null
-                                }
-                                {
-                                    (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                        <TableCell align="right">Action</TableCell>
-                                    ) : null
-                                }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.state.biblesDetails.map(items => (
-                                items["languageVersions"].map(row => (
-                                    <TableRow key={row.sourceId}>
-                                        <TableCell align="right">{row.version.name}</TableCell>
-                                        <TableCell align="right">{row.version.code}</TableCell>
-                                        <TableCell align="right">{row.version.longName}</TableCell>
-                                        <TableCell align="right">{row.updatedDate}</TableCell>
-                                        <TableCell align="right">{row.script}</TableCell>
-                                        <TableCell align="right">{row.language.name}</TableCell>
-                                        <TableCell align="right">{row.language.code}</TableCell>
-                                        {
-                                            (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                                
-                                                    <TableCell align="right">
+                <Grid item xs={11} justify="center" >
+                    <Paper className={classes.versionDisplay}>
+                        <ComponentHeading data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
+                        <Divider />
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="left">Version Name</TableCell>
+                                    <TableCell align="left">Version Code</TableCell>
+                                    <TableCell align="left">Version Long Name</TableCell>
+                                    <TableCell align="left">Updated Date</TableCell>
+                                    <TableCell align="left">Script</TableCell>
+                                    <TableCell align="left">Language Name</TableCell>
+                                    <TableCell align="left">Language Code</TableCell>
+                                    {
+                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                            <TableCell align="left">Books</TableCell>
+                                        ) : null
+                                    }
+                                    {
+                                        (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                            <TableCell align="left">Action</TableCell>
+                                        ) : null
+                                    }
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.biblesDetails.map(items => (
+                                    items["languageVersions"].map(row => (
+                                        <TableRow key={row.sourceId}>
+                                            <TableCell align="left">{row.version.name}</TableCell>
+                                            <TableCell align="left">{row.version.code}</TableCell>
+                                            <TableCell align="left">{row.version.longName}</TableCell>
+                                            <TableCell align="left">{row.updatedDate}</TableCell>
+                                            <TableCell align="left">{row.script}</TableCell>
+                                            <TableCell align="left">{row.language.name}</TableCell>
+                                            <TableCell align="left">{row.language.code}</TableCell>
+                                            {
+                                                (this.state.decoded && this.state.decoded.role !== 'm') ? (
+
+                                                    <TableCell align="left">
                                                         <Button size="small" variant="contained" color="primary" onClick={this.handleBookSelect(row.sourceId)}>Books</Button>
                                                     </TableCell>
-                                            ) : null
-                                        }
-                                        {
-                                            (this.state.decoded && this.state.decoded.role !== 'm') ? (
-                                                    <TableCell align="right">
+                                                ) : null
+                                            }
+                                            {
+                                                (this.state.decoded && this.state.decoded.role !== 'm') ? (
+                                                    <TableCell align="left">
                                                         <Button size="small" variant="contained" color="primary" onClick={this.handleSelect(row.sourceId)}>Upload</Button>
                                                     </TableCell>
-                                            ) : null
-                                        }
-                                    </TableRow>
+                                                ) : null
+                                            }
+                                        </TableRow>
 
-                                ))
-                            ))}
-                        </TableBody>
-                    </Table>
-                <Dialog
-                        open={this.state.listBooks}
-                    >
-                        <DialogContent>
-                            <Grid container item>
-                                {this.displayBooks()}
-                            </Grid>
+                                    ))
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <Dialog
+                            open={this.state.listBooks}
+                        >
+                            <DialogContent>
+                                <Grid container item>
+                                    {this.displayBooks()}
+                                </Grid>
 
 
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
-                        </DialogActions>
-                    </Dialog>
-                    <UploadTexts sourceId={this.state.sourceId} dialogOpen={this.state.dialogOpen} close={this.closeDialog} />
-                </Paper>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
+                            </DialogActions>
+                        </Dialog>
+                        <UploadTexts sourceId={this.state.sourceId} dialogOpen={this.state.dialogOpen} close={this.closeDialog} />
+                    </Paper>
+                </Grid>
             </Grid>
         )
     }

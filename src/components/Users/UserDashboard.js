@@ -84,7 +84,6 @@ class UserDashboard extends Component {
                     <div className={classes.toolbar} />
                     {(listUserProjectsPane) ? (
                         <ListUserProjects
-                            userProjectsData={userProjectsData}
                             updateState={this.updateState}
                         />
                     ) : null}

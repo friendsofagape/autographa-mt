@@ -200,17 +200,18 @@ const styles = theme => ({
 });
 
 function App(props) {
-  const { classes } = props;
+  // const { classes } = props;
   console.log("test321");
   return (
-      <Grid container className={classes.root}>
-          <Routes classes={classes} />
-      </Grid>
+      // <Grid container className={classes.root}>
+          <Routes />
+      // </Grid>
   );
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
+// App.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
 
-export default withStyles(styles)(App);
+// export default withStyles(styles)(App);
+export default App

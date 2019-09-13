@@ -14,7 +14,7 @@ const styles = theme => ({
       color: 'white'
     },
     h1: {
-      backgroundColor: 'green',
+      backgroundColor: 'black',
     },
     grow: {
       flexGrow: 1,

@@ -37,7 +37,7 @@ const styles = theme => ({
 
 class DownloadDraft extends Component {
     state = {
-        projects: [],
+        projects: null,
         translatedTokenInfo: [],
         booksDialogOpen: false, 
         selectedProject: {}
@@ -224,7 +224,9 @@ class DownloadDraft extends Component {
     displayDraftCards(){
         const { projects } = this.state
         const { classes } = this.props
+        console.log(projects == [])
         if(projects){
+            console.log('in downloads')
             return projects.map(project => {
                 return (
                     <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
@@ -249,6 +251,8 @@ class DownloadDraft extends Component {
                 )
             })
 
+        }else{
+            return <Typography variant="h5">No Project available for download</Typography>
         }
     }
 

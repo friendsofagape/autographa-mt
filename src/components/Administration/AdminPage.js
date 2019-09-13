@@ -41,6 +41,8 @@ const styles = theme => ({
     root: {
         display:'flex',
         flexGrow: 1,
+        // backgroundColor: '#ededf4',
+        backgroundColor: '#f2f2f2ab'
     },
     exp: {
         backgroundColor: '#100f0ffa',
@@ -61,7 +63,8 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing(1),
+        minHeight: '100vh'
+        // padding: theme.spacing(1),
     },
     toolbar: theme.mixins.toolbar,
 });
@@ -98,7 +101,7 @@ class AdminPage extends Component {
         console.log(this.state)
         return (
             <div className={classes.root}>
-                <CssBaseline />
+                {/* <CssBaseline /> */}
                 <AppBar position="fixed" className={classes.appBar}>
                     <Header />
                 </AppBar>

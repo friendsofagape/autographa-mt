@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
-import apiUrl from '../../GlobalUrl';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { selectBook } from '../../../store/actions/sourceActions';
@@ -17,26 +16,6 @@ const styles = theme => ({
 });
 
 class MenuBar extends Component {
-
-    async getTokenList(book) {
-        // const { updateState } = this.props
-        // updateState({book: book})
-
-        const { sourceId } = this.props.project
-        console.log(apiUrl + 'v1/tokenlist/' + sourceId + '/' + book)
-        var bookData = await fetch(apiUrl + 'v1/tokenlist/' + sourceId + '/' + book, {
-            method: 'GET'
-        })
-        const tokenList = await bookData.json();
-        // updateState({tokenList: tokenList, book})
-    }
-
-    // onBookSelection = (book) => {
-    //     this.getTokenList(book)
-    // }
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps)
-    }
 
     displayBooks() {
         const { project } = this.props
@@ -63,6 +42,7 @@ class MenuBar extends Component {
                         <FormControl>
                             <InputLabel htmlFor="select-books">Books</InputLabel>
                             <Select
+                                variant="outlined"
                                 className={classes.selectMenu}
                                 value={book}
                                 onChange={(e) => this.props.selectBook({ book: e.target.value })}

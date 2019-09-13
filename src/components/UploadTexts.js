@@ -14,14 +14,26 @@ import ComponentHeading from './ComponentHeading';
 import apiUrl from './GlobalUrl'
 import { displaySnackBar } from '../store/actions/sourceActions';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import { displaySnackBar } from '../store/actions/sourceActions'
 var grammar = require('usfm-grammar')
 
-export class UploadTexts extends Component {
+
+const styles = theme => ({
+    progress: {
+        margin: theme.spacing(2)
+    },
+});
+
+
+class UploadTexts extends Component {
     state = {
         fileContent: [],
         parsedUsfm: [],
-        disableUpload: true
+        disableUpload: true,
+        progress: false,
+        text: ""
     }
 
     async uploadVersionDetails(apiData) {
@@ -88,14 +100,21 @@ export class UploadTexts extends Component {
     async handleFileChosen(file) {
 
         let fileReader = await new FileReader();
+        console.log('first')
         fileReader.onloadend = (e) => {
             const { fileContent, parsedUsfm, errorFiles } = this.state
             const content = fileReader.result;
             var jsonOutput = grammar.parse(content)
             console.log('nice')
+            console.log(jsonOutput)
             if (jsonOutput.ERROR) {
                 console.log('here')
                 errorFiles.push(file.name)
+                this.props.displaySnackBar({
+                    snackBarMessage: jsonOutput.ERROR,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
                 this.setState({ errorFiles })
             } else {
                 console.log('fin')
@@ -103,24 +122,35 @@ export class UploadTexts extends Component {
                 parsedUsfm.push(jsonOutput)
                 this.setState({ fileContent, parsedUsfm })
             }
+            this.setState({ progress: false})
         }
         console.log('Inside')
-        fileReader.readAsText(file)
+        await this.setState({text: "Adding"})
+        await fileReader.readAsText(file)
+        await this.setState({ text: "completed"})
     };
 
     addFiles = e => {
         e.preventDefault();
         const filesObj = e.target.files
         const filesKeys = Object.keys(filesObj)
-        this.setState({ fileContent: [], parsedUsfm: [], errorFiles: [] })
+        this.setState({ fileContent: [], parsedUsfm: [], errorFiles: [], progress: true })
+        console.log('print 1')
         filesKeys.map(key => {
             this.handleFileChosen(filesObj[key])
         })
+        console.log('print 3')
+        this.props.displaySnackBar({
+            snackBarMessage: "added files",
+            snackBarOpen: true,
+            snackBarVariant: "error"
+        })
+        // this.setState({ progress: false})
     }
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         const { sourceId } = this.state
-        const newSourceId =  nextProps
-        if(sourceId !== newSourceId){
+        const newSourceId = nextProps
+        if (sourceId !== newSourceId) {
             this.setState({
                 fileContent: [],
                 parsedUsfm: [],
@@ -144,19 +174,24 @@ export class UploadTexts extends Component {
                 // onClose={close}
                 aria-labelledby="form-dialog-title"
             >
-                <PopUpMessages  />
+                <PopUpMessages />
                 <ComponentHeading data={{ text: "Upload Sources", styleColor: '#2a2a2fbd' }} />
                 <DialogTitle id="form-dialog-title"> </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Select the files to be uploaded and click Upload
-                </DialogContentText>
+                    </DialogContentText>
                     <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
 
                             <label>
-                                {this.state.parsedUsfm.length} {(this.state.parsedUsfm.length > 1 ) ? 'files' : 'file'}
+                                {this.state.parsedUsfm.length} {(this.state.parsedUsfm.length > 1) ? 'files' : 'file'}
                             </label>
+                        </Grid>
+                        <Grid item xs={2}>
+
+                            {(this.state.progress) ? <CircularProgress /> : null}
+                            {(this.state.text) ? this.state.text : null}
                         </Grid>
                         <Grid item xs={5}>
                             <input
@@ -172,7 +207,7 @@ export class UploadTexts extends Component {
                                 </Button>
                             </label>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Button disabled={this.state.disableUpload} variant="contained" color="inherit" onClick={this.handleSubmit}>Upload</Button>
                         </Grid>
                     </Grid>
@@ -197,4 +232,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(UploadTexts)
+export default connect(null, mapDispatchToProps)(withStyles(styles)(UploadTexts))

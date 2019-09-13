@@ -6,7 +6,7 @@ import { Typography, CardContent } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
-import { selectProject } from '../../store/actions/sourceActions';
+import { selectProject, displaySnackBar } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux';
 
 
@@ -18,41 +18,47 @@ const styles = theme => ({
         padding: theme.spacing(2)
     },
     cursorPointer: {
-      cursor: 'pointer',
+        cursor: 'pointer',
     },
 });
 
 class ListUserProjects extends Component {
     state = {
-        projectLists:[]
+        projects: null,
+        userProjectsData: [],
     }
 
-    async getUserProjects() {
-        const { updateState } = this.props
-        const data = await fetch(apiUrl + '/v1/autographamt/users/projects', {
-            method: 'GET',
-            headers: {
-                "Authorization": 'bearer ' + accessToken
+    async getProjectData() {
+        try {
+            const data = await fetch(apiUrl + 'v1/autographamt/users/projects', {
+                method: 'GET',
+                headers: {
+                    Authorization: 'bearer ' + accessToken
+                }
+            })
+            const response = await data.json()
+            if ('success' in response) {
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
+            } else {
+                this.setState({ projects: response })
             }
-        })
-        const userProjectsData = await data.json()
-        console.log(userProjectsData)
-        if (userProjectsData !== false) {
-            updateState({ userProjectsData })
+        }
+        catch (ex) {
+            this.props.displaySnackBar({
+                snackBarMessage: "Server Error",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
         }
     }
-    
-    async getProjectsList(){
-        const data = await fetch(apiUrl + '/v1/autographamt/projects', {
-            method:'GET'
-        })
-        const projectLists = await data.json()
-        this.setState({projectLists})
-    }
+
 
     componentDidMount() {
-        this.getUserProjects()
-        // this.getProjectsList()
+        this.getProjectData()
     }
 
 
@@ -65,48 +71,55 @@ class ListUserProjects extends Component {
             displayDashboard: false,
             translationPane: true,
         })
-        this.props.selectProject({project: project})
+        this.props.selectProject({ project: project })
     }
 
-    displayProjectCards(){
-        // const { projectLists } = this.state
-        const { userProjectsData, classes } = this.props
-        return userProjectsData.map(project => {
-            return (
-                <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
-                    {/* <div className={classes.toolbar} /> */}
-                    <Card onClick={() => this.handleProjects(project)} className={classes.cursorPointer}>
-                        <CardHeader
-                            title={`Organisation: ${project.organisationName}`}
-                            subheader={`Organisation: ${project.organisationName}`} />
-                        <CardContent>
-                            <Typography varian="h5" gutterBottom>
-                                {project.projectName.split(" ")[0]}
-                            </Typography>
-                            <Typography varian="h5" gutterBottom>
-                                {project.projectName.split(" ")[1]}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            )
-        })
+    displayProjectCards() {
+        const { projects } = this.state
+        const { classes } = this.props
+        if (projects) {
+            return projects.map(project => {
+                return (
+                    <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{ gridRowGap: '2px' }}>
+                        {/* <div className={classes.toolbar} /> */}
+                        <Card onClick={() => this.handleProjects(project)} className={classes.cursorPointer}>
+                            <CardHeader
+                                title={`Organisation: ${project.organisationName}`}
+                                subheader={`Organisation: ${project.organisationName}`} />
+                            <CardContent>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split("|")[0]}
+                                </Typography>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.version.name}
+                                </Typography>
+                                <Typography varian="h5" gutterBottom>
+                                    {project.projectName.split("|")[1]}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                )
+            })
+        } else {
+            return <Typography variant="h5">No projects assigned</Typography>
+        }
     }
 
     render() {
         const { classes } = this.props;
         return (
 
-        <div className={classes.root}>
-            <Grid 
-                container
-                spacing={1}
-                style={{border:'1px solid #eee', padding:'10px'}}
+            <div className={classes.root}>
+                <Grid
+                    container
+                    spacing={1}
+                    style={{ border: '1px solid #eee', padding: '10px' }}
                 >
                     {this.displayProjectCards()}
 
-            </Grid>
-        </div>
+                </Grid>
+            </div>
         )
     }
 }
@@ -114,7 +127,8 @@ class ListUserProjects extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectProject : (project) => dispatch(selectProject(project))
+        selectProject: (project) => dispatch(selectProject(project)),
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp)),
     }
 }
 

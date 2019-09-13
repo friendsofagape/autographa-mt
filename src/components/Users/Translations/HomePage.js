@@ -8,9 +8,17 @@ import TranslationsWords from './TranslationWords';
 import UpdateTokens from './UpdateTokens';
 import { Switch } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
+import StatisticsSummary from '../../StatisticsSummary';
+import { withStyles } from '@material-ui/styles';
 // import Header from '../Header';
 
-export default class ProjectHomePage extends Component {
+const styles = theme => ({
+    root: {
+        backgroundColor: '#ededf4',
+    }
+});
+
+class ProjectHomePage extends Component {
     state = {
         book: '',
         tokenList: '',
@@ -108,11 +116,16 @@ export default class ProjectHomePage extends Component {
         } = this.state
         console.log("home State", this.state)
         return (
-            <Grid container item xs={12}>
+            <Grid container item xs={12} className={classes.root}>
                 {/* <Header classes={classes} /> */}
+                <Grid item xs={2}>
                 <MenuBar
                     updateState={this.updateState}
                  />
+                 </Grid>
+                 <Grid item xs={8}>
+                     {/* <StatisticsSummary /> */}
+                 </Grid>
                 <Grid container item xs={12}>
                     <Grid container alignItems="flex-start" justify="flex-end" item xs={7}>
                     </Grid>
@@ -163,3 +176,6 @@ export default class ProjectHomePage extends Component {
         )
     }
 }
+
+
+export default withStyles(styles)(ProjectHomePage)

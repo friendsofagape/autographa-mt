@@ -25,16 +25,45 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { displaySnackBar } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux'
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import StatisticsSummary from '../StatisticsSummary';
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+        // backgroundColor: '#383c5d',
+        // backgroundColor: '#f8f8fa',
+        // backgroundColor: '#ededf4',
+        // height: '100vh'
     },
     toolbar: theme.mixins.toolbar,
-    gridSize:{
+    gridSize: {
         height: 340,
         width: 300
+    },
+    listItem: {
+        border: '1px solid #eee',
+    },
+    checkBox: {
+        // backgroundColor: '#383c5d',
+        // backgroundColor: '#5b3a89',
+        // padding:'10px',
+        // color: '#fff',
+        border: '1px solid #eee',
+        // border: '1px solid #eee',
+        // padding: '10px'
+        // backgroundColor: '#141c29'
+    },
+    statisticsPane: {
+        // backgroundColor: '#383c5d',
+        // backgroundColor: '#fff',
+        // backgroundColor: '#626ed4',
+        // padding: '10px',
+        // color: '#fff',
+        // border: '1px solid #eee',
+        // borderRadius: '5px',
+        minHeight: '50px'
     }
 });
 
@@ -45,84 +74,87 @@ class AssignUser extends Component {
     state = {
         userListing: false,
         listBooks: false,
-        availableBooks:[],
+        availableBooks: [],
         assignedUsers: [],
         availableBooksData: {},
-        userId:'',
+        userId: '',
         projectId: '',
         userStatus: {},
-        userData: []
+        userData: [],
+        statistics: null
     }
 
-    async getUsers(){
-        const { userStatus} = this.state
+    async getUsers() {
+        const { userStatus } = this.state
         const data = await fetch(apiUrl + '/v1/autographamt/users', {
-            method:'GET',
+            method: 'GET',
             headers: {
                 "Authorization": 'bearer ' + accessToken
             }
         })
         const userData = await data.json()
-        console.log(userData)
-        if("success" in userData){
+        if ("success" in userData) {
             this.props.displaySnackBar({
                 snackBarMessage: userData.message,
                 snackBarOpen: true,
                 snackBarVariant: (userData.success) ? "success" : "error"
             })
-        }else{
+        } else {
             userData.map(item => {
-                if(item.roleId > 1){
+                if (item.roleId > 1) {
                     userStatus[item.userId] = {
-                        "admin":true,
-                        "verified":item.verified
+                        "admin": true,
+                        "verified": item.verified
                     }
-                }else{
+                } else {
                     userStatus[item.userId] = {
-                        "admin":false,
-                        "verified":item.verified
+                        "admin": false,
+                        "verified": item.verified
                     }
                 }
             })
-            this.setState({userData:userData, userStatus:userStatus})
+            this.setState({ userData: userData, userStatus: userStatus })
         }
     }
 
-    async getAssignedUsers(){
-        console.log('Im getting')
-        const projectId = this.props.projectId
+    async getAssignedUsers() {
+        const { projectId } = this.props.project
+        console.log(this.props)
         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments/' + projectId, {
-            method:'GET',
+            method: 'GET',
             headers: {
                 Authorization: 'bearer ' + accessToken
             }
         })
         const assignedUsers = await data.json()
-        if(!assignedUsers.message){
-            console.log('got and now setting')
-            this.setState({assignedUsers})
+        if (!assignedUsers.message) {
+            this.setState({ assignedUsers })
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getUsers()
         this.getAssignedUsers()
     }
 
-    // componentDidUpdate(){
-    //     this.getAssignedUsers()
-    // }
-
-    addUser(){
-        this.setState({userListing:true})
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        const { project } = nextProps
+        const { statistics } = this.state
+        if (statistics === null) {
+            this.getProjectStatistcs(project)
+        }
     }
 
-    async assignUserToProject(apiData){
-        // console.log(apiData)
-        // console.log(apiUrl + '/v1/autographamt/projects/assignments')
-        try{
+
+    addUser() {
+        this.setState({ userListing: true })
+    }
+
+    async assignUserToProject(apiData) {
+        try {
             const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments', {
-                method:'POST',
+                method: 'POST',
                 body: JSON.stringify(apiData)
             })
             const myJson = await data.json()
@@ -132,7 +164,7 @@ class AssignUser extends Component {
                 snackBarVariant: "success"
             })
             this.getAssignedUsers()
-        }catch(ex){
+        } catch (ex) {
             this.props.displaySnackBar({
                 snackBarMessage: "Server Error",
                 snackBarOpen: true,
@@ -142,22 +174,22 @@ class AssignUser extends Component {
     }
 
     selectUser = (userId) => {
-        const { projectId } =  this.props
+        const { projectId } = this.props.project
         const apiData = {
             projectId: projectId,
-            userId:userId,
-            books:[],
+            userId: userId,
+            books: [],
             // action:'add'
         }
         this.assignUserToProject(apiData)
     }
 
     closeUserListing = () => {
-        this.setState({userListing: false})
+        this.setState({ userListing: false })
     }
 
     closeBookListing = () => {
-        this.setState({userId: '', projectId:'', listBooks:false})
+        this.setState({ userId: '', projectId: '', listBooks: false })
     }
 
     getUserNames = () => {
@@ -165,30 +197,29 @@ class AssignUser extends Component {
         return userData.map(user => {
             return (
                 <div key={user.userId}>
-                <ListItem button onClick={() => this.selectUser(user.userId)} >{user.firstName + " " + user.lastName}</ListItem>
-                <Divider />
+                    <ListItem className={this.props.classes.listItem} button onClick={() => this.selectUser(user.userId)} >{user.firstName + " " + user.lastName}</ListItem>
+                    <Divider />
                 </div>
             )
         })
     }
 
-    async deleteUser(apiData){
+    async deleteUser(apiData) {
         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments', {
-            method:'DELETE',
-            body:JSON.stringify(apiData)
+            method: 'DELETE',
+            body: JSON.stringify(apiData)
         })
         const response = await data.json()
-        if(response.success){
-            console.log('deleted')
+        if (response.success) {
             this.props.displaySnackBar({
                 snackBarMessage: response.message,
                 snackBarOpen: true,
                 snackBarVariant: "success"
             })
             this.getAssignedUsers()
-            
-            
-        }else{
+
+
+        } else {
             this.props.displaySnackBar({
                 snackBarMessage: response.message,
                 snackBarOpen: true,
@@ -208,15 +239,15 @@ class AssignUser extends Component {
     }
 
 
-    async getUserBooks(userId){
-        try{
-            const { projectId } = this.props
+    async getUserBooks(userId) {
+        try {
+            const { projectId } = this.props.project
             const data = await fetch(apiUrl + 'v1/sources/projects/books/' + projectId + '/' + userId, {
-                method:'GET'
+                method: 'GET'
             })
             const response = await data.json()
-            this.setState({ 
-                listBooks:true, 
+            this.setState({
+                listBooks: true,
                 availableBooksData: response,
             })
             this.props.displaySnackBar({
@@ -225,7 +256,7 @@ class AssignUser extends Component {
                 snackBarVariant: "success"
             })
         }
-        catch(ex){
+        catch (ex) {
             this.props.displaySnackBar({
                 snackBarMessage: "Server Error",
                 snackBarOpen: true,
@@ -236,21 +267,20 @@ class AssignUser extends Component {
     }
 
     handleSelectBooks = (userId, projectId) => {
-        this.setState({userId, projectId})
+        this.setState({ userId, projectId })
         this.getUserBooks(userId)
     }
 
     displayAssignedUsers = () => {
         const { assignedUsers } = this.state
-        // console.log(assignedUsers)
         return assignedUsers.map(user => {
             const { userName, email, userId } = user.user
             return (
                 <TableRow key={userId}>
-                    <TableCell align="right">{ userName }</TableCell>
-                    <TableCell align="right">{ email }</TableCell>
-                    <TableCell align="right"><Button variant="contained" color="primary" onClick={() => this.handleSelectBooks(userId, user.projectId)}>Books</Button></TableCell>
-                    <TableCell align="right"><Button small="true" onClick={() => this.handleDelete(userId, user.projectId)}><DeleteOutlinedIcon  /></Button></TableCell>
+                    <TableCell align="right">{userName}</TableCell>
+                    <TableCell align="right">{email}</TableCell>
+                    <TableCell align="right"><Button size="small" variant="contained" color="primary" onClick={() => this.handleSelectBooks(userId, user.projectId)}>Books</Button></TableCell>
+                    <TableCell align="right"><Button small="true" onClick={() => this.handleDelete(userId, user.projectId)}><DeleteOutlinedIcon /></Button></TableCell>
                 </TableRow>)
         })
     }
@@ -259,7 +289,7 @@ class AssignUser extends Component {
         const { availableBooksData } = this.state
         const value = availableBooksData[book]["assigned"]
         availableBooksData[book]["assigned"] = !value
-        this.setState({availableBooksData})
+        this.setState({ availableBooksData })
     }
 
     displayBooks = () => {
@@ -267,30 +297,33 @@ class AssignUser extends Component {
         const allBooks = Object.keys(availableBooksData)
         return allBooks.map(book => {
             return (
+                <Grid item xs={2} className={this.props.classes.checkBox}>
                 <FormControlLabel key={book}
                     control={
-                        <Checkbox 
-                        checked={availableBooksData[book]["assigned"]}
-                        onChange={() => this.handleBooksChecked(book)}
-                        value={availableBooksData[book]["assigned"]}
-                        
+                        <Checkbox
+                            checked={availableBooksData[book]["assigned"]}
+                            onChange={() => this.handleBooksChecked(book)}
+                            value={availableBooksData[book]["assigned"]}
+
                         />
                     }
                     label={book}
-                    />
+                />
+                </Grid>
             )
         })
     }
 
     assignBooksToUser = () => {
-        const { userId, projectId, availableBooksData } = this.state
+        const { userId, availableBooksData } = this.state
+        const { projectId } = this.props.project
 
         const checkedBooks = Object.keys(availableBooksData).filter(book => availableBooksData[book]["assigned"] === true)
 
         const apiData = {
             projectId: projectId,
-            userId:userId,
-            books:checkedBooks,
+            userId: userId,
+            books: checkedBooks,
             // action:'add'
         }
         this.assignUserToProject(apiData)
@@ -298,45 +331,36 @@ class AssignUser extends Component {
 
 
     render() {
-        const { classes, projectDetails } = this.props
+        const { classes } = this.props
+        const projectDetails = this.props.project
         const { userListing, listBooks } = this.state
-        console.log("assigned user", this.state.assignedUsers)
+        const { statistics } = this.state
+        console.log(this.props)
+        console.log(this.state)
         return (
 
             <div className={classes.root}>
                 <Grid
-                    container
-                    spacing={1}
-                    style={{ border: '1px solid #eee', padding: '10px' }}
+                    item xs={12}
+                    className={classes.statisticsPane}
                 >
-                    <Grid item xs={12} style={{ gridRowGap: '2px' }}>
-                        <Card>
-                            <CardHeader
-                                title={projectDetails.projectName.split("|")[0]}
-                                subheader={projectDetails.organisationName} />
-                            <CardContent>
-                                <Typography varian="h5" gutterBottom>
-                                    {projectDetails.projectName.split("|")[1]}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    {/* {this.displayProjectCards()} */}
-
+                    <StatisticsSummary />
                 </Grid>
                 {/* <div className={classes.toolbar} /> */}
-                <Button 
-                onClick={() => this.addUser()} 
-                variant="contained" color="primary" 
-                style={{
-                    marginLeft:'85%', 
-                    marginBottom:'2%', 
-                    marginTop:'2%'
+                <Button
+                    onClick={() => this.addUser()}
+                    variant="contained" color="primary"
+                    style={{
+                        marginLeft: '85%',
+                        marginBottom: '2%',
+                        marginTop: '2%'
                     }}>
-                <AddIcon />
-                Add User</Button>
+                    <AddIcon />
+                    Add User</Button>
                 <Paper>
-                    <ComponentHeading data={{ classes: classes, text: "Users List", styleColor: "#2a2a2fbd" }} />
+                    {/* <ComponentHeading data={{ classes: classes, text: "Users List", styleColor: "#2a2a2fbd" }} /> */}
+                    <ComponentHeading data={{ classes: classes, text: "Users List", styleColor: "#fff", color:'black' }} />
+                    <Divider />
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
@@ -354,14 +378,15 @@ class AssignUser extends Component {
                 <PopUpMessages />
                 <Dialog
                     open={userListing}
-                    // onClose={this.closeUserListing}
+                    onClose={this.closeUserListing}
                     aria-labelledby="form-dialog-title"
                 >
-                    <ComponentHeading data={{classes:classes, text:"Add User", styleColor:'#2a2a2fbd'}} />
+                    {/* <ComponentHeading data={{ classes: classes, text: "Add User", styleColor: '#2a2a2fbd' }} /> */}
+                    <ComponentHeading data={{ classes: classes, text: "Add User", styleColor: '#2e639a' }} />
                     <DialogTitle id="form-dialog-title"> </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Select User
+                            <Typography variant="body1">Select User</Typography>
                     </DialogContentText>
                         <List className={classes.gridSize}>
                             {this.getUserNames()}
@@ -374,22 +399,26 @@ class AssignUser extends Component {
                     </DialogActions>
                 </Dialog>
                 <Dialog
-                        open={listBooks}
-                        // onClose={this.closeUserListing}
-                        // value={this.state.value}
-                    >
-                        <DialogContent>
-                            {this.displayBooks()}
-
-
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
-                            <Button onClick={this.assignBooksToUser} variant="contained" color="primary" >Assign</Button>
-                        </DialogActions>
-                    </Dialog>
+                    open={listBooks}
+                >
+                    <DialogContent>
+                        <Grid container item spacing={1}>
+                        {this.displayBooks()}
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.closeBookListing} variant="contained" color="secondary">Close</Button>
+                        <Button onClick={this.assignBooksToUser} variant="contained" color="primary" >Assign</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         )
+    }
+}
+
+const mapStateToProps = state => {
+    return {
+        project: state.sources.project
     }
 }
 
@@ -399,4 +428,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(AssignUser))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AssignUser))
