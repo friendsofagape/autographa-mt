@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Grid } from '@material-ui/core';
-import ComponentHeading from '../../ComponentHeading';
+import ComponentHeading from '../ComponentHeading';
 import { ListItem } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -8,7 +8,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
-import apiUrl from '../../GlobalUrl'
+import apiUrl from '../GlobalUrl'
 import { connect } from 'react-redux'
 
 const styles = theme => ({
@@ -68,7 +68,6 @@ class TranslationWords extends Component {
         const { translationWords } = this.state
         if (translationWords) {
             var tWkeys = Object.keys(translationWords)
-            console.log(tWkeys[0])
             return tWkeys.map((item, index) => {
                 return (
                     <ExpansionPanel

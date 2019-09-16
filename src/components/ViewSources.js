@@ -74,7 +74,7 @@ class ViewSources extends Component {
 
     componentDidMount() {
         this.getBiblesData()
-        var accessToken = localStorage.getItem('accessToken')
+        var {accessToken} = this.props
         if (accessToken) {
             this.setState({ decoded: jwt_decode(accessToken), accessToken })
         }
@@ -125,17 +125,14 @@ class ViewSources extends Component {
     }
 
     handleSelect = (sourceId) => (e) => {
-        console.log(sourceId)
         this.setState({ dialogOpen: true, sourceId })
     }
 
     handleBookSelect = (sourceId) => (e) => {
-        console.log(sourceId)
         this.setState({ listBooks: true, sourceId }, () => this.getBooks())
     }
     render() {
         const { classes } = this.props
-        console.log(this.state)
         return (
             <Grid item xs={12} md={12} container justify="center" className={classes.root}>
                 <Header />
@@ -153,7 +150,7 @@ class ViewSources extends Component {
 
                 </Grid>
                 {/* <Link onClick={this.createSourceDialog}>Can't find source from the listed? Create new.</Link> */}
-                <Grid item xs={11} justify="center" >
+                <Grid item xs={11}  >
                     <Paper className={classes.versionDisplay}>
                         <ComponentHeading data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
                         <Divider />
@@ -233,6 +230,12 @@ class ViewSources extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        accessToken: state.auth.accessToken
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
         uploadDialog: (status) => dispatch(uploadDialog(status)),
@@ -240,4 +243,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(ViewSources));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ViewSources));

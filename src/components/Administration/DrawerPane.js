@@ -20,7 +20,6 @@ if (accessToken) {
     decoded = jwt_decode(accessToken)
     role = decoded.role
 }
-console.log(decoded)
 var drawerItems;
 if(role === 'sa'){
     drawerItems = ['List Organisations', 'List Users', 'List Projects', 'Create Projects', 'Create Organisation']
@@ -83,7 +82,6 @@ export default class DrawerPane extends Component {
             }
         })
         const organisationsData = await data.json()
-        console.log(organisationsData, organisationsStatus)
         organisationsData.map(item => {
             organisationsStatus[item.organisationId] = {
                 "verified":item.verified
@@ -173,7 +171,6 @@ export default class DrawerPane extends Component {
             case 'Create Projects': this.createProjects(); break;
             case 'List Projects': this.listProjects(); break;
             case 'My Projects': this.listMyProjects(); break;
-            default: console.log('No option selected')
         }
     }
     render() {

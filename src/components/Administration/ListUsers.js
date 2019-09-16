@@ -40,7 +40,6 @@ class ListUsers extends Component {
             }
         })
         const userData = await data.json()
-        console.log(userData)
         if("success" in userData){
             this.props.displaySnackBar({
                 snackBarMessage: userData.message,
@@ -129,9 +128,7 @@ class ListUsers extends Component {
 
     getTableRows() {
         const { userData, userStatus } = this.state
-        console.log(userData, userStatus)
         return userData.map(user => {
-            console.log(user)
             return (
                 <TableRow key={user.userId}>
                     <TableCell align="right">{user.firstName + " " + user.lastName}</TableCell>
@@ -157,7 +154,6 @@ class ListUsers extends Component {
     }
     render() {
         const { classes } = this.props
-        console.log(this.props)
         return (
             <Paper>
                 <ComponentHeading data={{ classes: classes, text: "Users List", styleColor:"#2a2a2fbd" }} />

@@ -26,7 +26,6 @@ class StatisticsSummary extends Component {
     async getProjectStatistcs() {
         try {
             const { project } = this.props
-            console.log(project)
             const data = await fetch(apiUrl + 'v1/autographamt/statistics/projects/' + project.projectId)
             const response = await data.json()
             if (response.success === false) {
@@ -55,7 +54,6 @@ class StatisticsSummary extends Component {
     render() {
         const { statistics } = this.state
         const { classes, project } = this.props
-        console.log(statistics)
         return (
             <Grid container spacing={2}>
                 <Grid item xs={3} className={classes.statisticsPane}>

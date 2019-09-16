@@ -9,9 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import { Checkbox, Button, Paper, List } from '@material-ui/core';
 import ComponentHeading from '../ComponentHeading';
 import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { Typography, CardContent } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -25,7 +23,6 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { displaySnackBar } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux'
-import HowToRegIcon from '@material-ui/icons/HowToReg';
 import StatisticsSummary from '../StatisticsSummary';
 
 const styles = theme => ({
@@ -119,7 +116,6 @@ class AssignUser extends Component {
 
     async getAssignedUsers() {
         const { projectId } = this.props.project
-        console.log(this.props)
         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments/' + projectId, {
             method: 'GET',
             headers: {
@@ -138,7 +134,6 @@ class AssignUser extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         const { project } = nextProps
         const { statistics } = this.state
         if (statistics === null) {
@@ -297,8 +292,8 @@ class AssignUser extends Component {
         const allBooks = Object.keys(availableBooksData)
         return allBooks.map(book => {
             return (
-                <Grid item xs={2} className={this.props.classes.checkBox}>
-                <FormControlLabel key={book}
+                <Grid item xs={2} className={this.props.classes.checkBox} key={book}>
+                <FormControlLabel 
                     control={
                         <Checkbox
                             checked={availableBooksData[book]["assigned"]}
@@ -327,16 +322,13 @@ class AssignUser extends Component {
             // action:'add'
         }
         this.assignUserToProject(apiData)
+        this.setState({ userId: '', projectId: '', listBooks: false })
     }
 
 
     render() {
         const { classes } = this.props
-        const projectDetails = this.props.project
         const { userListing, listBooks } = this.state
-        const { statistics } = this.state
-        console.log(this.props)
-        console.log(this.state)
         return (
 
             <div className={classes.root}>

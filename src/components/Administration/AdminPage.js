@@ -3,7 +3,6 @@ import jwt_decode from 'jwt-decode';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from '../Header';
 import { Component } from 'react';
 import DrawerPane from './DrawerPane';
@@ -14,26 +13,26 @@ import ListProjects from './ListProjects';
 import AssignUser from '../Assignments/AssignUser';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
 import ListUserProjects from '../Users/ListUserProjects'
-import HomePage from '../Users/Translations/HomePage'
+import HomePage from '../Translations/HomePage'
 // import ProjectStatistics from '../Reports/ProjectStatistics'
 
 
 let decoded;
-let tokenAliveFlag = false
+// let tokenAliveFlag = false
 var accessToken = localStorage.getItem('accessToken')
 if (accessToken) {
     decoded = jwt_decode(accessToken)
     let currentDate = new Date().getTime()
     let expiry = decoded.exp * 1000
-    var firstName = decoded.firstName
+    // var firstName = decoded.firstName
     var hours = (expiry - currentDate) / 36e5
     if(hours > 0){
-        tokenAliveFlag = true
+        // tokenAliveFlag = true
+        console.log("logged in")
     }else{
         console.log("logged out")
     }
 }
-console.log(decoded)
 
 const drawerWidth = 240;
 
@@ -85,7 +84,7 @@ class AdminPage extends Component {
         createProjectsPane: false,
         listProjectsPane: false,
         assignmentsPane: false,
-        // listUserProjectsPane: true,
+        listUserProjectsPane: true,
         displayDashboard: true,
         translationPane: false,
         // projectStatisticsPane: true,
@@ -98,7 +97,6 @@ class AdminPage extends Component {
     }
     render() {
         const { classes } = this.props;
-        console.log(this.state)
         return (
             <div className={classes.root}>
                 {/* <CssBaseline /> */}
@@ -119,25 +117,25 @@ class AdminPage extends Component {
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     {(this.state.listUsersPane) ? (<ListUsers data={{
-                        classes: classes,
+                        // classes: classes,
                         updateState: this.updateState,
                         userStatus: this.state.userStatus,
                         userData: this.state.userData
                     }} />) : null}
                     {(this.state.listOrganisationsPane) ? (<ListOrganisations data={{
-                        classes: classes,
+                        // classes: classes,
                         updateState: this.updateState,
                         organisationsData: this.state.organisationsData,
                         organisationsStatus: this.state.organisationsStatus
                     }} />) : null}
                     <CreateProjects data={{
-                        classes: classes,
+                        // classes: classes,
                         createProjectsPane: this.state.createProjectsPane,
                         updateState: this.updateState,
                         role: decoded.role
                     }} />
                     <CreateOrganisations
-                        classes={classes}
+                        // classes={classes}
                         createOrganisationsPane={this.state.createOrganisationsPane}
                         updateState={this.updateState}
                     />
@@ -158,7 +156,7 @@ class AdminPage extends Component {
                     {
                         (this.state.translationPane) ? (
                             <HomePage selectedProject={this.state.selectedProject}
-                                classes={classes} />
+                                 />
                         ) : null
                     }
                     {/* {

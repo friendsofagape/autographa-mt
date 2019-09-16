@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Grid } from '@material-ui/core';
-import ComponentHeading from '../../ComponentHeading';
+import ComponentHeading from '../ComponentHeading';
 import { ListItem } from '@material-ui/core';
 import { Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import apiUrl from '../../GlobalUrl';
-import { saveReference } from '../../../store/actions/sourceActions';
+import apiUrl from '../GlobalUrl';
+import { saveReference } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux';
 
 const styles = theme => ({
@@ -54,7 +54,6 @@ class Concordance extends Component {
 
     async getVerseText(token, sourceId, book ) {
         if(book){
-            console.log(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token)
             const data = await fetch(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token, {
                 method: 'GET'
             })
@@ -123,8 +122,6 @@ class Concordance extends Component {
         const { classes } = this.props
         const { book, token } = this.props
         const { concordance } = this.state
-        console.log(this.props)
-        console.log(this.state)
         return (
             <Grid container item xs={12} className={classes.containerGrid}>
                 {/* <Paper className={classes.tokenList}> */}

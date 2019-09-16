@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Grid, ListItem, Divider } from '@material-ui/core';
-import ComponentHeading from '../../ComponentHeading';
-import apiUrl from '../../GlobalUrl'
+import ComponentHeading from '../ComponentHeading';
+import apiUrl from '../GlobalUrl'
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { selectToken } from '../../../store/actions/sourceActions';
+import { selectToken } from '../../store/actions/sourceActions';
 
 const styles = theme => ({
     root: {

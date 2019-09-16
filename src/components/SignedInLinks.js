@@ -1,37 +1,37 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import { Menu, MenuItem } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom'
-import { renderers } from 'react-markdown/lib/with-html';
+import { connect } from 'react-redux';
+import { setAccessToken } from '../store/actions/authActions';
 
-let decoded;
-let tokenAliveFlag = false
-var accessToken = localStorage.getItem('accessToken')
-if (accessToken) {
-    decoded = jwt_decode(accessToken)
-    let currentDate = new Date().getTime()
-    let expiry = decoded.exp * 1000
-    var firstName = decoded.firstName
-    var hours = (expiry - currentDate) / 36e5
-    if (hours > 0) {
-        tokenAliveFlag = true
-    } else {
-        console.log("logged out")
-    }
-}
+// let decoded;
+// let tokenAliveFlag = false
+// var accessToken = localStorage.getItem('accessToken')
+// if (accessToken) {
+//     decoded = jwt_decode(accessToken)
+//     let currentDate = new Date().getTime()
+//     let expiry = decoded.exp * 1000
+//     var firstName = decoded.firstName
+//     var hours = (expiry - currentDate) / 36e5
+//     if (hours > 0) {
+//         tokenAliveFlag = true
+//     } else {
+//         console.log("logged out")
+//     }
+// }
 
 
 // const SignedInLinks = ({ classes }) => {
 class SignedInLinks extends Component {
-    // const [anchorEl, setAnchorEl] = useState(null);
-    // const open = Boolean(anchorEl)
     state = {
         anchorEl: null
     }
 
-    logOut = (event) => {
+    logOut = () => {
+        this.props.setAccessToken({accessToken: null})
         localStorage.removeItem('accessToken')
     }
 
@@ -63,7 +63,21 @@ class SignedInLinks extends Component {
         const { classes } = this.props
         const { anchorEl } = this.state
         const isMenuOpen = Boolean(anchorEl)
-        console.log(this.state)
+        let tokenAliveFlag = false
+        let decoded;
+        const { accessToken } = this.props
+        if (accessToken) {
+            decoded = jwt_decode(accessToken)
+            let currentDate = new Date().getTime()
+            let expiry = decoded.exp * 1000
+            var firstName = decoded.firstName
+            var hours = (expiry - currentDate) / 36e5
+            if (hours > 0) {
+                tokenAliveFlag = true
+            } else {
+                console.log("logged out")
+            }
+        }
         return (
 
             <div>
@@ -94,9 +108,6 @@ class SignedInLinks extends Component {
                                 {/* <Link to="/" onClick={() => LogOut()} className={classes.link}>Log Out</Link> */}
                                 <label color="inherit" style={{ padding: '5px' }}>Welcome, {firstName.charAt(0).toUpperCase() + firstName.slice(1)}</label>
                                 <IconButton
-                                    // aria-label="Account of current user"
-                                    // aria-controls="menu-appbar"
-                                    // aria-haspopup="true"
                                     aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                                     aria-haspopup="true"
                                     onClick={this.handleMenu}
@@ -137,4 +148,16 @@ class SignedInLinks extends Component {
     }
 }
 
-export default SignedInLinks;
+const mapStateToProps = state => {
+    return {
+        accessToken: state.auth.accessToken
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setAccessToken: (accessToken) => dispatch(setAccessToken(accessToken))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks);

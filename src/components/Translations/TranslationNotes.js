@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ComponentHeading from '../../ComponentHeading';
+import ComponentHeading from '../ComponentHeading';
 import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
@@ -42,7 +42,6 @@ class TranslationNotes extends Component {
 
     async getTranslationNotes(book, chapter, verse){
         try{
-            console.log('https://git.door43.org/api/v1/repos/BCS-EXEGETICAL/hi_tN/raw/Content%2F' + book.toUpperCase() +  '%2F' + chapter + '%2F' + verse + '.md')
             const data = await fetch('https://git.door43.org/api/v1/repos/BCS-EXEGETICAL/hi_tN/raw/Content%2F' + book.toUpperCase() +  '%2F' + chapter + '%2F' + verse + '.md', {
                 method:'GET',
                 header: {
@@ -54,8 +53,6 @@ class TranslationNotes extends Component {
             this.setState({translationNotes:result, currentRef: this.props.reference})
         }
         catch(ex){
-            console.log('No data')
-            console.log(ex)
             this.setState({translationNotes:"No Data available"})
         }
     }
@@ -85,7 +82,6 @@ class TranslationNotes extends Component {
         // }
     }
     render() {
-        console.log("notes", this.props)
         const { classes } = this.props
         return (
             <Grid item xs={12} className={classes.containerGrid}>

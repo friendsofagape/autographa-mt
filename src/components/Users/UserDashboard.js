@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Header from '../Header';
 import UserDrawer from './UserDrawer';
 import ListUserProjects from './ListUserProjects';
-import HomePage from './Translations/HomePage';
+import HomePage from '../Translations/HomePage';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
 
 
@@ -57,11 +57,9 @@ class UserDashboard extends Component {
     }
     render() {
         const { classes } = this.props;
-        console.log("user", this.state)
         const { 
             displayDashboard, 
-            listUserProjectsPane, 
-            userProjectsData, 
+            listUserProjectsPane,
             translationPane,
             selectedProject,
             createOrganisationsPane

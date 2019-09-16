@@ -8,7 +8,7 @@ import TranslationsWords from './TranslationWords';
 import UpdateTokens from './UpdateTokens';
 import { Switch } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
-import StatisticsSummary from '../../StatisticsSummary';
+// import StatisticsSummary from '../StatisticsSummary';
 import { withStyles } from '@material-ui/styles';
 // import Header from '../Header';
 
@@ -18,7 +18,7 @@ const styles = theme => ({
     }
 });
 
-class ProjectHomePage extends Component {
+class HomePage extends Component {
     state = {
         book: '',
         tokenList: '',
@@ -95,41 +95,33 @@ class ProjectHomePage extends Component {
     }
 
     render() {
-        const { classes, selectedProject } = this.props
-        const { books, sourceId, targetId, projectId} = selectedProject
+        const { classes } = this.props
         const {
-            book,
-            token,
-            tokenTranslation,
-            senses,
-            concordance,
+            // book,
+            // token,
+            // tokenTranslation,
+            // senses,
+            // concordance,
             tokenPane,
-            tokenList,
+            // tokenList,
             translationPane,
             concordancePane,
             displayConcordancePane,
             translationWordsPane,
-            translationWords,
+            // translationWords,
             translationNotesPane,
-            translationNotes,
+            // translationNotes,
             displayTranslationWordSwitch
         } = this.state
-        console.log("home State", this.state)
         return (
             <Grid container item xs={12} className={classes.root}>
-                {/* <Header classes={classes} /> */}
-                <Grid item xs={2}>
-                <MenuBar
+                <Grid container item xs={12}>
+                    <Grid container alignItems="flex-start" justify="center" item xs={7}>
+                    <MenuBar
                     updateState={this.updateState}
                  />
-                 </Grid>
-                 <Grid item xs={8}>
-                     {/* <StatisticsSummary /> */}
-                 </Grid>
-                <Grid container item xs={12}>
-                    <Grid container alignItems="flex-start" justify="flex-end" item xs={7}>
                     </Grid>
-                    <Grid container alignItems="flex-start" justify="flex-end" item xs={2}
+                    <Grid container alignItems="center" justify="center" item xs={2}
                     >
                         <Typography variant="subtitle2" color="textSecondary"  style={{display: displayTranslationWordSwitch}}>
                             Toggle Translation Words
@@ -138,18 +130,16 @@ class ProjectHomePage extends Component {
                             <Switch
                                 checked={this.state.tWswitchChecked}
                                 onChange={this.handleTWSwitchChange}
-                                // value={this.handleTWSwitchChange}
                             />
                         </div>
                     </Grid>
-                    <Grid container alignItems="flex-start" justify="flex-end" item xs={3}>
+                    <Grid container alignItems="center" justify="flex-end" item xs={3}>
                         <Typography variant="subtitle2" color="textSecondary" >
                             Toggle Translation Helps
                         </Typography>
                         <Switch
                             checked={this.state.tNswitchChecked}
                             onChange={this.handleTNSwitchChange}
-                            // value={this.handleTNSwitchChange}
                         />
                     </Grid>
                 </Grid>
@@ -178,4 +168,4 @@ class ProjectHomePage extends Component {
 }
 
 
-export default withStyles(styles)(ProjectHomePage)
+export default withStyles(styles)(HomePage)

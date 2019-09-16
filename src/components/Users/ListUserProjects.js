@@ -64,7 +64,6 @@ class ListUserProjects extends Component {
 
     handleProjects = (project) => {
         const { updateState } = this.props
-        // console.log(project)
         updateState({
             // selectedProject: project,
             listUserProjectsPane: false,

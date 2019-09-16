@@ -1,17 +1,10 @@
 
 // import { connect } from 'react-redux';
 import React, { Component } from 'react'
-import { Button, Grid, FormControl, Select, InputLabel } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { Grid } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Header from './Header';
 import PopUpMessages from './PopUpMessages';
-// import { Card } from '@material-ui/core';
-// import { CardHeader } from '@material-ui/core';
 import apiUrl from './GlobalUrl';
 import { connect } from 'react-redux'
 import { displaySnackBar, selectProject } from '../store/actions/sourceActions';
@@ -21,7 +14,7 @@ import { CardHeader } from '@material-ui/core';
 import { Typography, CardContent } from '@material-ui/core';
 import { booksDialog } from '../store/actions/dialogActions';
 import BooksDownloadable from './BooksDownloadable';
-var FileSaver = require('file-saver');
+// var FileSaver = require('file-saver');
 
 var accessToken = localStorage.getItem('accessToken')
 
@@ -182,8 +175,6 @@ class DownloadDraft extends Component {
             return ver.languageName === this.state.language && ver.versionContentCode === this.state.version && ver.contentType === 'bible'
         })
         const sourceId = version[0].sourceId
-        console.log("targ", targetLanguageId)
-        // console.log('http://127.0.0.1:8000/v1/translatedbooks/' + sourceId + '/' + targetLanguageId)
         var book = await fetch(apiUrl + 'v1/translatedbooks/' + sourceId + '/' + targetLanguageId, {
             method: 'GET'
         })
@@ -196,12 +187,9 @@ class DownloadDraft extends Component {
 
     onTargetLanguageSelection = () => {
         const { targetLanguage, languageDetails } = this.state
-        console.log("DONE", targetLanguage)
-        console.log("langDetails", languageDetails)
         const selectedLanguage = languageDetails.find((item) => {
             return item.languageName === targetLanguage
         })
-        console.log("selected", selectedLanguage.languageId)
         const targetLanguageId = selectedLanguage.languageId
         // this.setState({targetLanguageId})
         this.getTargetBooks(targetLanguageId)
@@ -224,9 +212,7 @@ class DownloadDraft extends Component {
     displayDraftCards(){
         const { projects } = this.state
         const { classes } = this.props
-        console.log(projects == [])
         if(projects){
-            console.log('in downloads')
             return projects.map(project => {
                 return (
                     <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
@@ -257,8 +243,6 @@ class DownloadDraft extends Component {
     }
 
     render() {
-        console.log("state", this.state)
-        const { classes } = this.props
         return (
 
             <Grid item xs={12} container>
@@ -279,11 +263,6 @@ class DownloadDraft extends Component {
 }
 
 
-// const mapStateToProps = (state) => {
-//     return {
-//         language: state.language
-//     }
-// }
 
 const mapDispatchToProps = (dispatch) => {
     return {

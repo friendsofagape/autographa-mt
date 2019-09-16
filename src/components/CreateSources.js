@@ -115,7 +115,6 @@ class UploadSource extends Component {
         const value = this.state.contentDetails.filter((item) => {
             return item.contentType === e.target.value
         })
-        console.log(value[0]);
         this.setState({ contentid: value[0].contentId, contentType: e.target.value });
     }
 
@@ -156,128 +155,126 @@ class UploadSource extends Component {
     }
 
     render() {
-        console.log(this.state)
         const { classes } = this.props
 
         var languageData = [];
         if (this.state.languageDetails != null) {
-			{
-				Object.values(this.state.languageDetails).map(lang => {
-					languageData.push({
-						label: lang.languageName,
-						value: lang.languageId,
-						code: lang.languageCode,
-					});
-				});
-			}
-		}
+            Object.values(this.state.languageDetails).map(lang => {
+                languageData.push({
+                    label: lang.languageName,
+                    value: lang.languageId,
+                    code: lang.languageCode,
+                });
+            });
+        }
 
         return (
-                <Dialog
-                    open={this.props.uploadPane}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <PopUpMessages />
-                    <ComponentHeading data={{ classes, text: "Create Source", styleColor: '#2a2a2fbd' }} />
-                    <form className={classes.form} onSubmit={this.handleSubmit}>
-                        <DialogTitle id="form-dialog-title"> </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Enter details to create source
+            <Dialog
+                open={this.props.uploadPane}
+                aria-labelledby="form-dialog-title"
+            >
+                <PopUpMessages />
+                <ComponentHeading data={{ classes, text: "Create Source", styleColor: '#2a2a2fbd' }} />
+                <form className={classes.form} onSubmit={this.handleSubmit}>
+                    <DialogTitle id="form-dialog-title"> </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Enter details to create source
                             </DialogContentText>
-                            <Grid container spacing={1} item xs={12}>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
-                                        id="version-content-description"
-                                        label="Version Name"
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                        // style={{ height: '40px' }}
-                                        required
-                                        inputProps={{
-                                            classes: {
-                                                input: classes.resize
-                                            }
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        onChange={(e) => this.setState({ versionContentCode: e.target.value })}
-                                        id="version-code"
-                                        label="Version Abbreviation"
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        onChange={(e) => this.setState({ year: e.target.value })}
-                                        id="year"
-                                        label="Year"
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        onChange={(e) => this.setState({ license: e.target.value })}
-                                        id="licence"
-                                        label="License"
-                                        className={classes.textField}
-                                        margin="normal"
-                                        variant="outlined"
-                                        defaultValue="CC BY SA"
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel htmlFor="select-revision">Revision</InputLabel>
-                                        <Select
-                                            value={this.state.revision}
-                                            variant="outlined"
-                                            onChange={(e) => this.setState({ revision: e.target.value })}
-                                            inputProps={{
-                                                name: 'revision',
-                                                id: 'select-revision'
-                                            }}
-                                            className={classes.selectMenu}
-                                        >
-                                            <MenuItem key={1} value={1}>1</MenuItem>
-                                            <MenuItem key={2} value={2}>2</MenuItem>
-                                            <MenuItem key={3} value={3}>3</MenuItem>
-                                            <MenuItem key={4} value={4}>4</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={6}>
-                                        <InputLabel htmlFor="select-language">Language</InputLabel>
-                                        <VirtualizedSelect className={classes.selectMenu}   
-                                        options={languageData}
-                                        onChange={(e) => this.setState({ 
-                                            languageName: e.label,
-                                            languageid:e.value,
-                                            languageCode:e.code})}
-                                        value={this.state.languageid} 
-                                        />
-                                </Grid>
+                        <Grid container spacing={1} item xs={12}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
+                                    id="version-content-description"
+                                    label="Version Name"
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    // style={{ height: '40px' }}
+                                    required
+                                    inputProps={{
+                                        classes: {
+                                            input: classes.resize
+                                        }
+                                    }}
+                                />
                             </Grid>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button 
-                            variant="contained" 
-                            size="small" 
-                            color="secondary" 
-                            onClick={() => this.props.uploadDialog({uploadPane: false})}
-                            >Close</Button>
-                            <Button variant="contained" color="primary" onClick={this.handleSubmit}>Create Source</Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
+                            <Grid item xs={6}>
+                                <TextField
+                                    onChange={(e) => this.setState({ versionContentCode: e.target.value })}
+                                    id="version-code"
+                                    label="Version Abbreviation"
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    onChange={(e) => this.setState({ year: e.target.value })}
+                                    id="year"
+                                    label="Year"
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    onChange={(e) => this.setState({ license: e.target.value })}
+                                    id="licence"
+                                    label="License"
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    defaultValue="CC BY SA"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="select-revision">Revision</InputLabel>
+                                    <Select
+                                        value={this.state.revision}
+                                        variant="outlined"
+                                        onChange={(e) => this.setState({ revision: e.target.value })}
+                                        inputProps={{
+                                            name: 'revision',
+                                            id: 'select-revision'
+                                        }}
+                                        className={classes.selectMenu}
+                                    >
+                                        <MenuItem key={1} value={1}>1</MenuItem>
+                                        <MenuItem key={2} value={2}>2</MenuItem>
+                                        <MenuItem key={3} value={3}>3</MenuItem>
+                                        <MenuItem key={4} value={4}>4</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <InputLabel htmlFor="select-language">Language</InputLabel>
+                                <VirtualizedSelect className={classes.selectMenu}
+                                    options={languageData}
+                                    onChange={(e) => this.setState({
+                                        languageName: e.label,
+                                        languageid: e.value,
+                                        languageCode: e.code
+                                    })}
+                                    value={this.state.languageid}
+                                />
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            color="secondary"
+                            onClick={() => this.props.uploadDialog({ uploadPane: false })}
+                        >Close</Button>
+                        <Button variant="contained" color="primary" onClick={this.handleSubmit}>Create Source</Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
         )
     }
 }

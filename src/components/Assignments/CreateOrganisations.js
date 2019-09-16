@@ -54,7 +54,6 @@ class CreateOrganisations extends Component {
             }
         })
         const myJson = await data.json()
-        console.log(myJson)
         if(myJson.success){
             this.props.displaySnackBar({
                 snackBarMessage: myJson.message,
@@ -91,7 +90,6 @@ class CreateOrganisations extends Component {
 
     handleClose = () => {
         const { updateState } = this.props
-        console.log(updateState)
         updateState({ createOrganisationsPane: false})
         this.setState({
             organisationName: '',

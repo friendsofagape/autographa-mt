@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
-import { Button, Grid, FormControl, Select, InputLabel } from '@material-ui/core';
+import { Button} from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -33,7 +32,6 @@ class BooksDownloadable extends Component {
 
 
     componentWillReceiveProps(nextProps){
-        console.log('here')
         const { project } = nextProps
         // const { project } =  this.props
         if(project){
@@ -57,7 +55,6 @@ class BooksDownloadable extends Component {
             projectId: project.projectId,
             bookList: bookList
         }
-        console.log(apiData)
         try {
             const data = await fetch(apiUrl + 'v1/downloaddraft', {
                 method: 'POST',
@@ -95,13 +92,10 @@ class BooksDownloadable extends Component {
 
     getBooksCheckbox = () => {
         const { targetBooks, targetBooksChecked } = this.state
-        // console.log('targ',targetBooks)
-        console.log(targetBooksChecked)
         if (targetBooks) {
             return targetBooks.map((book, index) => {
                 return (
                     <FormControlLabel key={book}
-                    key={index}
                         control={
                             <Checkbox
                                 checked={targetBooksChecked[book]['checked']}
@@ -117,7 +111,6 @@ class BooksDownloadable extends Component {
     }
     render() {
         const { booksDialog, booksPane, classes } = this.props
-        console.log(this.props)
         return (
             <Dialog
                     open={booksPane}

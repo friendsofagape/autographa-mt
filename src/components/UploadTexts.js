@@ -70,10 +70,7 @@ class UploadTexts extends Component {
         const { parsedUsfm, fileContent } = this.state
         const { sourceId } = this.props
         // let errorFiles = []
-        let uploadFail = []
-        let message = []
         parsedUsfm.map((item, index) => {
-            console.log(item)
             // let bookName = item.metadata.id.book
             var apiData = {
                 'sourceId': sourceId,
@@ -100,15 +97,11 @@ class UploadTexts extends Component {
     async handleFileChosen(file) {
 
         let fileReader = await new FileReader();
-        console.log('first')
         fileReader.onloadend = (e) => {
             const { fileContent, parsedUsfm, errorFiles } = this.state
             const content = fileReader.result;
             var jsonOutput = grammar.parse(content)
-            console.log('nice')
-            console.log(jsonOutput)
             if (jsonOutput.ERROR) {
-                console.log('here')
                 errorFiles.push(file.name)
                 this.props.displaySnackBar({
                     snackBarMessage: jsonOutput.ERROR,
@@ -117,14 +110,12 @@ class UploadTexts extends Component {
                 })
                 this.setState({ errorFiles })
             } else {
-                console.log('fin')
                 fileContent.push(content)
                 parsedUsfm.push(jsonOutput)
                 this.setState({ fileContent, parsedUsfm })
             }
             this.setState({ progress: false})
         }
-        console.log('Inside')
         await this.setState({text: "Adding"})
         await fileReader.readAsText(file)
         await this.setState({ text: "completed"})
@@ -135,11 +126,9 @@ class UploadTexts extends Component {
         const filesObj = e.target.files
         const filesKeys = Object.keys(filesObj)
         this.setState({ fileContent: [], parsedUsfm: [], errorFiles: [], progress: true })
-        console.log('print 1')
         filesKeys.map(key => {
             this.handleFileChosen(filesObj[key])
         })
-        console.log('print 3')
         this.props.displaySnackBar({
             snackBarMessage: "added files",
             snackBarOpen: true,
@@ -167,7 +156,6 @@ class UploadTexts extends Component {
 
     render() {
         const { dialogOpen, close } = this.props
-        console.log(this.state)
         return (
             <Dialog
                 open={dialogOpen}

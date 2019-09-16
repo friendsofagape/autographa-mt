@@ -42,7 +42,6 @@ class ListOrganisations extends Component {
         })
         const organisationsData = await data.json()
         let organisationsStatus = {}
-        console.log(organisationsData, organisationsStatus)
         if("success" in organisationsData){
             this.props.displaySnackBar({
 
@@ -68,67 +67,12 @@ class ListOrganisations extends Component {
         this.getOrganisations()
     }
 
-    // async getOrganisations() {
-    //     console.log('here')
-    //     const org = await fetch(apiUrl + '/v1/autographamt/organisations', {
-    //         method: 'GET',
-    //         headers: {
-    //             Authorization: 'bearer ' + accessToken
-    //         }
-    //     })
-    //     const organisationDetails = await org.json()
-    //     if("success" in organisationDetails){
-    //         if(organisationDetails.success === false){
-    //             this.props.displaySnackBar({
-    //                 snackBarMessage: organisationDetails.message,
-    //                 snackBarOpen: true,
-    //                 snackBarVariant: "error"
-                    
-    //             })
-    //         }
-    //     }else{
-    //         this.setState({ organisationDetails })
-    //     }
-    //     // console.log(organisationDetails)
-            
-    // }
-
-    // async getOrganisations(){
-    //     const {updateState, organisationsStatus} = this.props.data
-
-    //     const data = await fetch(apiUrl + '/v1/autographamt/organisations', {
-    //         method:'GET',
-    //         headers: {
-    //             Authorization: 'bearer ' + accessToken
-    //         }
-    //     })
-    //     const organisationsData = await data.json()
-    //     console.log(organisationsData, organisationsStatus)
-    //     organisationsData.map(item => {
-    //         organisationsStatus[item.organisationId] = {
-    //             "verified":item.verified
-    //         }
-    //     })
-    //     updateState({
-    //         organisationsStatus:organisationsStatus, 
-    //         organisationsData: organisationsData, 
-    //         listOrganisationsPane:true, 
-    //         listUsersPane: false,
-    //         createProjectsPane:false,
-    //         listProjectsPane: false,
-    //         assignmentsPane: false,
-    //         listUserProjectsPane: false,
-    //     })
-    // }
-
     async verifyOrganisation(verified, organisationId){
         try{
             const apiData = {
                 organisationId: organisationId,
                 verified: verified
             }
-            console.log(organisationId)
-            console.log(apiUrl + 'v1/autographamt/approvals/organisations')
             const data = await fetch(apiUrl + 'v1/autographamt/approvals/organisations', {
                 method: 'POST',
                 body: JSON.stringify(apiData),
@@ -202,7 +146,6 @@ class ListOrganisations extends Component {
     }
     render() {
         const {  classes } = this.props
-        console.log(this.state)
         return (
             <Paper>
             <ComponentHeading data={{classes:classes, text:"Organisations List", styleColor:"#2a2a2fbd"}} />

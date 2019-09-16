@@ -7,7 +7,6 @@ const initState = {
 }
 
 const authReducer = (state=initState, action) => {
-    console.log('auth reducer')
     switch(action.type){
         case 'SET_ACCESS_TOKEN':
             return {

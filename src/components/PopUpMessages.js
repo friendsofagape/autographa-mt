@@ -20,7 +20,6 @@ class PopUpMessages extends Component {
         })
     };
     render() {
-        console.log('snack', this.props)
         const { snackBarVariant, snackBarOpen, snackBarMessage} = this.props
         let snackColor;
         if(snackBarVariant === "success"){

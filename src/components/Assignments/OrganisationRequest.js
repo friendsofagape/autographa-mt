@@ -49,7 +49,6 @@ class OrganisationRequest extends Component {
             body: JSON.stringify(apiData)
         })
         const myJson = data.json()
-        console.log(myJson)
         if(myJson.success){
             this.props.displaySnackBar({
                 snackBarMessage: myJson.message,
@@ -63,7 +62,6 @@ class OrganisationRequest extends Component {
                 snackBarOpen: true,
                 snackBarVariant: "error"
             })
-            // this.setState({ snackBarOpen: true, popupdata: { variant: "error", message: myJson.message, snackBarOpen: true, closeSnackBar: this.closeSnackBar } })
         }
     }
 
@@ -157,8 +155,6 @@ class OrganisationRequest extends Component {
                             // fullWidth
                             variant="contained"
                             color="primary"
-                            
-                        // className={classes.submit}
                         >
                             Submit Details
                         </Button>

@@ -1,39 +1,42 @@
 import React, { Component } from 'react';
 import { Grid, Button, Typography } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-import ComponentHeading from '../../ComponentHeading';
-import PopUpMessages from '../../PopUpMessages';
+import ComponentHeading from '../ComponentHeading';
+import PopUpMessages from '../PopUpMessages';
 import Chip from '@material-ui/core/Chip';
-import apiUrl from '../../GlobalUrl';
+import apiUrl from '../GlobalUrl';
 // import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { displaySnackBar } from '../../../store/actions/sourceActions';
+import { displaySnackBar } from '../../store/actions/sourceActions';
 
 const accessToken = localStorage.getItem('accessToken')
 
 
 const styles = theme => ({
     root: {
-        display:'flex',
+        display: 'flex',
         flexGrow: 1,
-      },
-      inputField: {
+    },
+    inputField: {
         width: '90%',
         marginLeft: '10px'
-      },
-      containerGrid: {
-          width: '97%',
-          marginLeft: '2%',
-          marginRight: '2%',
-          border: '1px solid "#2a2a2fbd"',
-          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-          height: '100%',
-          backgroundColor: '#fff',
-      },
+    },
+    containerGrid: {
+        width: '97%',
+        marginLeft: '2%',
+        marginRight: '2%',
+        border: '1px solid "#2a2a2fbd"',
+        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        height: '100%',
+        backgroundColor: '#fff',
+    },
+    button: {
+        margin: '10px'
+    }
 });
 
- class UpdateTokens extends Component {
+class UpdateTokens extends Component {
     state = {
         translation: '',
         snackBarOpen: false,
@@ -52,7 +55,6 @@ const styles = theme => ({
             translation: translation,
             senses: sense
         }
-        console.log(apiData)
         try {
             const update = await fetch(apiUrl + 'v1/autographamt/projects/translations', {
                 method: 'POST',
@@ -148,7 +150,7 @@ const styles = theme => ({
     }
 
     render() {
-        const { classes, token, project } =  this.props
+        const { classes, token, project } = this.props
 
         const { translation } = this.state
         var displayLanguage = ''
@@ -165,7 +167,7 @@ const styles = theme => ({
                     <Grid item xs={12} sm={6}>
                         <TextField
                             disabled
-                            margin="normal"
+                            margin="dense"
                             variant="outlined"
                             label={token}
                             className={classes.inputField}
@@ -177,19 +179,25 @@ const styles = theme => ({
                             label="Enter Translation"
                             value={translation}
                             onChange={(e) => this.setState({ translation: e.target.value })}
-                            margin="normal"
+                            margin="dense"
                             variant="outlined"
                             className={classes.inputField}
                         />
                     </Grid>
                 </Grid>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ marginLeft: '30%', marginTop: '3%' }}
-                    onClick={this.handleSubmit}>Update Token</Button>
+                <Grid container justify="center" alignItems="center">
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        // style={{ marginLeft: '30%', marginTop: '3%' }}
+                        // style={{ margin: 'auto' }}
+                        onClick={this.handleSubmit}>Update Token</Button>
+                </Grid>
                 <Grid container item xs={12}>
-                    <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}>
+                    {/* <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}> */}
+                    <Grid container justify="center" alignItems="center">
                         <Typography variant="inherit" align="center" style={{ color: 'rgb(145, 148, 151)' }}>
                             Add alternate translations
                         </Typography>
@@ -200,16 +208,20 @@ const styles = theme => ({
                             label="Enter Senses"
                             value={this.state.sense}
                             onChange={(e) => this.setState({ sense: e.target.value })}
-                            margin="normal"
+                            margin="dense"
                             variant="outlined"
                             className={classes.inputField}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} style={{ marginTop: '7%' }}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={this.submitSenses}>Add Senses</Button>
+                    <Grid item xs={12} sm={6}>
+                        <Grid container justify="center" alignItems="center">
+                            {/* <Grid item xs={12} sm={6} style={{ marginTop: '7%' }}> */}
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                color="secondary"
+                                onClick={this.submitSenses}>Add Senses</Button>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Grid item xs={12} style={{ margin: '2%' }}>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { selectBook } from '../../../store/actions/sourceActions';
+import { selectBook } from '../../store/actions/sourceActions';
 
 
 const styles = theme => ({
@@ -11,7 +11,10 @@ const styles = theme => ({
         marginTop: '1%'
     },
     selectMenu: {
-        width: '120px',
+        width: '140px',
+        padding: '2px',
+        border: '1px solid black',
+        borderRadius: '10px'
     },
 });
 
@@ -34,7 +37,6 @@ class MenuBar extends Component {
 
     render() {
         const { classes, book } = this.props
-        console.log(this.props)
         return (
             <Grid container item xs={12} className={classes.selectionGrid}>
                 <Grid container item xs={8}>
@@ -42,7 +44,8 @@ class MenuBar extends Component {
                         <FormControl>
                             <InputLabel htmlFor="select-books">Books</InputLabel>
                             <Select
-                                variant="outlined"
+                                variant="filled"
+                                margin="dense"
                                 className={classes.selectMenu}
                                 value={book}
                                 onChange={(e) => this.props.selectBook({ book: e.target.value })}

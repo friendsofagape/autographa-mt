@@ -21,6 +21,7 @@ import { displaySnackBar } from '../../store/actions/sourceActions'
 import VirtualizedSelect from 'react-virtualized-select';
 import "react-select/dist/react-select.css";
 import "react-virtualized-select/styles.css";
+
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -29,12 +30,8 @@ const styles = theme => ({
     selectMenu: {
         width: '110px',
     },
-    // dialog:{
-    //     height: 500
-    // },
     dialogContent: {
         height: 400,
-        // width: '120%'
     },
     virtualSelect: {
         width: '150px'
@@ -48,8 +45,8 @@ class CreateProjects extends Component {
     state = {
         language: '',
         bibleLanguages: [],
-        biblesDetails:[],
-        allLanguages:[],
+        biblesDetails: [],
+        allLanguages: [],
         version: '',
         targetLanguage: '',
         targetLanguageId: '',
@@ -78,41 +75,35 @@ class CreateProjects extends Component {
 
 
     async getOrganisations() {
-        console.log('here')
-        console.log(accessToken)
         const org = await fetch(apiUrl + 'v1/autographamt/organisations', {
             method: 'GET',
             headers: {
                 Authorization: 'bearer ' + accessToken
             }
         })
-        console.log(org)
         const organisationDetails = await org.json()
-        if("success" in organisationDetails){
-            if(organisationDetails.success === false){
+        if ("success" in organisationDetails) {
+            if (organisationDetails.success === false) {
                 this.props.displaySnackBar({
                     snackBarMessage: organisationDetails.message,
                     snackBarOpen: true,
                     snackBarVariant: "error"
-                    
+
                 })
             }
-        }else{
+        } else {
             this.setState({ organisationDetails })
         }
-        // console.log(organisationDetails)
-            
+
     }
 
     componentDidMount() {
-        console.log('here')
         this.getOrganisations()
         this.getBiblesData()
     }
 
     displayOrganisation = () => {
         const { organisationDetails } = this.state
-        console.log("orggg", organisationDetails)
         return organisationDetails.map(org => {
             return (
                 <MenuItem key={org.organisationId} value={org.organisationName}>{org.organisationName}</MenuItem>
@@ -141,22 +132,16 @@ class CreateProjects extends Component {
             return <MenuItem key="" value="" disabled>Loading Versions</MenuItem>
         }
         const versions = biblesDetails.filter((ver) => {
-            console.log("new", ver)
             return ver.language === language.toLowerCase()
         })
-        // console.log(versions)
-        // this.setState({versionDetails: versions[0]["languageVersions"]})
         return versions[0]["languageVersions"].map(item => {
             return <MenuItem key={item.sourceId} value={item.version.longName}>{item.version.longName.toUpperCase()}</MenuItem>
         })
     }
 
     onVersionSelection = () => {
-        const { language, version, biblesDetails, versionDetails } = this.state
-        console.log(language, version)
-        console.log(biblesDetails)
+        const { language, version, biblesDetails } = this.state
         const versions = biblesDetails.filter((ver) => {
-            // console.log("new", ver)
             return ver.language === language.toLowerCase()
         })
         const source = versions[0]["languageVersions"].find((ver) => {
@@ -190,7 +175,6 @@ class CreateProjects extends Component {
 
     handleClose = () => {
         const { updateState } = this.props.data
-        console.log(updateState)
         updateState({ createProjectsPane: false })
         this.setState({ language: '', version: '', targetLanguage: '', sourceId: '' })
     }
@@ -210,7 +194,7 @@ class CreateProjects extends Component {
 
     async createProject() {
         const { sourceId, targetLanguageId, organisationId } = this.state
-        
+
         const apiData = {
             sourceId: sourceId,
             targetLanguageId: targetLanguageId,
@@ -225,7 +209,6 @@ class CreateProjects extends Component {
                 }
             })
             const myJson = await data.json()
-            console.log(myJson)
             if (myJson.success) {
                 this.props.displaySnackBar({
                     snackBarMessage: myJson.message,
@@ -246,7 +229,7 @@ class CreateProjects extends Component {
                 snackBarMessage: "Server Error",
                 snackBarOpen: true,
                 snackBarVariant: "error"
-                
+
             })
         }
     }
@@ -262,21 +245,18 @@ class CreateProjects extends Component {
     render() {
         var languageData = [];
         if (this.state.allLanguages != null) {
-			{
-				Object.values(this.state.allLanguages).map(lang => {
-					languageData.push({
-						label: lang.languageName,
-						value: lang.languageId,
-						code: lang.languageCode,
-					});
-				});
-			}
-		}
-       
+            Object.values(this.state.allLanguages).map(lang => {
+                languageData.push({
+                    label: lang.languageName,
+                    value: lang.languageId,
+                    code: lang.languageCode,
+                });
+            });
+        }
+
         const { language, version, organisation } = this.state
         const { createProjectsPane } = this.props.data
         const { classes } = this.props
-        console.log(this.state)
         return (
             <Dialog
                 open={createProjectsPane}
@@ -349,13 +329,15 @@ class CreateProjects extends Component {
                         </Grid>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={2}>
-                                <InputLabel htmlFor="select-target">Target</InputLabel>
-                                <VirtualizedSelect className={classes.virtualSelect}   
+                            <InputLabel htmlFor="select-target">Target</InputLabel>
+                            <VirtualizedSelect className={classes.virtualSelect}
                                 options={languageData}
-                                onChange={(e) => this.setState({ targetLanguage: e.label,
-                                    targetLanguageId:e.value})}
-                                value={this.state.targetLanguageId} 
-                                />
+                                onChange={(e) => this.setState({
+                                    targetLanguage: e.label,
+                                    targetLanguageId: e.value
+                                })}
+                                value={this.state.targetLanguageId}
+                            />
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -383,7 +365,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return{
+    return {
         displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
     }
 }

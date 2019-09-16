@@ -6,7 +6,6 @@ const initState = {
     token: null,
     targetLanguage: null,
     targetLanguageId: null,
-    token: null,
     reference: null,
     verseNum: '',
     snackBarMessage: null,
@@ -15,8 +14,6 @@ const initState = {
 }
 
 const sourceReducer = (state = initState, action) => {
-    // console.log(action)
-    // console.log(state)
     switch (action.type) {
         case 'GET_SOURCES':
             return {
