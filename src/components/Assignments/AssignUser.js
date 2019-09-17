@@ -61,7 +61,10 @@ const styles = theme => ({
         // border: '1px solid #eee',
         // borderRadius: '5px',
         minHeight: '50px'
-    }
+    },
+    bookCard: {
+        width:'400px'
+    },
 });
 
 const accessToken = localStorage.getItem('accessToken')
@@ -238,18 +241,30 @@ class AssignUser extends Component {
         try {
             const { projectId } = this.props.project
             const data = await fetch(apiUrl + 'v1/sources/projects/books/' + projectId + '/' + userId, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    Authorization: 'bearer ' + this.props.accessToken
+                }
             })
             const response = await data.json()
-            this.setState({
-                listBooks: true,
-                availableBooksData: response,
-            })
-            this.props.displaySnackBar({
-                snackBarMessage: "Books Fetched",
-                snackBarOpen: true,
-                snackBarVariant: "success"
-            })
+            if("success" in response){
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+
+                })
+            }else{
+                this.setState({
+                    listBooks: true,
+                    availableBooksData: response,
+                })
+                this.props.displaySnackBar({
+                    snackBarMessage: "Books Fetched",
+                    snackBarOpen: true,
+                    snackBarVariant: "success"
+                })
+            }
         }
         catch (ex) {
             this.props.displaySnackBar({
@@ -329,6 +344,7 @@ class AssignUser extends Component {
     render() {
         const { classes } = this.props
         const { userListing, listBooks } = this.state
+        console.log(this.state)
         return (
 
             <div className={classes.root}>
@@ -394,7 +410,7 @@ class AssignUser extends Component {
                     open={listBooks}
                 >
                     <DialogContent>
-                        <Grid container item spacing={1}>
+                        <Grid container item spacing={1} className={classes.bookCard}>
                         {this.displayBooks()}
                         </Grid>
                     </DialogContent>
@@ -410,7 +426,8 @@ class AssignUser extends Component {
 
 const mapStateToProps = state => {
     return {
-        project: state.sources.project
+        project: state.sources.project,
+        accessToken: state.auth.accessToken
     }
 }
 

@@ -4,6 +4,7 @@ import { Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import apiUrl from './GlobalUrl';
+import { displaySnackBar } from '../store/actions/sourceActions';
 
 
 const styles = theme => ({
@@ -99,4 +100,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(StatisticsSummary))
+const mapDispatchToProps = dispatch => {
+    return {
+        displaySnackBar: (popUp) => dispatch(displaySnackBar(popUp))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(StatisticsSummary))

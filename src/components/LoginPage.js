@@ -62,12 +62,11 @@ class LoginPage extends Component {
         })
         const myJson = await data.json()
         if ('accessToken' in myJson) {
+            this.setState({ redirect: true })
             await localStorage.setItem('accessToken', myJson.accessToken)
             this.props.setAccessToken({
                 accessToken: myJson.accessToken
             })
-            console.log('setting')
-            this.setState({ redirect: true })
         } else {
             // alert(myJson.message)
             this.props.displaySnackBar({
@@ -168,7 +167,6 @@ class LoginPage extends Component {
     }
 
     render() {
-        console.log(this.state)
         const { redirect } = this.state;
         if (redirect) {
             return <Redirect to='/dashboard' />

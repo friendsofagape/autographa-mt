@@ -38,15 +38,13 @@ const styles = theme => ({
         // marginLeft: '1%',
         // marginTop: '1%'
     },
-    typeG: {
-        backgroundColor: '#3e51b5',
-        color: 'white',
-        padding: '10px 0px'
-    },
     cursorPointer: {
         margin: 10,
         cursor: 'pointer',
     },
+    bookCard: {
+        width:'400px'
+    }
 });
 
 class ViewSources extends Component {
@@ -109,10 +107,9 @@ class ViewSources extends Component {
 
     displayBooks = () => {
         const { availableBooksData } = this.state
-        // const allBooks = Object.keys(availableBooksData)
         return availableBooksData.map(book => {
             return (
-                <Grid item xs={2} key={book}>
+                <Grid item xs={2} key={book} >
                     <Typography>{book}</Typography>
                 </Grid>
             )
@@ -212,7 +209,7 @@ class ViewSources extends Component {
                             open={this.state.listBooks}
                         >
                             <DialogContent>
-                                <Grid container item>
+                                <Grid container item className={this.props.classes.bookCard}>
                                     {this.displayBooks()}
                                 </Grid>
 

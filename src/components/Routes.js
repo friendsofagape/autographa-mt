@@ -30,21 +30,10 @@ class Routes extends Component {
             // this.props.setAccessToken({accessToken})
         }
     }
-    updateRedirect() {
-        this.setState({ redirect: true })
-    }
-
-    updateRedirect = () => {
-        const { redirect } = this.state
-        if (!redirect) {
-            this.setState({ redirect: true })
-        }
-    }
     render() {
         var { decoded } = this.state;
         const { classes, accessToken } =  this.props
         var tokenAliveFlag = true;
-        console.log(this.props)
         return (
             <BrowserRouter>
                 {(decoded && accessToken && decoded.role === 'sa' && tokenAliveFlag) ? (

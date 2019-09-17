@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Typography, CardContent } from '@material-ui/core';
@@ -8,6 +7,7 @@ import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
 import { selectProject, displaySnackBar } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux';
+import PopUpMessages from '../PopUpMessages';
 
 
 const accessToken = localStorage.getItem('accessToken')
@@ -64,13 +64,21 @@ class ListUserProjects extends Component {
 
     handleProjects = (project) => {
         const { updateState } = this.props
-        updateState({
-            // selectedProject: project,
-            listUserProjectsPane: false,
-            displayDashboard: false,
-            translationPane: true,
-        })
-        this.props.selectProject({ project: project })
+        if (project.books.length > 0) {
+            updateState({
+                listUserProjectsPane: false,
+                displayDashboard: false,
+                translationPane: true,
+            })
+            this.props.selectProject({ project: project })
+
+        } else {
+            this.props.displaySnackBar({
+                snackBarMessage: "No Books assigned yet",
+                snackBarOpen: true,
+                snackBarVariant: "error"
+            })
+        }
     }
 
     displayProjectCards() {
@@ -116,7 +124,7 @@ class ListUserProjects extends Component {
                     style={{ border: '1px solid #eee', padding: '10px' }}
                 >
                     {this.displayProjectCards()}
-
+                <PopUpMessages />
                 </Grid>
             </div>
         )
