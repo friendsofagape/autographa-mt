@@ -100,7 +100,7 @@ class UploadTexts extends Component {
         fileReader.onloadend = (e) => {
             const { fileContent, parsedUsfm, errorFiles } = this.state
             const content = fileReader.result;
-            var jsonOutput = grammar.parse(content)
+            var jsonOutput = grammar.parseUSFM(content)
             if (jsonOutput.ERROR) {
                 errorFiles.push(file.name)
                 this.props.displaySnackBar({
@@ -156,6 +156,7 @@ class UploadTexts extends Component {
 
     render() {
         const { dialogOpen, close } = this.props
+        console.log(this.state.parsedUsfm)
         return (
             <Dialog
                 open={dialogOpen}

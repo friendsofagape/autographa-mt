@@ -25,15 +25,16 @@ import { uploadDialog } from '../store/actions/dialogActions';
 import { connect } from 'react-redux'
 import CreateSources from './CreateSources';
 import { displaySnackBar } from '../store/actions/sourceActions';
+import PopUpMessages from './PopUpMessages';
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        overflowY:'hidden'
+        overflowY: 'hidden'
     },
     versionDisplay: {
         maxHeight: '80vh',
-        overflow:'auto',
+        overflow: 'auto',
         // backgroundColor:'red',
         // marginLeft: '1%',
         // marginTop: '1%'
@@ -43,7 +44,7 @@ const styles = theme => ({
         cursor: 'pointer',
     },
     bookCard: {
-        width:'400px'
+        width: '400px'
     }
 });
 
@@ -72,7 +73,7 @@ class ViewSources extends Component {
 
     componentDidMount() {
         this.getBiblesData()
-        var {accessToken} = this.props
+        var { accessToken } = this.props
         if (accessToken) {
             this.setState({ decoded: jwt_decode(accessToken), accessToken })
         }
@@ -81,23 +82,38 @@ class ViewSources extends Component {
     async getBooks() {
         try {
             const { sourceId } = this.state
+            // console.log(sourceId)
             const data = await fetch(apiUrl + 'v1/sources/books/' + sourceId, {
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    Authorization: 'bearer ' + this.props.accessToken
+                }
             })
             const response = await data.json()
-            this.setState({
-                listBooks: true,
-                availableBooksData: response,
-            })
-            this.props.displaySnackBar({
-                snackBarMessage: "Books Fetched",
-                snackBarOpen: true,
-                snackBarVariant: "success"
-            })
+            console.log(response)
+            if ("success" in response) {
+
+                this.props.displaySnackBar({
+                    snackBarMessage: response.message,
+                    snackBarOpen: true,
+                    snackBarVariant: "error"
+                })
+            } else {
+
+                this.setState({
+                    listBooks: true,
+                    availableBooksData: response,
+                })
+                this.props.displaySnackBar({
+                    snackBarMessage: "Books Fetched",
+                    snackBarOpen: true,
+                    snackBarVariant: "success"
+                })
+            }
         }
         catch (ex) {
             this.props.displaySnackBar({
-                snackBarMessage: "Server Error",
+                snackBarMessage: "Get books Server Error",
                 snackBarOpen: true,
                 snackBarVariant: "error"
             })
@@ -148,6 +164,7 @@ class ViewSources extends Component {
                 </Grid>
                 {/* <Link onClick={this.createSourceDialog}>Can't find source from the listed? Create new.</Link> */}
                 <Grid item xs={11}  >
+                    <PopUpMessages />
                     <Paper className={classes.versionDisplay}>
                         <ComponentHeading data={{ text: "View Sources", styleColor: '#2a2a2fbd' }} />
                         <Divider />

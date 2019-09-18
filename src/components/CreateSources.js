@@ -43,9 +43,14 @@ const styles = theme => ({
         fontSize: '20px'
     },
     selectMenu: {
-        width: 180,
-        margin: 20
+        width: 220,
+        margin: 10
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 220,
+
+    }
 });
 
 class UploadSource extends Component {
@@ -175,7 +180,7 @@ class UploadSource extends Component {
             >
                 <PopUpMessages />
                 <ComponentHeading data={{ classes, text: "Create Source", styleColor: '#2a2a2fbd' }} />
-                <form className={classes.form} onSubmit={this.handleSubmit}>
+                {/* <form className={classes.form} onSubmit={this.handleSubmit}> */}
                     <DialogTitle id="form-dialog-title"> </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -188,7 +193,7 @@ class UploadSource extends Component {
                                     id="version-content-description"
                                     label="Version Name"
                                     className={classes.textField}
-                                    margin="normal"
+                                    margin="dense"
                                     variant="outlined"
                                     // style={{ height: '40px' }}
                                     required
@@ -205,7 +210,7 @@ class UploadSource extends Component {
                                     id="version-code"
                                     label="Version Abbreviation"
                                     className={classes.textField}
-                                    margin="normal"
+                                    margin="dense"
                                     variant="outlined"
                                 />
                             </Grid>
@@ -215,7 +220,7 @@ class UploadSource extends Component {
                                     id="year"
                                     label="Year"
                                     className={classes.textField}
-                                    margin="normal"
+                                    margin="dense"
                                     variant="outlined"
                                 />
                             </Grid>
@@ -225,28 +230,32 @@ class UploadSource extends Component {
                                     id="licence"
                                     label="License"
                                     className={classes.textField}
-                                    margin="normal"
+                                    margin="dense"
                                     variant="outlined"
                                     defaultValue="CC BY SA"
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="select-revision">Revision</InputLabel>
+                                <FormControl variant="outlined" className={classes.formControl}>
                                     <Select
+                                    // native
                                         value={this.state.revision}
-                                        variant="outlined"
+                                        // variant="outlined"
                                         onChange={(e) => this.setState({ revision: e.target.value })}
+                                        // variant="outlined"
+                                        // margin="dense"
                                         inputProps={{
                                             name: 'revision',
                                             id: 'select-revision'
                                         }}
-                                        className={classes.selectMenu}
+                                        // className={classes.selectMenu}
                                     >
                                         <MenuItem key={1} value={1}>1</MenuItem>
                                         <MenuItem key={2} value={2}>2</MenuItem>
                                         <MenuItem key={3} value={3}>3</MenuItem>
                                         <MenuItem key={4} value={4}>4</MenuItem>
+                                        <MenuItem key={5} value={5}>5</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -254,6 +263,7 @@ class UploadSource extends Component {
                                 <InputLabel htmlFor="select-language">Language</InputLabel>
                                 <VirtualizedSelect className={classes.selectMenu}
                                     options={languageData}
+                                    id="select-language"
                                     onChange={(e) => this.setState({
                                         languageName: e.label,
                                         languageid: e.value,
@@ -271,9 +281,9 @@ class UploadSource extends Component {
                             color="secondary"
                             onClick={() => this.props.uploadDialog({ uploadPane: false })}
                         >Close</Button>
-                        <Button variant="contained" color="primary" onClick={this.handleSubmit}>Create Source</Button>
+                        <Button size="small" variant="contained" color="primary" onClick={this.handleSubmit}>Create Source</Button>
                     </DialogActions>
-                </form>
+                {/* </form> */}
             </Dialog>
         )
     }
