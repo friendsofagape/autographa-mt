@@ -28,7 +28,7 @@ function Header({ classes }) {
                 {/* <Link color="inherit" variant="body2" href="/"> */}
                 <Link to="/dashboard" className={classes.link}>
                     <Typography variant="h5" className={classes.grow}>
-                        AutographaMT new
+                        AutographaMT
                     </Typography>
                 </Link>
             <div className={classes.grow}>
