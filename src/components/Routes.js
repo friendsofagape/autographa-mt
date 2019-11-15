@@ -16,7 +16,7 @@ class Routes extends Component {
     state = {
         redirect: false,
         accessToken: "",
-        decode: {},
+        decoded: {},
     }
 
     componentDidMount() {
