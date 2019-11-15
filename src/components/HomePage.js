@@ -1,18 +1,7 @@
 import React, { Component } from 'react';
 import {
     Grid,
-    TextField,
-    Button,
-    FormControlLabel,
-    Checkbox,
-    Link,
     Typography,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Paper,
     makeStyles,
     Card,
     CardActionArea,
@@ -22,18 +11,16 @@ import {
     ListItemText,
     ExpansionPanel,
     ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Container
+    ExpansionPanelDetails
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 const styles = makeStyles(theme => ({
   homePage: {
-      marginTop: '5%'
+      marginTop: '5%',
   },
   root: {
     flexGrow: 1,
@@ -42,6 +29,9 @@ const styles = makeStyles(theme => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  subheader: {
+    fontWeight: "bold",
   }
 }));
 
