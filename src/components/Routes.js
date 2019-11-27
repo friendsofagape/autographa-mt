@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import jwt_decode from 'jwt-decode';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import LoginPage from './LoginPage';
+import HomePage from './HomePage';
 import SignUp from './SignUp';
 import AdminPage from './Administration/AdminPage'
 import DownloadDraft from './DownloadDraft';
@@ -15,7 +16,7 @@ class Routes extends Component {
     state = {
         redirect: false,
         accessToken: "",
-        decode: {},
+        decoded: {},
     }
 
     componentDidMount() {
@@ -38,7 +39,7 @@ class Routes extends Component {
             <BrowserRouter>
                 {(decoded && accessToken && decoded.role === 'sa' && tokenAliveFlag) ? (
                     <Switch>
-                        <Route exact path="/" component={() => <LoginPage  />} />
+                        <Route exact path="/" component={() => <HomePage  />} />
                         <Route path="/signin" component={() => <LoginPage  />} />
                         <Route path="/signup" component={() => <SignUp />} />
                         <Route path="/dashboard" component={() => <AdminPage />} />
@@ -48,7 +49,7 @@ class Routes extends Component {
                 ) : (
                         (accessToken && decoded.role === 'ad' && tokenAliveFlag) ? (
                             <Switch>
-                                <Route exact path="/" component={() => <LoginPage  />} />
+                                <Route exact path="/" component={() => <HomePage  />} />
                                 <Route path="/signin" component={() => <LoginPage  />} />
                                 <Route path="/signup" component={() => <SignUp />} />
                                 <Route path="/dashboard" component={() => <AdminPage />} />
@@ -58,7 +59,7 @@ class Routes extends Component {
                         ) : (
                                 (accessToken && decoded.role === 'm' && tokenAliveFlag) ? (
                                     <Switch>
-                                        <Route exact path="/" component={() => <LoginPage  />} />
+                                        <Route exact path="/" component={() => <HomePage  />} />
                                         <Route path="/signin" component={() => <LoginPage  />} />
                                         <Route path="/signup" component={() => <SignUp />} />
                                         <Route path="/download" component={() => <DownloadDraft classes={classes} />} />
@@ -67,7 +68,7 @@ class Routes extends Component {
                                     </Switch>
                                 ) : (
                                         <Switch>
-                                            <Route exact path="/" component={() => <LoginPage  />} />
+                                            <Route exact path="/" component={() => <HomePage  />} />
                                             <Route path="/signin" component={() => <LoginPage  />} />
                                             <Route path="/signup" component={() => <SignUp />} />
                                         </Switch>

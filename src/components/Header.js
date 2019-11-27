@@ -26,9 +26,9 @@ function Header({ classes }) {
         <AppBar position="static" className={classes.h1}>
             <Toolbar>
                 {/* <Link color="inherit" variant="body2" href="/"> */}
-                <Link to="/dashboard" className={classes.link}>
+                <Link to="/" className={classes.link}>
                     <Typography variant="h5" className={classes.grow}>
-                        AutographaMT new
+                        AutographaMT
                     </Typography>
                 </Link>
             <div className={classes.grow}>
