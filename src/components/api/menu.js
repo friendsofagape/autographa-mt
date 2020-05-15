@@ -7,7 +7,7 @@ export const menus = [
             {
                 name: 'List organisation',
                 link: '/app/organisations',
-                roles: ['member', 'ad', 'sa'],
+                roles: ['member', 'admin', 'sa'],
                 key:'organisations'
             },
             {
@@ -19,7 +19,7 @@ export const menus = [
             {
                 name: 'List users',
                 link: '/app/users',
-                roles: ['member', 'ad', 'sa'],
+                roles: ['member', 'admin', 'sa'],
                 key: 'users'
             },
             {
