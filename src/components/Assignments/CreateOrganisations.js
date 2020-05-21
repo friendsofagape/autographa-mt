@@ -83,10 +83,16 @@ class CreateOrganisations extends Component {
     //     this.setState(item)
     // }
 
+    canBeSubmitted() {
+        const { organisationName, organisationAddress,  organisationEmail, organisationPhone } = this.state;
+        return organisationName.toString().length > 0 && organisationAddress.toString().length > 0 && organisationEmail.toString().length > 0 && organisationPhone.toString().length > 0;
+	}
+
 
     render() {
         // const { popupdata } = this.state
         const { createOrganisationsPane, classes } = this.props
+        const isEnabled = this.canBeSubmitted();
         return (
             <Grid item xs={12}>
                 {/* <Header /> */}
@@ -152,6 +158,7 @@ class CreateOrganisations extends Component {
                             fullWidth
                             variant="contained"
                             color="primary"
+                            disabled={!isEnabled}
                             onClick={this.handleSubmit}
                         >
                             Create
