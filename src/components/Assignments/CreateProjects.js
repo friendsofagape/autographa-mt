@@ -134,6 +134,7 @@ class CreateProjects extends Component {
         const versions = biblesDetails.filter((ver) => {
             return ver.language === language.toLowerCase()
         })
+        console.log("+++++++++++++++", versions)
         return versions[0]["languageVersions"].map(item => {
             return <MenuItem key={item.sourceId} value={item.version.longName}>{item.version.longName.toUpperCase()}</MenuItem>
         })
