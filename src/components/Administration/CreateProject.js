@@ -102,7 +102,7 @@ class CreateProject extends Component {
 			return source.map((item) => {
 				return (
 					<MenuItem key={item.sourceId} value={item.sourceId}>
-						{item.version.code}
+						{item.version.code +' (' + item.version.longName +' )'}
 					</MenuItem>
 				);
 			});
@@ -160,8 +160,6 @@ class CreateProject extends Component {
 				});
 			});
 		}
-		console.log('Create Project', this.props);
-		console.log('State Projects', this.state);
 		return (
 			<Dialog
 				onClose={close}
@@ -207,7 +205,7 @@ class CreateProject extends Component {
 						<Grid item xs={6}>
 							<FormControl className={classes.formControl}>
 								<InputLabel className={classes.label} htmlFor="select-version">
-									Version
+									Version(Revision)
 								</InputLabel>
 								<Select
 									className={classes.selectMenu}
