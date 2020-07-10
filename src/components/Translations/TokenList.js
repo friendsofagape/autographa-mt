@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, ListItem, Divider } from "@material-ui/core";
+import { Grid, ListItem, Divider, Button } from "@material-ui/core";
 import ComponentHeading from "../ComponentHeading";
 import apiUrl from "../GlobalUrl";
 import { withStyles } from "@material-ui/core/styles";
@@ -10,7 +10,15 @@ import {
   setSelectedToken,
 } from "../../store/actions/projectActions";
 
-import ReactToExcel from "react-html-table-to-excel";
+
+// import ReactToExcel from "react-html-table-to-excel";
+
+
+import { saveAs } from 'file-saver';
+import XLSX from 'xlsx';
+
+
+
 
 const styles = (theme) => ({
   root: {
@@ -94,36 +102,53 @@ class TokenList extends Component {
     }
   }
 
-  download = () => {
-    console.log("dddddddddddddddd", this.props.tokenList);
+  clickdownload = () => {
+    // console.log("dddddddddddddddd", this.props.currentBook);
+    var tokenarray =  this.props.tokenList.map(i => [i])
+    var wb = XLSX.utils.book_new();
+      wb.Props = {
+        Title : "TokenList",
+        Subject : "TokenList",
+        Author : "TokenList",
+        CreatedDate : new Date()
+        };
+        wb.SheetNames.push("TokenList");
+        var ws_data = tokenarray;
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["TokenList"] = ws;
+
+        var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+        function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+        }
+    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.props.selectedBook+'.xlsx');
   };
+
+  canBeSubmitted() {
+        const {  tokenList } = this.props;
+        // console.log('jjjjjjjjjjjjjjjjjjjjjj', tokenlist)
+        // console.log("eeeeeeeeeeeeeeeeeeeeeeeeeee", this.state)
+        return tokenList.length > 0 ;
+  }
+
 
   render() {
     const { classes } = this.props;
+    const isEnabled = this.canBeSubmitted();
     // console.log("Token list", this.props);
-    console.log("dddddddddddddd", this.props.tokenList);
+    console.log("ddddddddddddd00000000000000000d", this.props.selectedBook);
     return (
       <div>
-        {/* <button onClick={this.download}>DOWNLOAD TOKEN</button>
-               <button>UPLOAD TOKEN</button> */}
-        <div className="App">
-          {/* <table id="table-to-xls">
-            <tbody> */}
-              {this.props.tokenList.map((message) => (
-                <tr key={message}>
-                  <td>{message} </td>
-                </tr>
-              ))}
-            {/* </tbody>
-          </table> */}
-          <ReactToExcel
-            table="table-to-xls"
-            filename="excelFile"
-            sheet="sheet 1"
-            buttonText="DOWNLOD"
-          />
-        </div>
-
+         <Button size="small"
+            variant="contained"
+            color="primary"
+            disabled={!isEnabled}
+            onClick ={this.clickdownload}> 
+            Download Tokens
+            </Button>
         <Grid item xs={12} className={classes.containerGrid}>
           <Grid item xs={12}>
             <ComponentHeading
@@ -138,7 +163,7 @@ class TokenList extends Component {
             {this.getTokens()}
           </Grid>
         </Grid>
-      </div>
+        </div>
     );
   }
 }
