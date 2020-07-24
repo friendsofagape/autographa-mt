@@ -166,7 +166,7 @@ class ViewSources extends Component {
     //     this.setState({ decoded: jwt_decode(accessToken), accessToken })
     // }
     dispatch(fetchBibleLanguages());
-    if (current_user.role == "sa") {
+    if (current_user.role == "sa" ) {
       let { columns } = this.state;
       columns = [
         ...columns,
@@ -209,6 +209,34 @@ class ViewSources extends Component {
             },
           },
         },
+      ];
+      this.setState({ columns });
+    }
+
+    else {
+      let { columns } = this.state;
+      columns = [
+        ...columns,
+        {
+          name: "Books",
+          options: {
+            filter: true,
+            customBodyRender: (value) => {
+              return (
+                <Button
+                  onClick={() =>
+                    this.setState(
+                      { listBooks: true },
+                      this.handleBookSelect(value)
+                    )
+                  }
+                >
+                  View
+                </Button>
+              );
+            },
+          },
+        }
       ];
       this.setState({ columns });
     }
