@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, ListItem, Divider, Button } from "@material-ui/core";
+import { Grid, ListItem, Divider, Button, Alert } from "@material-ui/core";
 import ComponentHeading from "../ComponentHeading";
 import apiUrl from "../GlobalUrl";
 import { withStyles } from "@material-ui/core/styles";
@@ -9,13 +9,16 @@ import {
   fetchTokenList,
   setSelectedToken,
 } from "../../store/actions/projectActions";
+import { saveAs } from 'file-saver';
+import XLSX from 'xlsx';
+const accessToken = localStorage.getItem('accessToken');
+
 
 
 // import ReactToExcel from "react-html-table-to-excel";
 
 
-import { saveAs } from 'file-saver';
-import XLSX from 'xlsx';
+
 
 
 
@@ -105,6 +108,7 @@ class TokenList extends Component {
   clickdownload = () => {
     // console.log("dddddddddddddddd", this.props.currentBook);
     var tokenarray =  this.props.tokenList.map(i => [i])
+    tokenarray.unshift(['token','translation','senses'])
     var wb = XLSX.utils.book_new();
       wb.Props = {
         Title : "TokenList",
@@ -127,6 +131,41 @@ class TokenList extends Component {
     saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.props.selectedBook+'.xlsx');
   };
 
+  clickupload = (e) => {
+    var proId = this.props.selectedProject.projectId;
+    var files = e.target.files,
+    f = files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      // var contents = e.target.result;
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, {type: 'array'});
+      var first_sheet_name = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[first_sheet_name];
+      var tknlist = XLSX.utils.sheet_to_json(worksheet)
+      var jsondata = {
+        "projectId":proId,
+        "tokenTranslations":tknlist
+      }
+      console.log("ttttttttttt", jsondata)
+      var respdata = fetch(apiUrl + 'v1/autographamt/projects/bulktranslations',{
+          method: 'POST',
+          body: JSON.stringify(jsondata),
+          headers: {
+              Authorization: 'bearer ' + accessToken
+          }
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message));
+    };
+
+    reader.onerror = function(e) {
+      console.error("File could not be read! Code " + e.target.error.code);
+    };
+    reader.readAsArrayBuffer(f);
+  }
+
+
   canBeSubmitted() {
         const {  tokenList } = this.props;
         // console.log('jjjjjjjjjjjjjjjjjjjjjj', tokenlist)
@@ -139,16 +178,38 @@ class TokenList extends Component {
     const { classes } = this.props;
     const isEnabled = this.canBeSubmitted();
     // console.log("Token list", this.props);
-    console.log("ddddddddddddd00000000000000000d", this.props.selectedBook);
+    // console.log("ddddddddddddd00000000000000000d", this.props.selectedProject.projectId);
     return (
+      <div>
       <div>
          <Button size="small"
             variant="contained"
             color="primary"
             disabled={!isEnabled}
-            onClick ={this.clickdownload}> 
+            onClick ={this.clickdownload}>
             Download Tokens
-            </Button>
+        </Button>
+        </div>
+        <br />
+        <div>
+        <label tmlFor="upload-photo">
+          <input
+            style={{ display: 'none' }}
+            id="upload-photo"
+            name="upload-photo"
+            type="file"
+            onChange={this.clickupload}
+          />
+          <Button
+            color="secondary"
+            variant="contained"
+            disabled={!isEnabled}
+            component="span">
+            Upload Tokens
+          </Button>
+       </label>
+       </div>
+       <br />
         <Grid item xs={12} className={classes.containerGrid}>
           <Grid item xs={12}>
             <ComponentHeading
