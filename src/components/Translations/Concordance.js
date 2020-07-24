@@ -55,7 +55,7 @@ class Concordance extends Component {
 
 	async getVerseText(token, sourceId, book) {
 		if (book) {
-			const data = await fetch(apiUrl + '/v1/concordances/' + sourceId + '/' + book + '/' + token, {
+			const data = await fetch(apiUrl + 'v1/concordances/' + sourceId + '/' + book + '/' + token, {
 				method: 'GET',
 			});
 			const concordance = await data.json();

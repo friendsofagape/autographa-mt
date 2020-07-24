@@ -45,7 +45,7 @@ class TranslationWords extends Component {
     }
 
     async getTranslationWords(sourceId, token) {
-        const data = await fetch(apiUrl + '/v1/translationshelps/words/' + sourceId + '/' + token, {
+        const data = await fetch(apiUrl + 'v1/translationshelps/words/' + sourceId + '/' + token, {
             method: 'GET'
         })
         const translationWords = await data.json()
