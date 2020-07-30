@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
+import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Tooltip } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
@@ -46,7 +46,7 @@ const getMuiTheme = () => createMuiTheme({
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2),
+        padding: theme.spacing(8),
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
     },
@@ -86,75 +86,94 @@ class MyProjects extends Component {
                 }
             },
             {
-                name: 'Project Name',
+                name: <th>Project Name</th>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false,
                 }
             },
             {
-                name: 'Project Code',
+                name: <th>Organisation</th>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false,
                 }
             },
             {
-                name: 'Organisation',
+                name: <th>Source Details</th>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
+            // {
+            //     name: <th>Books Assigned</th>,
+            //     options: {
+            //         filter: false,
+            //         sort: false
+            //     }
+            // },
             {
-                name: 'Source',
+                name: <th>Translate</th>,
                 options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Books Assigned',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Download',
-                options: {
-                    filter: true,
-                    customBodyRender: (value, row) => {
-                        return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>
-                    }
-                }
-            },
-            {
-                name: 'Translate',
-                options: {
-                    filter: true,
+                    filter: false,
+                    sort:false,
                     customBodyRender: (value) => {
-                        return <Link to={`/app/translations/projects/${value}`}>Translate</Link>
-                    }
+                        var valuesbook = value.split('/')[1]
+                        var valuesTran = value.split('/')[0]
+                        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
+                        if (valuesbook == 0){
+                        return <Tooltip title="Book is not assigned yet">
+                        <span>
+                        <Button variant="outlined" disabled color="secondary" size="small">Open Project</Button>
+                        </span>
+                      </Tooltip>
+                        }
+                        else{
+                            return <Button variant="outlined" color="secondary" size="small"><Link to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
+                        }
+                    },
                 }
             }
+            
+           /* 
+            {
+                name: <th>Download</th>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value, row) => {
+                        return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>
+                    },
+                    customHeadRender: (columnMeta) => (
+                        <th key={5} align={"center"}>
+                          {columnMeta.name}
+                          </th>
+                    )
+                }
+            },
+            */
         ]
     }
 
-    handleDownload = (projectId) => {
-        var project = this.props.userProjects.filter(item => item.projectId === projectId)
-        if(project.length > 0){
-            this.setState({
-                project: project[0],
-                booksPane: true
-            })
-        } else {
-            swal({
-                title: 'Download drafts',
-                text: 'No downloadable books available ',
-                icon: 'error'
-            });
-        }
-    }
+    // handleDownload = (projectId) => {
+    //     var project = this.props.userProjects.filter(item => item.projectId === projectId)
+    //     if(project.length > 0){
+    //         this.setState({
+    //             project: project[0],
+    //             booksPane: true
+    //         })
+    //     } else {
+    //         swal({
+    //             title: 'Download drafts',
+    //             text: 'No downloadable books available ',
+    //             icon: 'error'
+    //         });
+    //     }
+    // }
 
-    updateState = (data) => {
-        this.setState(data);
-    }
+    // updateState = (data) => {
+    //     this.setState(data);
+    // }
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -167,16 +186,23 @@ class MyProjects extends Component {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
-                project.projectName.split('|')[1], 
+                // project.projectName.split('|')[1], 
                 project.organisationName, 
-                project.version.name,
-                project.books.length,
-                project.projectId, 
-                project.projectId, 
+                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
+                // project.version.name,
+                // project.books.length,
+                // project.projectId, 
+                project.projectId+'/'+project.books.length, 
             ]
         });
         const options = {
             selectableRows: false,
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false,
+            // responsive: "scroll"
             // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
         console.log('my projects', this.props)
@@ -187,15 +213,15 @@ class MyProjects extends Component {
         return (
             <div className={classes.root}>
                 { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
-                    <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
+                {/* <MuiThemeProvider theme={getMuiTheme()}> */}
+                    {/* <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} /> */}
                 <MUIDataTable 
-                    title={"My Projects"} 
+                    title={<th>MY PROJECTS</th>}
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
+                {/* </MuiThemeProvider> */}
             </div>
         )
     }
