@@ -56,7 +56,7 @@ class SignedInLinks extends Component {
                 onClose={this.handleClose}
             >
                 <MenuItem>
-                    <Link to="/" onClick={this.logOut} className={this.props.classes.link}>Log Out</Link>
+                    <Link style={{textDecoration:'none', color:'black'}} to="/" onClick={this.logOut} variant="contained" size="small" color="primary" /*className={this.props.classes.link}*/>Log Out</Link>
                 </MenuItem>
             </Menu>
         )

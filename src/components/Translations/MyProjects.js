@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Select } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
 import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
 import { fetchUserProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
-import { connect } from 'react-redux'
-import PopUpMessages from '../PopUpMessages';
+import { connect } from 'react-redux'   
+import Tooltip from '@material-ui/core/Tooltip';
 import MUIDataTable from "mui-datatables";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 // import CreateProject from './CreateProject';
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
-
 import swal from 'sweetalert';
+
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -70,6 +65,32 @@ const styles = theme => ({
     }
 });
 
+const LightTooltip = withStyles((theme) => ({
+    arrow: {
+        color: theme.palette.common.white,
+      },
+    tooltip: {
+      backgroundColor: theme.palette.common.white,
+      color: 'rgba(0, 0, 0, 0.87)',
+      boxShadow: theme.shadows[1],
+      fontSize: 11,
+    },
+  }))(Tooltip);
+ /* const useStylesBootstrap = makeStyles((theme) => ({
+    arrow: {
+      color: theme.palette.common.black,
+    },
+    tooltip: {
+      backgroundColor: theme.palette.common.black,
+    },
+  }));
+  
+  function BootstrapTooltip(props) {
+    const classes = useStylesBootstrap();
+  
+    return <Tooltip arrow classes={classes} {...props} />;
+  }*/
+
 class MyProjects extends Component {
     
     state = {
@@ -77,6 +98,9 @@ class MyProjects extends Component {
         open: false,
         booksPane: false,
         project: {},
+        listBooks: false,                //
+        userId: '',                      //
+        projectId: '',                  
         columns: [
             {
                 name: 'id',
@@ -86,56 +110,76 @@ class MyProjects extends Component {
                 }
             },
             {
-                name: 'Project Name',
+                name: <h4>PROJECT NAME</h4>,
                 options: {
                     filter: true
                 }
             },
-            {
+            /*{
                 name: 'Project Code',
                 options: {
                     filter: true
                 }
-            },
+            },*/
             {
-                name: 'Organisation',
+                name: <h4>ORGANISATION</h4>,
                 options: {
                     filter: true
                 }
             },
             {
-                name: 'Source',
+                name: <h4>SOURCE</h4>,
                 options: {
                     filter: true
                 }
             },
             {
-                name: 'Books Assigned',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Download',
+                name: <h4>BOOKS ASSIGNED</h4>,
                 options: {
                     filter: true,
-                    customBodyRender: (value, row) => {
-                        return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>
+                    customBodyRender: (value) => {                                                                                                                                                  //added
+                    return <div>{value}</div>                    
+                    
                     }
                 }
             },
             {
-                name: 'Translate',
+                name: <h4>BOOKS</h4>,
+                options: {
+                    filter: true,
+                    customBodyRender: (value) => {                                                                                                                                                  //added
+                    return <div>    
+                    <LightTooltip title={<Typography color="inherit"><b>{value}</b></Typography>}> 
+                    <Button variant="contained" size="small" color="primary" >Books</Button></LightTooltip></div>             
+                    
+                    }
+                }
+            },
+            /*{*/
+                /*name: 'Download',*/
+                /*name: '',
+                options: {
+                    filter: true,
+                    customBodyRender: (value, row) => {*/
+                        /*return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>*/
+                       /* return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>View Books</Button>
+                    }
+                }*/
+           /* },*/
+            {
+                /*name: 'Translate',*/
+                name: '',
                 options: {
                     filter: true,
                     customBodyRender: (value) => {
-                        return <Link to={`/app/translations/projects/${value}`}>Translate</Link>
+                        /*return <Link to={`/app/translations/projects/${value}`}>Translate</Link>*/
+                        return <Link style={{textDecoration:'none'}} to={`/app/translations/projects/${value}`}><Button variant="contained" size="small" color="primary" >Open Project</Button></Link>
                     }
                 }
             }
         ]
     }
-
+    
     handleDownload = (projectId) => {
         var project = this.props.userProjects.filter(item => item.projectId === projectId)
         if(project.length > 0){
@@ -157,7 +201,7 @@ class MyProjects extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
+        const { dispatch } = this.props;                           
         dispatch(fetchUserProjects());
     }
     render () {
@@ -167,16 +211,24 @@ class MyProjects extends Component {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
-                project.projectName.split('|')[1], 
+                /*project.projectName.split('|')[1],*/ 
                 project.organisationName, 
                 project.version.name,
                 project.books.length,
+                project.books.map(book=>
+                 <ul>{book}</ul>),
                 project.projectId, 
                 project.projectId, 
             ]
         });
+
         const options = {
             selectableRows: false,
+            print:false,                              
+            search: true,                                    
+            download: false,                                
+            viewColumns: false,                        
+            filter: false,                       
             // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
         console.log('my projects', this.props)
@@ -186,16 +238,16 @@ class MyProjects extends Component {
         }
         return (
             <div className={classes.root}>
-                { isFetching && <CircleLoader />}
+               { isFetching && <CircleLoader />}
                 <MuiThemeProvider theme={getMuiTheme()}>
                     <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
-                    title={"My Projects"} 
+                    title={<h3>MY PROJECT</h3>} 
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
+                </MuiThemeProvider>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
             </div>
         )
     }
