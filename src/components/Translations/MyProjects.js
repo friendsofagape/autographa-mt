@@ -158,7 +158,9 @@ class MyProjects extends Component {
                       </Tooltip>
                         }
                         else{
-                            return <Button variant="contained" color="primary" size="small"><Link style={{"color":"white", "text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
+                            return <Button variant="contained" style={{
+                                backgroundColor: "#21b6ae",
+                            }} size="small"><Link style={{"color":"black", "text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
                         }
                     },
                 }

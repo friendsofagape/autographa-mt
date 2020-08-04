@@ -244,8 +244,9 @@ class UpdateTokens extends Component {
                                 onClick={this.updateTokenSense}>Add Senses</Button>
                         </Grid>
                     </Grid>
-                </Grid>
-                <Grid item xs={12} style={{ margin: '2%' }}>
+                </Grid>*/}
+
+                {/* <Grid item xs={12} style={{ margin: '2%' }}>
                     <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)' }}>
                         Synonyms:
                     </Typography>
@@ -254,7 +255,7 @@ class UpdateTokens extends Component {
                     margin: '2%',
                 }}>
                     {this.displaySenses()}
-                </Grid> */}
+                </Grid>  */}
             </Grid>
         )
     }

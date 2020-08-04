@@ -147,16 +147,16 @@ class HomePage extends Component {
         
         <Grid item xs={4}>
           <UpdateTokens />
-          {/* <TranslationsWords /> */}
+          <TranslationsWords />
         </Grid>
-        {/* <Grid item xs={5}>
+        <Grid item xs={5}>
           <Grid item xs={12}>
             <Concordance />
           </Grid>
           <Grid item xs={12}>
             <TranslationsNotes />
           </Grid>
-        </Grid> */}
+        </Grid>
         
       
       </Grid>
