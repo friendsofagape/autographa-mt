@@ -56,7 +56,7 @@ class SignedInLinks extends Component {
                 onClose={this.handleClose}
             >
                 <MenuItem>
-                    <Link to="/" onClick={this.logOut} className={this.props.classes.link}>Log Out</Link>
+                    <Link style={{"color":"red", "text-decoration": "none"}} to="/" onClick={this.logOut} className={this.props.classes.link}>Log Out</Link>
                 </MenuItem>
             </Menu>
         )
@@ -88,24 +88,25 @@ class SignedInLinks extends Component {
                 {
                     current_user.firstName ?  (
                         <div>
-                            <label color="inherit" style={{ padding: '5px', color: 'white' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
-                        <IconButton
-                            aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleMenu}
-                            className={classes.link}
-                            // color="inherit"
-                        >
+                            <label color="inherit" style={{ padding: '5px', color: 'yellow' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
+                            <IconButton
+                                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleMenu}
+                                className={classes.link}
+                                // color="inherit"
+                            >
                             <AccountCircle />
-                        </IconButton>
-                        {this.getMenuItems()}
-                    </div>
+                            </IconButton>
+                            {this.getMenuItems()}
+                        </div>
                     ) 
-                    : (
-                    <div style={{paddingTop: '20px', paddingRight: '10px'}}>
-                    <Link to="/signin" className={classes.link}>Sign In</Link>
-                    <Link to="/signup" className={classes.link}>Sign Up</Link>
-                    </div>)
+                    :(
+                        <div style={{paddingTop: '20px', paddingRight: '10px'}}>
+                        <Link to="/signin" className={classes.link}>Sign In</Link>
+                        <Link to="/signup" className={classes.link}>Sign Up</Link>
+                        </div>
+                    )
                 }
                 
             </div>

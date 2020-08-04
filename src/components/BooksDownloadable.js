@@ -103,6 +103,7 @@ class BooksDownloadable extends Component {
         }
         // targetBooksChecked[book]['checked'] = !targetBooksChecked[book]['checked']
         this.setState({ targetBooks })
+        console.log("---------------------------",this.state.targetBooks.length)
     }
 
     getBooksCheckbox = () => {
@@ -142,7 +143,14 @@ class BooksDownloadable extends Component {
         updateState({booksPane: false})
     }
 
+    canBeSubmitted() {
+        const { targetBooks } = this.state;
+        // console.log("jhjadbjbxjhbasjnbdjbasjnnbas", this.state.targetBooks.length)
+        return targetBooks.length > 0;
+	}
+
     render() {
+        const isEnabled = this.canBeSubmitted();
         const { updateState, booksPane, classes, project, isFetching } = this.props
         return (
             <Dialog
@@ -155,7 +163,7 @@ class BooksDownloadable extends Component {
                     isFetching &&
                     <CircleLoader />
                 }
-                <ComponentHeading data={{ classes: classes, text: "Select Books to Download", styleColor: '#2a2a2fbd' }} />
+                <ComponentHeading data={{ classes: classes, text: "Select Books", styleColor: '#2a2a2fbd' }} />
                 {/* <DialogTitle id="form-dialog-title">Select Books to Download</DialogTitle> */}
                 <DialogContent>
                     {this.getBooksCheckbox()}
@@ -164,7 +172,7 @@ class BooksDownloadable extends Component {
                 <DialogActions>
                     {/* <Button onClick={this.handleClose} variant="raised" color="primary">Close</Button> */}
                     <Button onClick={this.handleClose} size="small" variant="contained" color="secondary" >Close</Button>
-                    <Button onClick={this.handleDownload} variant="contained" color="primary" >Download</Button>
+                    <Button onClick={this.handleDownload} size="small" disabled={!isEnabled} variant="contained" color="primary" >Download</Button>
                 </DialogActions>
             </Dialog>
         )

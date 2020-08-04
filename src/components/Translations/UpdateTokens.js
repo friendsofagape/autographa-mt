@@ -145,11 +145,13 @@ class UpdateTokens extends Component {
         return (
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid item xs={12}>
-                    <ComponentHeading data={{ classes: classes, text: `Enter ${displayLanguage} Translation`, styleColor: "#2a2a2fbd" }} />
+                    <ComponentHeading data={{ classes: classes, text: `${displayLanguage.toUpperCase()} Project`, styleColor: "#2a2a2fbd" }} />
                 </Grid>
                 <PopUpMessages />
-                <Grid container item xs={12}>
-                    <Grid item xs={12} sm={6}>
+                
+                <Grid item container xs={12}>
+                    <Grid item sm={1}></Grid>
+                    <Grid item sm={10}>
                         <TextField
                             disabled
                             margin="dense"
@@ -158,7 +160,12 @@ class UpdateTokens extends Component {
                             className={classes.inputField}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item sm={1}></Grid>
+                </Grid>
+                
+                <Grid item container xs={12}>
+                    <Grid item sm={1}></Grid>
+                    <Grid item sm={10}>
                         <TextField
                             required
                             label="Enter Translation"
@@ -169,9 +176,34 @@ class UpdateTokens extends Component {
                             className={classes.inputField}
                         />
                     </Grid>
+                    <Grid item sm={1}></Grid>
                 </Grid>
+               
                 <Grid container justify="center" alignItems="center">
+                    <Typography variant="inherit" align="center" style={{ color: 'rgb(145, 148, 151)', margin:'10px' }}>
+                        Add alternate translations
+                    </Typography>
+                </Grid>
 
+                <Grid item container xs={12}>
+                    <Grid item sm={1}></Grid>
+                    <Grid item xs={12} sm={10}>
+                            <TextField
+                                required
+                                label="Enter Senses"
+                                value={this.state.sense}
+                                onChange={(e) => this.setState({ sense: e.target.value })}
+                                margin="dense"
+                                helperText="Note: Enter each senses seprated by commas(,) "
+                                variant="outlined"
+                                className={classes.inputField}
+                            />
+                    </Grid>
+                    <Grid item sm={1}></Grid>
+                </Grid>
+
+               
+                <Grid container justify="center" alignItems="center">
                     <Button
                         variant="contained"
                         color="primary"
@@ -180,8 +212,12 @@ class UpdateTokens extends Component {
                         // style={{ margin: 'auto' }}
                         onClick={this.updateTokenTranslation}>Update Token</Button>
                 </Grid>
-                <Grid container item xs={12}>
-                    {/* <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}> */}
+               
+               
+               
+               
+                {/* <Grid container item xs={12}>
+                    <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}>
                     <Grid container justify="center" alignItems="center">
                         <Typography variant="inherit" align="center" style={{ color: 'rgb(145, 148, 151)' }}>
                             Add alternate translations
@@ -200,7 +236,7 @@ class UpdateTokens extends Component {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Grid container justify="center" alignItems="center">
-                            {/* <Grid item xs={12} sm={6} style={{ marginTop: '7%' }}> */}
+                            <Grid item xs={12} sm={6} style={{ marginTop: '7%' }}>
                             <Button
                                 className={classes.button}
                                 variant="contained"
@@ -218,7 +254,7 @@ class UpdateTokens extends Component {
                     margin: '2%',
                 }}>
                     {this.displaySenses()}
-                </Grid>
+                </Grid> */}
             </Grid>
         )
     }

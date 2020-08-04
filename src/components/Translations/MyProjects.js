@@ -19,8 +19,9 @@ import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
-
+import purple from '@material-ui/core/colors/purple';
 import swal from 'sweetalert';
+import color from '@material-ui/core/colors/amber';
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -70,6 +71,8 @@ const styles = theme => ({
     }
 });
 
+
+
 class MyProjects extends Component {
     
     state = {
@@ -113,6 +116,31 @@ class MyProjects extends Component {
             //         sort: false
             //     }
             // },
+
+
+
+            {
+                name: <th>Download</th>,
+                options: {
+                    filter: false,
+                    sort:false,
+                    customBodyRender: (value, row) => {
+                        var valuesbook = value.split('/')[1]
+                        var valuesTran = value.split('/')[0]
+                        // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
+                        if (valuesbook == 0){
+                        return <Tooltip title="Book is not assigned yet">
+                        <span>
+                            <Button size="small" disabled color="primary">Download drafts</Button>
+                        </span>
+                        </Tooltip>
+                        }
+                        else{
+                            return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
+                        }
+                    },
+                }
+            },
             {
                 name: <th>Translate</th>,
                 options: {
@@ -121,7 +149,7 @@ class MyProjects extends Component {
                     customBodyRender: (value) => {
                         var valuesbook = value.split('/')[1]
                         var valuesTran = value.split('/')[0]
-                        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
+                        // console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
                         <span>
@@ -130,50 +158,39 @@ class MyProjects extends Component {
                       </Tooltip>
                         }
                         else{
-                            return <Button variant="outlined" color="secondary" size="small"><Link to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
+                            return <Button variant="contained" color="primary" size="small"><Link style={{"color":"white", "text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
                         }
                     },
                 }
             }
             
-           /* 
-            {
-                name: <th>Download</th>,
-                options: {
-                    filter: false,
-                    customBodyRender: (value, row) => {
-                        return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>
-                    },
-                    customHeadRender: (columnMeta) => (
-                        <th key={5} align={"center"}>
-                          {columnMeta.name}
-                          </th>
-                    )
-                }
-            },
-            */
+            
+            
+            
         ]
     }
 
-    // handleDownload = (projectId) => {
-    //     var project = this.props.userProjects.filter(item => item.projectId === projectId)
-    //     if(project.length > 0){
-    //         this.setState({
-    //             project: project[0],
-    //             booksPane: true
-    //         })
-    //     } else {
-    //         swal({
-    //             title: 'Download drafts',
-    //             text: 'No downloadable books available ',
-    //             icon: 'error'
-    //         });
-    //     }
-    // }
+    handleDownload = (projectId) => {
+        var project = this.props.userProjects.filter(item => item.projectId == projectId)
+        // console.log(">>>>>>>>>>>>>>>>>>>>>>>",typeof(projectId) )
+        if(project.length > 0){
+            this.setState({
+                project: project[0],
+                booksPane: true
+            })
+        } else {
+            swal({
+                title: 'Download drafts',
+                text: 'No downloadable books available ',
+                icon: 'error'
+            });
+        }
+    }
 
-    // updateState = (data) => {
-    //     this.setState(data);
-    // }
+    updateState = (data) => {
+        // console.log('???????????????????????????????', data)
+        this.setState(data);
+    }
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -191,7 +208,7 @@ class MyProjects extends Component {
                 project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
                 // project.version.name,
                 // project.books.length,
-                // project.projectId, 
+                project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
         });
@@ -214,7 +231,7 @@ class MyProjects extends Component {
             <div className={classes.root}>
                 { isFetching && <CircleLoader />}
                 {/* <MuiThemeProvider theme={getMuiTheme()}> */}
-                    {/* <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} /> */}
+                    <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
                     title={<th>MY PROJECTS</th>}
                     data={data} 

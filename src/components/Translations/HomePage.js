@@ -51,10 +51,12 @@ class HomePage extends Component {
     displayTranslationWordSwitch: "none",
     tokenTranslation: "",
     senses: [],
+    bkvalue:""
   };
 
-  updateState = (value) => {
-    this.setState(value);
+  updateState = (bk) => {
+    this.setState({bkvalue:bk});
+    // console.log("pppppppppppppppppppppppp", bk)
   };
 
   componentDidMount() {
@@ -122,44 +124,41 @@ class HomePage extends Component {
   render() {
     const { classes, isFetching } = this.props;
     const {
-      // book,
-      // token,
-      // tokenTranslation,
-      // senses,
-      // concordance,
       tokenPane,
-      // tokenList,
       translationPane,
       concordancePane,
       displayConcordancePane,
       translationWordsPane,
-      // translationWords,
       translationNotesPane,
-      // translationNotes,
       displayTranslationWordSwitch,
     } = this.state;
     console.log("homepagessssssssssss", this.props);
     return (
       <Grid container spacing={2} className={classes.root}>
         {isFetching && <CircleLoader />}
+        
         <Grid item xs={3} style={{ minHeight: "480px" }}>
           <Grid item xs={12}>
             <MenuBar updateState={this.updateState} />
           </Grid>
-          <TokenList />
+           <TokenList/>
         </Grid>
+
+        
         <Grid item xs={4}>
           <UpdateTokens />
-          <TranslationsWords />
+          {/* <TranslationsWords /> */}
         </Grid>
-        <Grid item xs={5}>
+        {/* <Grid item xs={5}>
           <Grid item xs={12}>
             <Concordance />
           </Grid>
           <Grid item xs={12}>
             <TranslationsNotes />
           </Grid>
-        </Grid>
+        </Grid> */}
+        
+      
       </Grid>
     );
   }

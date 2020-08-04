@@ -62,6 +62,8 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
     overflowY: "hidden",
+    padding: theme.spacing(8),
+
   },
   versionDisplay: {
     maxHeight: "80vh",
@@ -103,45 +105,52 @@ class ViewSources extends Component {
         },
       },
       {
-        name: "Version name",
+        name: <th>Language</th>,
         options: {
-          filter: true,
+          filter: false,
+          sort: false,
         },
       },
       {
-        name: "Version code",
+        name: <th>Version</th>,
         options: {
-          filter: true,
+          filter: false,
+          sort: false,
         },
       },
       {
-        name: "Updated Date",
+        name: <th>Revision</th>,
         options: {
-          filter: true,
+          filter: false,
+          sort: false,
+        },
+      },
+      {
+        name: <th>Updated Date</th>,
+        options: {
+          filter: false,
+          sort: false,
           customBodyRender: (value) => {
             return moment(value).format('D/M/Y');
           },
         },
       },
-      {
-        name: "Revision",
-        options: {
-          filter: true,
-        },
-      },
-      {
-        name: "Language name",
-        options: {
-          filter: true,
-        },
-      },
 
-      {
-        name: "Language code",
-        options: {
-          filter: true,
-        },
-      },
+      // {
+      //   name: <th>Version code</th>,
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //   },
+      // },
+
+      // {
+      //   name: <th>Language code</th>,
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //   },
+      // },
     ],
   };
 
@@ -171,9 +180,10 @@ class ViewSources extends Component {
       columns = [
         ...columns,
         {
-          name: "Books",
+          name: <th>Books</th>,
           options: {
-            filter: true,
+            filter: false,
+            sort: false,
             customBodyRender: (value) => {
               return (
                 <Button
@@ -191,9 +201,10 @@ class ViewSources extends Component {
           },
         },
         {
-          name: "Upload",
+          name: <th>Upload</th>,
           options: {
-            filter: true,
+            filter: false,
+            sort: false,
             customBodyRender: (value) => {
               return (
                 <Button
@@ -218,9 +229,10 @@ class ViewSources extends Component {
       columns = [
         ...columns,
         {
-          name: "Books",
+          name: <th>Books</th>,
           options: {
-            filter: true,
+            filter: false,
+            sort: false,
             customBodyRender: (value) => {
               return (
                 <Button
@@ -284,42 +296,41 @@ class ViewSources extends Component {
         console.log("eeeeeeeeeeeeeeee", version);
         data.push([
           version.sourceId,
-          version.version.name,
-          version.version.code,
-          version.updatedDate,
-          version.version.longName,
           version.language.name,
-          version.language.code,
+          version.version.name,
+          // version.version.code,
+          version.version.longName,
+          version.updatedDate,
+          // version.language.code,
           version.sourceId,
           version.sourceId,
         ]);
       });
 
-      // [
-      // project.projectId,
-      // project.projectName.split('|')[0],
-      // project.projectName.split('|')[1],
-      // project.organisationName,
-      // project.version.name
-      // ]
+    
     });
     // console.log('data', data);
     const options = {
       selectableRows: false,
+      download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false,
       // onRowClick: rowData => this.setState({redirect: rowData[0]})
     };
     return (
       <div className={classes.root}>
         {/* <PopUpMessages /> */}
         {isFetching && <CircleLoader />}
-        <MuiThemeProvider theme={getMuiTheme()}>
+        {/* <MuiThemeProvider theme={getMuiTheme()}> */}
           <MUIDataTable
-            title={"Sources List"}
+            title={<th>SOURCES</th>}
             data={data}
             columns={columns}
             options={options}
           />
-        </MuiThemeProvider>
+        {/* </MuiThemeProvider> */}
         {/* <CreateProject open={open} close={this.handleClose} /> */}
         {createSourceDialog && (
           <CreateSources
