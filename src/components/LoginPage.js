@@ -10,6 +10,7 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
+	Paper,
 	DialogContentText,
 	DialogTitle,
 } from '@material-ui/core';
@@ -182,7 +183,8 @@ class LoginPage extends Component {
 				<Header />
 				<PopUpMessages />
 				<Container component="main" maxWidth="xs" className={classes.loginPage}>
-					<Typography component="h1" variant="h5">
+					<Paper elevation='3' style={{padding:'8%'}}>
+					<Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%"}}>
 						Sign in
 					</Typography>
 					<form className={classes.form} onSubmit={this.handleLoginSubmit}>
@@ -208,26 +210,41 @@ class LoginPage extends Component {
 							name="password"
 							type="password"
 							autoComplete="current-password"
-							autoFocus
 							onChange={(e) => this.setState({ password: e.target.value })}
 						/>
-						<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-						<Button type="submit" fullWidth variant="contained" color="primary">
-							Sign In
-						</Button>
-					</form>
-					<Grid container style={{ marginTop: '7px' }}>
-						<Grid item xs>
+						{/* <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" /> */}
+						<Grid container>
+							<Grid item sm={5}>
+
 							<Link variant="body2" onClick={this.handleOpen} className={classes.forgot}>
 								Forgot password?
 							</Link>
+
+							</Grid>
+						<Grid item  sm={7} style={{paddingTop:"1%", textAlign:"right"}}>
+							
 						</Grid>
-						<Grid item>
-							<Link href="/signup" variant="body2">
-								{"Don't have an account? Sign Up"}
+
+						</Grid>
+						
+						
+					</form>
+
+
+					<Grid container style={{ marginTop: '20%' }}>
+						<Grid item xs style={{ margin: '2%' }}>
+						<Link href="/signup" variant="body2">
+								{"Create account"}
 							</Link>
 						</Grid>
+						
+						<Grid item>
+						<Button type="submit" onClick={this.handleLoginSubmit} variant="contained" color="primary">
+								Sign In
+						</Button>
+						</Grid>
 					</Grid>
+					
 					<Dialog
 						open={this.state.forgotPasswordDailogOpen}
 						onClose={this.handleClose}
@@ -312,6 +329,7 @@ class LoginPage extends Component {
 							</Button>
 						</DialogActions>
 					</Dialog>
+					</Paper>
 				</Container>
 			</Grid>
 		);
