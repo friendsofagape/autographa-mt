@@ -112,7 +112,6 @@ class SignUp extends Component {
                                 label="First Name"
                                 name="firstName"
                                 autoComplete="fname"
-                                autoFocus
                                 onChange={(e) => this.setState({ firstName: e.target.value })}
                             />
                         </Grid>
@@ -126,7 +125,6 @@ class SignUp extends Component {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
-                                autoFocus
                                 onChange={(e) => this.setState({ lastName: e.target.value })}
                             />
                         </Grid>
@@ -142,7 +140,6 @@ class SignUp extends Component {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                             onChange={(e) => this.setState({ email: e.target.value })}
                         />
                     </Grid>
@@ -157,7 +154,6 @@ class SignUp extends Component {
                             name="password"
                             type="password"
                             autoComplete="current-password"
-                            autoFocus
                             onChange={(e) => this.setState({ password: e.target.value })}
                         />
                     </Grid>
