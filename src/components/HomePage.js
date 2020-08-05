@@ -25,7 +25,7 @@ const styles = makeStyles(theme => ({
       margin:0
   },
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   paper: {
     padding: theme.spacing(2),
@@ -46,12 +46,13 @@ class HomePage extends Component {
         }
         const { classes } = this.props
         return (
-          <React.Fragment>
+          <Grid container style={{"backgroundColor":"black"}}>
             <Header />
-            <Grid container spacing={3} >
-              <Grid item xs={12}className={classes.homePage}>
-                <Card className={classes.card} style={{marginTop: '80px'}}>
-                  <CardActionArea>
+            
+            <Grid container spacing={2} >
+              
+              <Grid item xs={12}className={classes.homePage} >
+                <Card className={classes.card} style={{marginTop: '80px', "backgroundColor":"#f5ce42", marginLeft:'10px', marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Autographa Machine Translation
@@ -60,12 +61,12 @@ class HomePage extends Component {
                         AutographaMT is a web-based application that aims to support automatic translation of the Bible into languages that have no available digital text useful for training conventional machine translation models. AutographaMT attempts to generate a machine translations of the source text employing minimal effort of human translators.
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
                 </Card>
               </Grid>
+
+
               <Grid item xs={6}>
-                <Card className={classes.card}>
-                  <CardActionArea>
+                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginLeft:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Workflow
@@ -97,12 +98,12 @@ class HomePage extends Component {
                           All these steps are facilitated within AutographaMT.                        
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
                 </Card>
               </Grid>
+
+
               <Grid item xs={6}>
-                <Card className={classes.card}>
-                  <CardActionArea>
+                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Features
@@ -132,17 +133,17 @@ class HomePage extends Component {
                         Free and open-source
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
                 </Card>
               </Grid>
+
+              
               <Grid item xs={12}>
-                <Card className={classes.card}>
-                  <CardActionArea>
+                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginLeft:'10px', marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         FAQ
                       </Typography>
-                      <ExpansionPanel>
+                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
@@ -156,7 +157,7 @@ class HomePage extends Component {
                           </Typography>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
-                      <ExpansionPanel>
+                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel2a-content"
@@ -170,7 +171,7 @@ class HomePage extends Component {
                           </Typography>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
-                      <ExpansionPanel>
+                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel3a-content"
@@ -186,11 +187,11 @@ class HomePage extends Component {
                       </ExpansionPanel>
 
                     </CardContent>
-                  </CardActionArea>
                 </Card>
               </Grid>
+              
             </Grid>
-          </React.Fragment>
+          </Grid>
         )
     }
 }
