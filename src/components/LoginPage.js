@@ -238,7 +238,7 @@ class LoginPage extends Component {
 							</Link>
 						</Grid>
 						
-						<Grid item>
+						<Grid item style={{ paddingBottom: '10%' }}>
 						<Button type="submit" onClick={this.handleLoginSubmit} variant="contained" color="primary">
 								Sign In
 						</Button>
