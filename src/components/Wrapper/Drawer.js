@@ -49,7 +49,7 @@ const styles = theme => ({
       flexShrink: 0,
     },
     drawerPaper: {
-      width: 500,
+      width: 240,
     },
     drawerContainer: {
       overflow: 'auto',
