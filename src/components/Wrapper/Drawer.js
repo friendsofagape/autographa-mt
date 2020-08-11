@@ -14,6 +14,10 @@ import { Redirect, Route, Switch, BrowserRouter } from 'react-router-dom';
 import { menus } from '../api/menu';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Toolbar } from '@material-ui/core';
+import compose from "recompose/compose";
+import { withStyles } from '@material-ui/styles';
+
 
 let decoded;
 var role;
@@ -30,6 +34,32 @@ if (role === 'sa') {
     drawerItems = ['List Users', 'List Projects', 'Create Projects', 'Create Organisation']
 }
 console.log('menus', menus)
+
+
+
+const styles = theme => ({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      zIndex: 1201,
+    },
+    drawer: {
+      width: 240,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: 500,
+    },
+    drawerContainer: {
+      overflow: 'auto',
+    },
+    content: {
+      flexGrow: 1,
+      // padding: theme.spacing(3),
+    },
+  });
+
 class DrawerPane extends Component {
     state = {
         expanded: 'translations'
@@ -113,36 +143,31 @@ class DrawerPane extends Component {
         const { classes, current_user } = this.props
         const { expanded } = this.state;
         return (
-            // <Drawer
-            //     className={classes.drawer}
-            //     variant="permanent"
-            //     classes={{
-            //         paper: classes.drawerPaper,
-            //     }}
-            // >
-                // <div className={classes.toolbar} />
-                <Fragment>
-                    
+                <div>
                 {
                     menus.map(menu => {
                         if(menu.roles.includes(current_user.role)){
                             return (
-                                <ExpansionPanel style={{ backgroundColor: '#2a2a2fbd', color: 'white', margin: 0 }} key={menu.key} expanded={expanded === menu.key} onClick={() => this.setState({expanded: expanded === menu.key ? false : menu.key})}>
-                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon style={{ color: 'white' }}  />}>
-                                        <Typography color="inherit" className={classes.heading}>{menu.name}</Typography>
-                                    </ExpansionPanelSummary>
-                                    <List>
+                                <Drawer
+                                className={classes.drawer}
+                                variant="permanent"
+                                classes={{
+                                  paper: classes.drawerPaper,
+                                }}
+                                >
+                                <Toolbar />
+                                   <List>
                                         {
                                             menu.child &&
                                             menu.child.map(childMenu => {
                                                 if(childMenu.roles.includes(current_user.role)) {
                                                     return (
                                                         <Link to={childMenu.link} key={childMenu.key}>
-                                                            <ListItem button  className={classes.exp}
+                                                            <ListItem button key={childMenu.key} className={classes.exp}
                                                             // onClick={(e) => this.checkWhat(text)}
                                                             >
                                                                 <ListItemText disableTypography divider="true"
-                                                                    primary={<Typography variant="caption" style={{ color: '#FFFFFF' }}
+                                                                    primary={<Typography variant="caption" style={{ color: 'white' }}
         
                                                                     >{childMenu.name}</Typography>}
                                                                 />
@@ -154,13 +179,13 @@ class DrawerPane extends Component {
                                             })
                                         }
                                     </List>
-                                </ExpansionPanel>
+                                    </Drawer>
                             )
                         }
                         
                     })
                 }
-                </Fragment>
+                </div>
 
                 
         )
@@ -172,4 +197,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps)(DrawerPane);
+export default connect(mapStateToProps)(withStyles(styles)(DrawerPane));

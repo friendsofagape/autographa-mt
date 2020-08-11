@@ -97,7 +97,7 @@ class Wrapper extends Component {
                     {/* <div></div> */}
                     {/* </Grid> */}
                 {/* </AppBar> */}
-                <Header />
+                {/* <Header /> */}
                 <Grid item xs={2} style={{top: '0', position: 'fixed', paddingTop: '80px', width: '100%', height: '100%', backgroundColor: 'black'}}>
                     <Drawer classes={classes}  />
                 </Grid>
