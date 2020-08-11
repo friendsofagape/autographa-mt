@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Grid, Popover} from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom'
@@ -49,16 +49,34 @@ class SignedInLinks extends Component {
 
     getMenuItems() {
         const { anchorEl } = this.state
+        const open = Boolean(anchorEl);
+        const id = open ? 'simple-popover' : undefined;
         return (
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleClose}
-            >
+            // <Menu
+            //     anchorEl={anchorEl}
+            //     open={Boolean(anchorEl)}
+            //     onClose={this.handleClose}
+            // >
+            <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={this.handleClose}
+            
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
                 <MenuItem>
                     <Link style={{"color":"red", "text-decoration": "none"}} to="/" onClick={this.logOut} className={this.props.classes.link}>Log Out</Link>
                 </MenuItem>
-            </Menu>
+            {/* // </Menu> */}
+            </Popover>
         )
     }
     render() {
@@ -84,7 +102,7 @@ class SignedInLinks extends Component {
         const { current_user } = this.props;
         return (
 
-            <div>
+            <Grid>
                 {
                     current_user.firstName ?  (
                         <div>
@@ -94,22 +112,20 @@ class SignedInLinks extends Component {
                                 aria-haspopup="true"
                                 onClick={this.handleMenu}
                                 className={classes.link}
-                                // color="inherit"
                             >
                             <AccountCircle />
                             </IconButton>
                             {this.getMenuItems()}
                         </div>
                     ) 
-                    :(
-                        <div style={{paddingTop: '20px', paddingRight: '10px'}}>
-                        <Link to="/signin" className={classes.link}>Sign In</Link>
-                        <Link to="/signup" className={classes.link}>Sign Up</Link>
-                        </div>
+                    :(  <Grid>
+                            <Link to="/signin" className={classes.link}>Sign In</Link>
+                            <Link style={{ paddingLeft:'2%', paddingRight:"1%"}} to="/signup" className={classes.link}>Sign Up</Link>
+                        </Grid>
                     )
                 }
                 
-            </div>
+            </Grid>
         )
     }
 }

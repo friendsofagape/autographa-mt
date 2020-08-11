@@ -3,6 +3,7 @@ import {
     Grid,
     TextField,
     Button,
+    Paper,
     Dialog,
     DialogActions,
     DialogContent,
@@ -98,10 +99,13 @@ class CreateOrganisations extends Component {
                 {/* <Header /> */}
                 {/* <PopUpMessages /> */}
                 <Container component="main" maxWidth="xs" className={classes.pageContainer}>
-                    <Typography component="h1" variant="h5">
+                <Paper elevation='3' style={{padding:'8%'}}>
+                    <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%"}}>
                         Create Organisation
                 </Typography>
-                    <form className={classes.form} onSubmit={this.handleLoginSubmit}>
+                    <form className={classes.form} onSubmit={this.handleLoginSubmit} style={{padding:'3%'}}>
+                            <Grid container spacing={0}>
+                            <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -112,8 +116,11 @@ class CreateOrganisations extends Component {
                                     name="organisationName"
                                     autoComplete="organisationName"
                                     autoFocus
+                                    size="small"
                                 onChange={(e) => this.setState({ organisationName: e.target.value })}
                                 />
+                                </Grid>
+                                <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -124,8 +131,11 @@ class CreateOrganisations extends Component {
                                     name="organisationAddress"
                                     autoComplete="organisationAddress"
                                     autoFocus
+                                    size="small"
                                 onChange={(e) => this.setState({ organisationAddress: e.target.value })}
                                 />
+                                </Grid>
+                                <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -137,8 +147,11 @@ class CreateOrganisations extends Component {
                                     name="organisationEmail"
                                     autoComplete="organisationEmail"
                                     autoFocus
+                                    size="small"
                                 onChange={(e) => this.setState({ organisationEmail: e.target.value })}
                                 />
+                                </Grid>
+                                <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
@@ -149,21 +162,28 @@ class CreateOrganisations extends Component {
                                     name="organisationPhone"
                                     autoComplete="organisationPhone"
                                     autoFocus
+                                    size="small"
                                 onChange={(e) => this.setState({ organisationPhone: e.target.value })}
                                 />
-                        
-                        
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            disabled={!isEnabled}
-                            onClick={this.handleSubmit}
-                        >
+                                </Grid>
+                        <Grid container style={{ marginTop: "10%" }}>
+                            <Grid item sm={8} style={{ margin: '2%' }}></Grid>
+                            <Grid item style={{ textAlign: "right", paddingBottom:'5%'}}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={!isEnabled}
+                                onClick={this.handleSubmit}
+                            >
                             Create
-                        </Button>
+                            </Button>
+                        </Grid>
+                        </Grid>
+                        </Grid>
                     </form>
+                    </Paper>
                 </Container>
             </Grid>
 

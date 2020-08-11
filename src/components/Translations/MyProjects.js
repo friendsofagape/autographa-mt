@@ -22,6 +22,7 @@ import BooksDownloadable from '../BooksDownloadable';
 import purple from '@material-ui/core/colors/purple';
 import swal from 'sweetalert';
 import color from '@material-ui/core/colors/amber';
+import MyProjectFunction from './MyProjectFunction';
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -109,38 +110,42 @@ class MyProjects extends Component {
                     sort: false
                 }
             },
-            // {
-            //     name: <th>Books Assigned</th>,
-            //     options: {
-            //         filter: false,
-            //         sort: false
-            //     }
-            // },
-
-
-
             {
-                name: <th>Download</th>,
+                name: <th>Books Assigned</th>,
                 options: {
                     filter: false,
-                    sort:false,
-                    customBodyRender: (value, row) => {
-                        var valuesbook = value.split('/')[1]
-                        var valuesTran = value.split('/')[0]
-                        // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
-                        if (valuesbook == 0){
-                        return <Tooltip title="Book is not assigned yet">
-                        <span>
-                            <Button size="small" disabled color="primary">Download drafts</Button>
-                        </span>
-                        </Tooltip>
+                    sort: false,
+                    customBodyRender: (value) => {                                                                                                                                                  //added
+                        return <div><MyProjectFunction books={value} /></div>                    
+                        
                         }
-                        else{
-                            return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
-                        }
-                    },
                 }
             },
+
+
+
+            // {
+            //     name: <th>Download</th>,
+            //     options: {
+            //         filter: false,
+            //         sort:false,
+            //         customBodyRender: (value, row) => {
+            //             var valuesbook = value.split('/')[1]
+            //             var valuesTran = value.split('/')[0]
+            //             // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
+            //             if (valuesbook == 0){
+            //             return <Tooltip title="Book is not assigned yet">
+            //             <span>
+            //                 <Button size="small" disabled color="primary">Download drafts</Button>
+            //             </span>
+            //             </Tooltip>
+            //             }
+            //             else{
+            //                 return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
+            //             }
+            //         },
+            //     }
+            // },
             {
                 name: <th>Translate</th>,
                 options: {
@@ -210,7 +215,8 @@ class MyProjects extends Component {
                 project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
                 // project.version.name,
                 // project.books.length,
-                project.projectId+'/'+project.books.length, 
+                project.books,
+                // project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
         });
