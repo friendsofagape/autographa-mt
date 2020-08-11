@@ -45,11 +45,11 @@ const styles = theme => ({
       zIndex: 1201,
     },
     drawer: {
-      width: 240,
+      width: 140,
       flexShrink: 0,
     },
     drawerPaper: {
-      width: 240,
+      width: 140,
     },
     drawerContainer: {
       overflow: 'auto',

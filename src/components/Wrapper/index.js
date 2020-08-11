@@ -41,7 +41,7 @@ export const PrivateRoute = ({ component: Component, location, ...rest }) => (
     />
 )
 
-const drawerWidth = 240;
+const drawerWidth = 140;
 
 const styles = theme => ({
     root: {
@@ -61,7 +61,7 @@ const styles = theme => ({
         zIndex: theme.zIndex.drawer + 1,
     },
     drawer: {
-        // width: drawerWidth,
+        width: drawerWidth,
         flexShrink: 0,
     },
     drawerPaper: {

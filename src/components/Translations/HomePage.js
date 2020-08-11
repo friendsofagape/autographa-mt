@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import MenuBar from "./MenuBar";
 import TokenList from "./TokenList";
 import Concordance from "./Concordance";
@@ -134,32 +134,89 @@ class HomePage extends Component {
     } = this.state;
     console.log("homepagessssssssssss", this.props);
     return (
-      <Grid container spacing={2} className={classes.root}>
+      <Grid container direction='column' className={classes.root}>
+        {/* <Grid item>
+					Joel
+				</Grid>
+        <Grid item>
+					Joel
+				</Grid> */}
         {isFetching && <CircleLoader />}
         
-        <Grid item xs={3} style={{ minHeight: "480px" }}>
-          <Grid item xs={12}>
+        <Grid item container>
+					{/* <Grid item sm={2}></Grid> */}
+					<Grid item sm={4}>
             <MenuBar updateState={this.updateState} />
+					</Grid>
+					<Grid item sm={4}>
+						Aaari Project
+					</Grid>
+					<Grid item sm={2}></Grid>
+				</Grid>
+        <Grid item container>
+        <Grid item sm={3}>
+            SOURCE TOKENS
+            <Grid>
+            <TokenList/>
+            </Grid>
+					</Grid>
+					<Grid item sm={4}>
+						TOKEN TRANSLATION
+            <Grid>
+            <UpdateTokens />
+            <TranslationsWords />
+            </Grid>
+					</Grid>
+					<Grid item sm={5}>
+            TOKEN REFERENCE
+            <Grid>
+            <Concordance />
+            <TranslationsNotes />
+            </Grid>
           </Grid>
-           <TokenList/>
         </Grid>
+        <Grid>
+          <Grid container>
+					<Grid item sm={4}>
+						<Button variant="contained" color="primary">Upload tokens</Button>
+
+						<Button variant="contained" color="secondary">Download tokens</Button>
+					</Grid>
+					<Grid item sm={4}>
+						
+					</Grid>
+					<Grid item sm={2}>
+          <Button variant="contained" color="secondary">Download Draft</Button>
+          </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      // <Grid container spacing={2} className={classes.root}>
+      //   {isFetching && <CircleLoader />}
+        
+      //   <Grid item xs={3} style={{ minHeight: "480px" }}>
+      //     <Grid item xs={12}>
+      //       <MenuBar updateState={this.updateState} />
+      //     </Grid>
+      //      <TokenList/>
+      //   </Grid>
 
         
-        <Grid item xs={4}>
-          <UpdateTokens />
-          <TranslationsWords />
-        </Grid>
-        <Grid item xs={5}>
-          <Grid item xs={12}>
-            <Concordance />
-          </Grid>
-          <Grid item xs={12}>
-            <TranslationsNotes />
-          </Grid>
-        </Grid>
+      //   <Grid item xs={4}>
+      //     <UpdateTokens />
+      //     <TranslationsWords />
+      //   </Grid>
+      //   <Grid item xs={5}>
+      //     <Grid item xs={12}>
+      //       <Concordance />
+      //     </Grid>
+      //     <Grid item xs={12}>
+      //       <TranslationsNotes />
+      //     </Grid>
+      //   </Grid>
         
       
-      </Grid>
+      // </Grid>
     );
   }
 }
