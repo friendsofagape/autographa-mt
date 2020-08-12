@@ -1,5 +1,5 @@
 import React from 'react';
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,6 +8,7 @@ import Header from '../Header';
 import { Component } from 'react';
 import Drawer from './Drawer';
 import { Redirect, Route, Switch, BrowserRouter } from 'react-router-dom';
+import { CssBaseline ,ListItem, List, Toolbar, Typography, ListItemText, Divider } from '@material-ui/core';
 
 // import HomePage from '../HomePage'
 import DownloadDraft from '../DownloadDraft';
@@ -44,37 +45,62 @@ export const PrivateRoute = ({ component: Component, location, ...rest }) => (
 const drawerWidth = 140;
 
 const styles = theme => ({
+    // root: {
+    //     display: 'flex',
+    //     flexGrow: 1,
+    //     // backgroundColor: '#ededf4',
+    //     backgroundColor: '#f2f2f2ab'
+    // },
+    // exp: {
+    //     backgroundColor: '#100f0ffa',
+    //     '&:hover': {
+    //         background: "#f00",
+    //     },
+    //     paddingLeft: '40px'
+    // },
+    // appBar: {
+    //     zIndex: theme.zIndex.drawer + 1,
+    // },
+    // drawer: {
+    //     width: drawerWidth,
+    //     flexShrink: 0,
+    // },
+    // drawerPaper: {
+    //     // width: '100%',
+    //     zIndex: -1,
+    //     backgroundColor: '#262f3d'
+    // },
+    // content: {
+    //     // flexGrow: 1,
+    //     minHeight: '100vh'
+    //     // padding: theme.spacing(1),
+    // },
+    // toolbar: theme.mixins.toolbar,
+
+
     root: {
         display: 'flex',
+      },
+    //   appBar: {
+    //     zIndex: 1201,
+    //   },
+    //   drawer: {
+    //     width: 240,
+    //     flexShrink: 0,
+    //   },
+    //   drawerPaper: {
+    //     width: 240,
+    //   },
+    //   drawerContainer: {
+    //     overflow: 'auto',
+    //   },
+      content: {
         flexGrow: 1,
-        // backgroundColor: '#ededf4',
-        backgroundColor: '#f2f2f2ab'
-    },
-    exp: {
-        backgroundColor: '#100f0ffa',
-        '&:hover': {
-            background: "#f00",
-        },
-        paddingLeft: '40px'
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        // width: '100%',
-        zIndex: -1,
-        backgroundColor: '#262f3d'
-    },
-    content: {
-        // flexGrow: 1,
-        minHeight: '100vh'
-        // padding: theme.spacing(1),
-    },
-    toolbar: theme.mixins.toolbar,
+        // padding: 20,
+      }
+
+
+
 });
 
 class Wrapper extends Component {
@@ -88,26 +114,13 @@ class Wrapper extends Component {
         const { classes } = this.props;
         console.log('Wrapper', this.props);
         return (
-            <BrowserRouter>
-            {/* <div className={classes.root}> */}
-                <Grid container>
-                {/* <CssBaseline /> */}
-                {/* <AppBar position="fixed" className={classes.appBar}> */}
-                    {/* <Grid item xs={12}> */}
-                    {/* <div></div> */}
-                    {/* </Grid> */}
-                {/* </AppBar> */}
-                <Header />
-                <Grid item xs={2} style={{top: '0', position: 'fixed', paddingTop: '80px', width: '100%', height: '100%', backgroundColor: 'black'}}>
-                    <Drawer classes={classes}  />
-                </Grid>
-                {/* <Grid item xs={2}></Grid> */}
-                <Grid item xs={10} style={{  width: '100%', zIndex: -1, position:'absolute', top:'85px', right:0}}>
-                    
-                
-                {/* <main className={classes.content}> */}
-                    {/* <div className={classes.toolbar} /> */}
-                    
+            <div className={classes.root}>
+            <BrowserRouter> 
+          				<Header />
+            <Drawer />
+       <main className={classes.content}>
+        <Toolbar />
+        <Grid item  /*style={{  width: '100%', zIndex: -1, position:'absolute', top:'85px', right:0}}*/>
                         <Switch>
                             {/* <Route path="/signin" component={() => <LoginPage />} /> */}
                             {/* <Route path="/signup" component={() => <SignUp />} /> */}
@@ -126,19 +139,15 @@ class Wrapper extends Component {
                             <PrivateRoute exact path="/app/translations/download" component={() => <DownloadDraft />} />
                             <PrivateRoute exact path="/app/translations/sources" component={() => <ViewSources />} />
                         </Switch>
-                    {/* </BrowserRouter> */}
-                {/* </main> */}
                 </Grid>
-            </Grid>
-            {/* </div> */}
+      </main> 
             </BrowserRouter>
+
+            </div>
         );
     }
 }
 
-// Wrapper.propTypes = {
-//     classes: PropTypes.object.isRequired,
-// };
 
 const mapStateToProps = state => ({
     current_user: state.auth.current_user

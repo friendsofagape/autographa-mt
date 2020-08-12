@@ -38,18 +38,19 @@ console.log('menus', menus)
 
 
 const styles = theme => ({
-    root: {
-      display: 'flex',
-    },
-    appBar: {
-      zIndex: 1201,
-    },
+    // root: {
+    //   display: 'flex'
+    // },
+    // appBar: {
+    //   zIndex: 1201,
+    // },
     drawer: {
-      width: 140,
+      width: 170,
       flexShrink: 0,
     },
     drawerPaper: {
-      width: 140,
+      width: 160,
+      backgroundColor: 'black'
     },
     drawerContainer: {
       overflow: 'auto',
@@ -155,14 +156,16 @@ class DrawerPane extends Component {
                                   paper: classes.drawerPaper,
                                 }}
                                 >
+
                                 <Toolbar />
+                            <div className={classes.drawerContainer}>
                                    <List>
                                         {
                                             menu.child &&
                                             menu.child.map(childMenu => {
                                                 if(childMenu.roles.includes(current_user.role)) {
                                                     return (
-                                                        <Link to={childMenu.link} key={childMenu.key}>
+                                                        <Link to={childMenu.link} key={childMenu.key} style={{textDecoration: 'none'}}>
                                                             <ListItem button key={childMenu.key} className={classes.exp}
                                                             // onClick={(e) => this.checkWhat(text)}
                                                             >
@@ -179,6 +182,7 @@ class DrawerPane extends Component {
                                             })
                                         }
                                     </List>
+                                    </div>
                                     </Drawer>
                             )
                         }
