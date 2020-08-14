@@ -49,6 +49,9 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(8),
+        paddingLeft:'10%',
+        paddingRight:'10%'
+
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
     },
@@ -124,30 +127,31 @@ class MyProjects extends Component {
 
 
 
-            // {
-            //     name: <th>Download</th>,
-            //     options: {
-            //         filter: false,
-            //         sort:false,
-            //         customBodyRender: (value, row) => {
-            //             var valuesbook = value.split('/')[1]
-            //             var valuesTran = value.split('/')[0]
-            //             // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
-            //             if (valuesbook == 0){
-            //             return <Tooltip title="Book is not assigned yet">
-            //             <span>
-            //                 <Button size="small" disabled color="primary">Download drafts</Button>
-            //             </span>
-            //             </Tooltip>
-            //             }
-            //             else{
-            //                 return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
-            //             }
-            //         },
-            //     }
-            // },
             {
-                name: <th>Translate</th>,
+                name: <th></th>,
+                options: {
+                    filter: false,
+                    sort:false,
+                    customBodyRender: (value, row) => {
+                        var valuesbook = value.split('/')[1]
+                        var valuesTran = value.split('/')[0]
+                        // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
+                        if (valuesbook == 0){
+                        return <Tooltip title="Book is not assigned yet">
+                        <span>
+                            <Button size="small" disabled color="primary">Download drafts</Button>
+                        </span>
+                        </Tooltip>
+                        }
+                        else{
+                            return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
+                        }
+                    },
+                }
+            },
+
+            {
+                name: <th></th>,
                 options: {
                     filter: false,
                     sort:false,
@@ -216,7 +220,7 @@ class MyProjects extends Component {
                 // project.version.name,
                 // project.books.length,
                 project.books,
-                // project.projectId+'/'+project.books.length, 
+                project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
         });

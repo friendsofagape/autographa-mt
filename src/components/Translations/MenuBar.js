@@ -11,10 +11,10 @@ import { withRouter } from 'react-router-dom';
 const styles = theme => ({
     selectionGrid: {
         marginLeft: '4%',
-        marginTop: '1%'
+        // marginTop: '1%'
     },
     formControl: {
-        margin: theme.spacing(1),
+        // margin: theme.spacing(1),
         minWidth: 120,
         // width: '100%'
       },
@@ -69,7 +69,8 @@ class MenuBar extends Component {
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">Select Book</InputLabel>
                 <Select
-                    variant="filled"
+                    // native
+                    // variant=""
                     margin="dense"
                     // className={classes.selectMenu}
                     value={this.state.selectbook}

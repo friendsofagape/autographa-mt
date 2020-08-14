@@ -31,12 +31,12 @@ function Header({ classes }) {
            { 
            currUrl.split('/').pop() =='' ? (
                <Grid item xs={3} style={{padding: '10px'}}>
-                      <span style={{fontSize: '25px', color:"#03f0fc"}}>AutographaMT</span>  
+                      <span style={{fontSize: '25px', color:"white", fontWeight:'bold'}}>AutographaMT</span>  
                 </Grid>
                 ):(
                 <Grid item xs={3} style={{padding: '10px'}}>
                     <Link to="/" className={classes.link}>
-                          <span style={{fontSize: '25px', color:"#03f0fc"}}>AutographaMT</span>  
+                          <span style={{fontSize: '25px', color:"white", fontWeight:'bold'}}>AutographaMT</span>  
                     </Link>
                 </Grid>)
             }

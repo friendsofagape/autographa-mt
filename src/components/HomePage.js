@@ -52,7 +52,7 @@ class HomePage extends Component {
             <Grid container spacing={2} >
               
               <Grid item xs={12}className={classes.homePage} >
-                <Card className={classes.card} style={{marginTop: '80px', "backgroundColor":"#f5ce42", marginLeft:'10px', marginRight:'10px'}}>
+                <Card className={classes.card} style={{marginTop: '80px', "backgroundColor":"#ededed", marginLeft:'10px', marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Autographa Machine Translation
@@ -66,7 +66,7 @@ class HomePage extends Component {
 
 
               <Grid item xs={6}>
-                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginLeft:'10px'}}>
+                <Card className={classes.card} style={{"backgroundColor":"#ededed", marginLeft:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Workflow
@@ -103,7 +103,7 @@ class HomePage extends Component {
 
 
               <Grid item xs={6}>
-                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginRight:'10px'}}>
+                <Card className={classes.card} style={{"backgroundColor":"#ededed", marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         Features
@@ -138,12 +138,12 @@ class HomePage extends Component {
 
               
               <Grid item xs={12}>
-                <Card className={classes.card} style={{"backgroundColor":"#f5ce42", marginLeft:'10px', marginRight:'10px'}}>
+                <Card className={classes.card} style={{"backgroundColor":"#ededed", marginLeft:'10px', marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
                         FAQ
                       </Typography>
-                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
+                      <ExpansionPanel style={{"backgroundColor":"#ededed"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
@@ -157,7 +157,7 @@ class HomePage extends Component {
                           </Typography>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
-                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
+                      <ExpansionPanel style={{"backgroundColor":"#ededed"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel2a-content"
@@ -171,7 +171,7 @@ class HomePage extends Component {
                           </Typography>
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
-                      <ExpansionPanel style={{"backgroundColor":"#f5ce42"}}>
+                      <ExpansionPanel style={{"backgroundColor":"#ededed"}}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel3a-content"

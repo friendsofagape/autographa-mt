@@ -63,6 +63,8 @@ const styles = (theme) => ({
     flexGrow: 1,
     overflowY: "hidden",
     padding: theme.spacing(8),
+    paddingLeft:'15%',
+    paddingRight:'15%'
 
   },
   versionDisplay: {

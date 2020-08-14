@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, Divider, CssBaseline, Toolbar,Tooltip, Paper } from "@material-ui/core";
 import MenuBar from "./MenuBar";
 import TokenList from "./TokenList";
 import Concordance from "./Concordance";
@@ -19,14 +19,24 @@ import CircleLoader from "../loaders/CircleLoader";
 import compose from "recompose/compose";
 import { withRouter } from "react-router-dom";
 // import Header from '../Header';
+import {
+  fetchTokenList,
+  setSelectedToken,
+} from "../../store/actions/projectActions";
+import XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import apiUrl from "../GlobalUrl";
+const accessToken = localStorage.getItem('accessToken');
+
 
 const styles = (theme) => ({
   root: {
     // backgroundColor: '#ededf4',
-    paddingTop: "8px",
-    margin: 0,
-    width: "100%",
-  },
+    // paddingTop: "8px",
+    // margin: 0,
+    // width: "100%",
+  }
+  
 });
 
 class HomePage extends Component {
@@ -57,6 +67,13 @@ class HomePage extends Component {
   updateState = (bk) => {
     this.setState({bkvalue:bk});
     // console.log("pppppppppppppppppppppppp", bk)
+    this.props.dispatch(
+      fetchTokenList(
+        bk,
+        this.props.selectedProject.sourceId
+      )
+    );
+    
   };
 
   componentDidMount() {
@@ -121,6 +138,72 @@ class HomePage extends Component {
     }
   };
 
+
+
+
+  clickdownload = () => {
+    console.log("dddddddddddddddd", this.props.currentBook);
+    console.log('ffffffffffffffffffff',this.props)
+    var tokenarray =  this.props.tokenList.map(i => [i])
+    tokenarray.unshift(['token','translation','senses'])
+    var wb = XLSX.utils.book_new();
+      wb.Props = {
+        Title : "TokenList",
+        Subject : "TokenList",
+        Author : "TokenList",
+        CreatedDate : new Date()
+        };
+        wb.SheetNames.push("TokenList");
+        var ws_data = tokenarray;
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["TokenList"] = ws;
+
+        var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+        function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+        }
+    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+  };
+
+
+  clickupload = (e) => {
+    var proId = this.props.selectedProject.projectId;
+    var files = e.target.files,
+    f = files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      // var contents = e.target.result;
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, {type: 'array'});
+      var first_sheet_name = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[first_sheet_name];
+      var tknlist = XLSX.utils.sheet_to_json(worksheet)
+      var jsondata = {
+        "projectId":proId,
+        "tokenTranslations":tknlist
+      }
+      console.log("ttttttttttt", jsondata)
+      var respdata = fetch(apiUrl + 'v1/autographamt/projects/bulktranslations',{
+          method: 'POST',
+          body: JSON.stringify(jsondata),
+          headers: {
+              Authorization: 'bearer ' + accessToken
+          }
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message));
+    };
+
+    reader.onerror = function(e) {
+      console.error("File could not be read! Code " + e.target.error.code);
+    };
+    reader.readAsArrayBuffer(f);
+  }
+
+
   render() {
     const { classes, isFetching } = this.props;
     const {
@@ -133,90 +216,222 @@ class HomePage extends Component {
       displayTranslationWordSwitch,
     } = this.state;
     console.log("homepagessssssssssss", this.props);
+    var projName = this.props.selectedProject.projectName
+    // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
     return (
-      <Grid container direction='column' className={classes.root}>
-        {/* <Grid item>
-					Joel
-				</Grid>
-        <Grid item>
-					Joel
-				</Grid> */}
+      <Grid container /*className={classes.root}*/>
         {isFetching && <CircleLoader />}
         
-        <Grid item container>
-					{/* <Grid item sm={2}></Grid> */}
-					<Grid item sm={4}>
+					<Grid item sm={3}>
             <MenuBar updateState={this.updateState} />
 					</Grid>
-					<Grid item sm={4}>
-						Aaari Project
+					
+          <Grid item sm={4} style={{textAlign:'center'}}>
+            <Typography component="h2" variant="h7">
+						  {this.props.selectedProject.projectName && this.props.selectedProject.projectName.split('|')[0].toUpperCase()}
+            </Typography>
 					</Grid>
-					<Grid item sm={2}></Grid>
-				</Grid>
-        <Grid item container>
-        <Grid item sm={3}>
-            SOURCE TOKENS
-            <Grid>
-            <TokenList/>
+					
+          <Grid item container sm={5} style={{marginTop:'1%'}}>
+            <Grid item sm={4}></Grid>
+            <Grid item sm={4} style={{paddingLeft:'5%'}}>
+            <Tooltip title="Download source tokens for offline translation">
+              <Button
+                color="primary"
+                variant="contained"
+                size='small'
+                disabled={!this.state.bkvalue}
+                onClick ={this.clickdownload}>
+                <span style={{fontSize:'78%'}}>Download Tokens</span>
+              </Button>
+              </Tooltip>
             </Grid>
-					</Grid>
-					<Grid item sm={4}>
-						TOKEN TRANSLATION
-            <Grid>
-            <UpdateTokens />
-            <TranslationsWords />
+            <Grid item sm={4} >
+              <label tmlFor="upload-photo">
+                <input
+                  style={{ display: 'none' }}
+                  id="upload-photo"
+                  name="upload-photo"
+                  type="file"
+                  onChange={this.clickupload}
+                />
+                <Tooltip title="Upload translated tokens">
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size='small'
+                  disabled={!this.state.bkvalue}
+                  component="span"
+                >
+                  <span style={{fontSize:'78%'}}>Upload Tokens</span>
+                </Button>
+                </Tooltip>
+              </label>
             </Grid>
-					</Grid>
-					<Grid item sm={5}>
-            TOKEN REFERENCE
-            <Grid>
-            <Concordance />
-            <TranslationsNotes />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid>
-          <Grid container>
-					<Grid item sm={4}>
-						<Button variant="contained" color="primary">Upload tokens</Button>
 
-						<Button variant="contained" color="secondary">Download tokens</Button>
-					</Grid>
-					<Grid item sm={4}>
-						
-					</Grid>
-					<Grid item sm={2}>
-          <Button variant="contained" color="secondary">Download Draft</Button>
+            {/* <Grid item sm={3}>
+              <Tooltip title="Download the target draft">
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size='small'
+                  disabled={!this.state.bkvalue}
+                >
+                <span style={{fontSize:'76%'}}>Download Draft</span>
+                </Button>
+              </Tooltip>
+            </Grid> */}
           </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      // <Grid container spacing={2} className={classes.root}>
-      //   {isFetching && <CircleLoader />}
         
-      //   <Grid item xs={3} style={{ minHeight: "480px" }}>
-      //     <Grid item xs={12}>
-      //       <MenuBar updateState={this.updateState} />
-      //     </Grid>
-      //      <TokenList/>
-      //   </Grid>
+     
+          <Grid item sm={12} style={{marginTop:'2%'}}>
+            <Divider />
+          </Grid>
 
+
+          
+          { this.state.bkvalue &&
+            <Grid item container style={{paddingTop:'2%'}} spacing={0}>
+            
+            
+            <Grid item sm={3} style={{paddingRight:'2%'}}>
+              <Paper elevation='2'>
+                  <Grid sm={12} style={{backgroundColor:'#f2eddf'}}>
+                    <Typography component="h4" variant="h7" style={{textAlign:"center" ,padding:"4%"}}>
+						          Source Tokens
+					          </Typography>
+                  </Grid>
+              </Paper>
+              <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'2%',paddingBottom:'2%'}}>
+                <Paper elevation='1'>
+              <TokenList/>
+              </Paper>
+              </Grid>
+            </Grid>
+
+
+
+
+
+            <Grid item sm={5}  style={{paddingRight:'2%'}}>
+              <Paper elevation='2'>
+              <Grid item sm={12} style={{backgroundColor:'#f2eddf'}}>
+                <Typography component="h4" variant="h7" style={{textAlign:"center" ,padding:"2%"}}>
+						      Token Translation
+					      </Typography>
+              </Grid>
+              </Paper>
+              
+              <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'2%',paddingBottom:'2%'}}>
+                <Paper elevation='1'>
+                  {/* <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
+						        Update Selected Token
+					        </Typography> */}
+                  <UpdateTokens />
+                </Paper>
+              </Grid>
+              
+            </Grid>
+
+
+
+            <Grid item sm={4} style={{paddingRight:'2%'}}>
+              <Paper elevation='2'>
+                <Grid item sm={12} style={{backgroundColor:'#f2eddf'}}>
+                  <Typography component="h4" variant="h7" style={{textAlign:"center" ,padding:"3%"}}>
+						        References
+					        </Typography>
+                </Grid>
+              </Paper>
+              <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'2%',paddingBottom:'2%'}}>
+                <Paper elevation='1'>
+                
+                
+{/*                 
+                
+                
+                
+                <Grid style={{paddingBottom:"1%"}}>
+                  <Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"2%"}}>
+                    Token Meaning
+					        </Typography>
+                  <Grid item sm={12}>
+                    <p style={{margin:'0%', paddingRight:'3%', paddingLeft:'3%',paddingBottom:'1%', fontSize:"85%", color:'#b1b2b3'}}> Check the word meaning and strong number details</p>
+                  </Grid>
+                  
+                  <Grid item sm={12} style={{textAlign:'right', marginBottom:'2%', paddingRight:'3%'}}>
+                    <Button size="small" variant="contained" color="primary" ><span style={{fontSize:'78%'}}>Open</span></Button>
+                  </Grid>
+                  </Grid>
+                  <Divider />
+
+
+                  <Grid style={{paddingBottom:"1%"}}>
+                  <Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"2%"}}>
+                    Concordance
+					        </Typography>
+                  <Grid item sm={12}>
+                    <p style={{margin:'0%', paddingRight:'3%', paddingLeft:'3%',paddingBottom:'1%', fontSize:"85%", color:'#b1b2b3'}}> Bible references in the selected book</p>
+                  </Grid>
+                  
+                  <Grid item sm={12} style={{textAlign:'right', marginBottom:'2%', paddingRight:'3%'}}>
+                    <Button size="small" variant="contained" color="primary" ><span style={{fontSize:'78%'}}>Open</span></Button>
+                  </Grid>
+                  </Grid>
+
+                  <Divider />
+
+                  <Grid style={{paddingBottom:"1%"}}>
+                  <Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"2%"}}>
+                    All Concordance
+					        </Typography>
+                  <Grid item sm={12}>
+                    <p style={{margin:'0%', paddingRight:'3%', paddingLeft:'3%',paddingBottom:'1%', fontSize:"85%", color:'#b1b2b3'}}> Bible references from all books</p>
+                  </Grid>
+                  
+                  <Grid item sm={12} style={{textAlign:'right', marginBottom:'2%', paddingRight:'3%'}}>
+                    <Button size="small" variant="contained" color="primary" ><span style={{fontSize:'78%'}}>Open</span></Button>
+                  </Grid>
+                  </Grid>
+
+                  <Divider />
+                  
+
+
+                  <Grid style={{paddingBottom:"1%"}}>
+                  <Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"2%"}}>
+                    Translation Notes
+					        </Typography>
+                  <Grid item sm={12}>
+                    <p style={{margin:'0%', paddingRight:'3%', paddingLeft:'3%',paddingBottom:'1%', fontSize:"85%", color:'#b1b2b3'}}> Translation Notes from the bible</p>
+                  </Grid>
+                  
+                  <Grid item sm={12} style={{textAlign:'right', marginBottom:'2%', paddingRight:'3%'}}>
+                    <Button size="small" variant="contained" color="primary" ><span style={{fontSize:'78%'}}>Open</span></Button>
+                  </Grid>
+                  </Grid> */}
+
+
+
+
+
+
+
+
+
+
+                  <Concordance />
+                  {/* <TranslationsNotes /> */}
+                  <TranslationsWords />
+                </Paper>
+              </Grid>
+            </Grid>
+          </Grid>
+        }
         
-      //   <Grid item xs={4}>
-      //     <UpdateTokens />
-      //     <TranslationsWords />
-      //   </Grid>
-      //   <Grid item xs={5}>
-      //     <Grid item xs={12}>
-      //       <Concordance />
-      //     </Grid>
-      //     <Grid item xs={12}>
-      //       <TranslationsNotes />
-      //     </Grid>
-      //   </Grid>
-        
-      
-      // </Grid>
+
+
+        </Grid>
     );
   }
 }
@@ -225,6 +440,11 @@ const mapStateToProps = (state) => ({
   projects: state.project.projects,
   isFetching: state.project.isFetching,
   userProjects: state.project.userProjects,
+  selectedProject: state.project.selectedProject,
+  tokenList: state.project.tokenList,
+  selectedToken: state.project.selectedToken,
+  translation: state.project.translation,
+  senses: state.project.senses
 });
 
 const mapDispatchToProps = (dispatch) => ({

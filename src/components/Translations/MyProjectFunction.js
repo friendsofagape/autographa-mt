@@ -39,7 +39,7 @@ import Popover from '@material-ui/core/Popover';
     <div>
             <div>
         
-        <Button disabled= {props.books ==0 ? true : false} aria-describedby={id} variant="contained" color="primary" size="small" onClick={handleClick}>
+        <Button disabled= {props.books ==0 ? true : false} aria-describedby={id} color="primary" size="small" onClick={handleClick}>
         {props.books.length}&nbsp;▼
         </Button>
       <Popover
