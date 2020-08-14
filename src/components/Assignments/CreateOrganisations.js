@@ -115,7 +115,7 @@ class CreateOrganisations extends Component {
                                     label="Organisation Name"
                                     name="organisationName"
                                     autoComplete="organisationName"
-                                    autoFocus
+                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationName: e.target.value })}
                                 />
@@ -130,7 +130,7 @@ class CreateOrganisations extends Component {
                                     label="Address"
                                     name="organisationAddress"
                                     autoComplete="organisationAddress"
-                                    autoFocus
+                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationAddress: e.target.value })}
                                 />
@@ -146,7 +146,7 @@ class CreateOrganisations extends Component {
                                     type="email"
                                     name="organisationEmail"
                                     autoComplete="organisationEmail"
-                                    autoFocus
+                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationEmail: e.target.value })}
                                 />
@@ -161,7 +161,7 @@ class CreateOrganisations extends Component {
                                     label="Phone"
                                     name="organisationPhone"
                                     autoComplete="organisationPhone"
-                                    autoFocus
+                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationPhone: e.target.value })}
                                 />

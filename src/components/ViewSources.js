@@ -4,6 +4,7 @@ import {
   Grid,
   Paper,
   Button,
+  Tooltip,
   Table,
   TableBody,
   TableHead,
@@ -63,6 +64,8 @@ const styles = (theme) => ({
     flexGrow: 1,
     overflowY: "hidden",
     padding: theme.spacing(8),
+    paddingLeft:'15%',
+    paddingRight:'15%'
 
   },
   versionDisplay: {
@@ -340,6 +343,7 @@ class ViewSources extends Component {
           />
         )}
         {current_user.role == "sa" && (
+          <Tooltip title="Click to add new source">
           <Fab
             aria-label={"add"}
             className={classes.fab}
@@ -348,6 +352,7 @@ class ViewSources extends Component {
           >
             <AddIcon />
           </Fab>
+          </Tooltip>
         )}
         {this.state.listBooks && (
           <Dialog open={this.state.listBooks}>

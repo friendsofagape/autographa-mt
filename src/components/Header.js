@@ -27,16 +27,16 @@ const styles = theme => ({
 function Header({ classes }) {
     const currUrl = window.location.href
     return (
-        <Grid container style={{position: 'fixed', width: '100%', backgroundColor: 'black' }}  >
+        <Grid container style={{position: 'fixed', width: '100%', zIndex: 1201, backgroundColor: 'black' }}  >
            { 
            currUrl.split('/').pop() =='' ? (
                <Grid item xs={3} style={{padding: '10px'}}>
-                      <span style={{fontSize: '25px', color:"white"}}>AutographaMT</span>  
+                      <span style={{fontSize: '25px', color:"white", fontWeight:'bold'}}>AutographaMT</span>  
                 </Grid>
                 ):(
                 <Grid item xs={3} style={{padding: '10px'}}>
                     <Link to="/" className={classes.link}>
-                          <span style={{fontSize: '25px'}}>AutographaMT</span>  
+                          <span style={{fontSize: '25px', color:"white", fontWeight:'bold'}}>AutographaMT</span>  
                     </Link>
                 </Grid>)
             }
