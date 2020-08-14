@@ -89,7 +89,9 @@ class Concordance extends Component {
 	};
 
 	displayConcordance(value, token) {
-		if (value) {
+		if (!value) {
+			return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >Select token to load data</p>;
+		}else if(value.length >0){
 			return value.map((item, index) => {
 				const bcv = item.book + item.chapterNumber + item.verseNumber;
 				const { book, chapterNumber, verseNumber, verse, bookCode } = item;
@@ -122,8 +124,9 @@ class Concordance extends Component {
 					</div>
 				);
 			});
-		} else {
-			return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >Select Token to Load Data</p>;
+		} 
+		else {
+			return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No data available</p>;
 		}
 	}
 	render() {

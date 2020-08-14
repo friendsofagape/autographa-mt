@@ -4,6 +4,7 @@ import {
   Grid,
   Paper,
   Button,
+  Tooltip,
   Table,
   TableBody,
   TableHead,
@@ -342,6 +343,7 @@ class ViewSources extends Component {
           />
         )}
         {current_user.role == "sa" && (
+          <Tooltip title="Click to add new source">
           <Fab
             aria-label={"add"}
             className={classes.fab}
@@ -350,6 +352,7 @@ class ViewSources extends Component {
           >
             <AddIcon />
           </Fab>
+          </Tooltip>
         )}
         {this.state.listBooks && (
           <Dialog open={this.state.listBooks}>

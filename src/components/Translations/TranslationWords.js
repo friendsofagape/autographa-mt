@@ -111,7 +111,7 @@ class TranslationWords extends Component {
             <Grid item xs={12} className={classes.containerGrid}>
                 <Grid item sm={12} >
 					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
-                   		Token Details
+                   		Dictionary
 					</Typography>
 				</Grid>
                 <Grid item sm={12} style={{height: '120px'}}>

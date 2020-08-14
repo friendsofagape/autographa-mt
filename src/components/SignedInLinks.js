@@ -106,7 +106,7 @@ class SignedInLinks extends Component {
                 {
                     current_user.firstName ?  (
                         <div>
-                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#ff7d7d' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
+                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
                             <IconButton
                                 aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                                 aria-haspopup="true"

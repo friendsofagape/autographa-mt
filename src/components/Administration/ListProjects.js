@@ -46,6 +46,8 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(2),
+        paddingRight:'10%',
+        paddingLeft:'10%'
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
     },

@@ -49,8 +49,8 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(8),
-        paddingLeft:'10%',
-        paddingRight:'10%'
+        paddingLeft:'5%',
+        paddingRight:'5%'
 
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
@@ -135,16 +135,23 @@ class MyProjects extends Component {
                     customBodyRender: (value, row) => {
                         var valuesbook = value.split('/')[1]
                         var valuesTran = value.split('/')[0]
-                        // console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmm',valuesTran)
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
                         <span>
-                            <Button size="small" disabled color="primary">Download drafts</Button>
+                            <Button size="small" variant="outlined" disabled style={{fontSize:'80%'}} >
+                                Download Draft
+                            </Button>
                         </span>
                         </Tooltip>
                         }
                         else{
-                            return <Button size="small" color="primary" onClick={() => this.handleDownload(valuesTran)}>Download drafts</Button>
+                            return <Button 
+                                        size="small" 
+                                        variant="contained" 
+                                        onClick={() => this.handleDownload(valuesTran)}
+                                        style={{fontSize:'80%', backgroundColor: "#21b6ae"}}>
+                                        Download Draft
+                                    </Button>
                         }
                     },
                 }
@@ -158,18 +165,27 @@ class MyProjects extends Component {
                     customBodyRender: (value) => {
                         var valuesbook = value.split('/')[1]
                         var valuesTran = value.split('/')[0]
-                        // console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
-                        <span>
-                        <Button variant="outlined" disabled color="secondary" size="small">Open Project</Button>
-                        </span>
+                        <Button 
+                            variant="outlined" 
+                            disabled 
+                            size="small"
+                            style={{fontSize:'80%'}}>
+                                Open Project
+                        </Button>
                       </Tooltip>
                         }
                         else{
-                            return <Button variant="contained" style={{
-                                backgroundColor: "#21b6ae",
-                            }} size="small"><Link style={{"color":"black", "text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}>Open Project</Link></Button>
+                            return <Button 
+                                variant="contained" 
+                                style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
+                                size="small">
+                                    <Link 
+                                    style={{"color":"black", "text-decoration": "none"}}
+                                    to={`/app/translations/projects/${valuesTran}`}>
+                                    Open Project</Link>
+                                </Button>
                         }
                     },
                 }
