@@ -29,15 +29,15 @@ const styles = theme => ({
 class MenuBar extends Component {
 
     componentDidMount() {
-        // const { dispatch } = this.props;
-        // dispatch(fetchUserProjects());
+        /* const { dispatch } = this.props;
+         dispatch(fetchUserProjects());*/
     }
 
     displayBooks() {
         const { userProjects, location } = this.props
         if (userProjects.length > 0 ) {
             const data = userProjects.filter(project => project.projectId === parseInt(location.pathname.split('/').pop()));
-            return data[0].books.map(item => {
+                return data[0].books.map(item => {
                 return (
                     <MenuItem key={item} value={item}>{item}</MenuItem>
                 )
@@ -97,6 +97,7 @@ class MenuBar extends Component {
           <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}
         </Select>
+        
       </FormControl>
         )
     }

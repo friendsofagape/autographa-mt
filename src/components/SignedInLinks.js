@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { setAccessToken, clearState } from '../store/actions/authActions';
+import { AppBar, Typography, Toolbar, Grid } from '@material-ui/core';
+import Popover from '@material-ui/core/Popover';
 
 // let decoded;
 // let tokenAliveFlag = false
@@ -47,18 +49,39 @@ class SignedInLinks extends Component {
         this.setState({ anchorEl: null })
     }
 
+   
+
     getMenuItems() {
         const { anchorEl } = this.state
+        const open = Boolean(anchorEl);
+        const id = open ? 'simple-popover' : undefined;
         return (
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleClose}
-            >
-                <MenuItem>
+            <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={this.handleClose}
+            
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+
+            {/* <Menu */}
+            {/* anchorEl={anchorEl}  */}
+            {/* open={Boolean(anchorEl)}  */}
+            {/* onClose={this.handleClose} */}
+            {/* >  */}
+                <MenuItem> 
                     <Link style={{textDecoration:'none', color:'black'}} to="/" onClick={this.logOut} variant="contained" size="small" color="primary" /*className={this.props.classes.link}*/>Log Out</Link>
-                </MenuItem>
-            </Menu>
+                  </MenuItem> 
+                {/* </Menu>  */}
+            </Popover>
         )
     }
     render() {

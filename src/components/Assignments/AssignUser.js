@@ -82,12 +82,12 @@ const accessToken = localStorage.getItem('accessToken');
 class AssignUser extends Component {
 	state = {
 		userListing: false,
-		listBooks: false,
+		listBooks: false,                         
 		availableBooks: [],
-		assignedUsers: [],
-		availableBooksData: {},
-		userId: '',
-		projectId: '',
+		assignedUsers: [],                      
+		availableBooksData: {},                  
+		userId: '',                                   
+		projectId: '',                           
 		userStatus: {},
 		userData: [],
 		statistics: null,

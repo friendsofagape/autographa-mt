@@ -33,11 +33,11 @@ function Header({ classes }) {
             <Grid item xs={3} style={{paddingLeft: '10px'}}>
                 <Link to="/" className={classes.link}>
                     <Typography variant="h5" className={classes.grow}>
-                        AutographaMT
+                        AutographaMT  
                     </Typography>
                 </Link>
             </Grid>
-            <Grid item xs={9} style={{textAlign: 'right'}}>
+            <Grid item xs={9} style={{textAlign: 'right', alignItems: 'flex-end'}} >
                 <SignedInLinks classes={classes} />
             </Grid>
         </Grid>

@@ -17,7 +17,8 @@ import {
 } from "../../store/actions/projectActions";
 import CircleLoader from "../loaders/CircleLoader";
 import compose from "recompose/compose";
-import { withRouter } from "react-router-dom";
+import { withRouter, Route } from "react-router-dom";
+import Header from "../Header";
 // import Header from '../Header';
 
 const styles = (theme) => ({
@@ -140,7 +141,7 @@ class HomePage extends Component {
     } = this.state;
     console.log("homepagessssssssssss", this.props);
     return (
-      <Grid container spacing={2} className={classes.root}>
+      <Grid container spacing={2} className={classes.root}>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
         {isFetching && <CircleLoader />}
         <Grid item xs={3} style={{ minHeight: "480px" }}>
           <Grid item xs={12}>

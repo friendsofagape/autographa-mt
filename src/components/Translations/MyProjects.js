@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Select } from '@material-ui/core';
+import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
 import apiUrl from '../GlobalUrl';
 import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
 import { fetchUserProjects } from '../../store/actions/projectActions';
@@ -15,6 +15,7 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
 import swal from 'sweetalert';
+import MyProjectFunction from './MyProjectFunction';
 
 
 const getMuiTheme = () => createMuiTheme({
@@ -45,6 +46,9 @@ const styles = theme => ({
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
     },
+    disabled: {
+        color: "lightgrey"
+      },
     cursorPointer: {
       cursor: 'pointer',
       backgroundColor: '#fff',
@@ -90,6 +94,17 @@ const LightTooltip = withStyles((theme) => ({
   
     return <Tooltip arrow classes={classes} {...props} />;
   }*/
+  /*function TriggersTooltips() {
+    const [open, setOpen] = React.useState(false);
+  
+    const handleTooltipClose = () => {
+      setOpen(false);
+    };
+  
+    const handleTooltipOpen = () => {
+      setOpen(true);
+    };*/
+  
 
 class MyProjects extends Component {
     
@@ -134,52 +149,59 @@ class MyProjects extends Component {
                 }
             },
             {
-                name: <h4>BOOKS ASSIGNED</h4>,
+                name: <h4>ASSIGNED BOOKS</h4>,
                 options: {
                     filter: true,
                     customBodyRender: (value) => {                                                                                                                                                  //added
-                    return <div>{value}</div>                    
+                    return <div><MyProjectFunction books={value} /></div>                    
                     
                     }
                 }
             },
             {
-                name: <h4>BOOKS</h4>,
+                name: <th></th>,
                 options: {
-                    filter: true,
-                    customBodyRender: (value) => {                                                                                                                                                  //added
-                    return <div>    
-                    <LightTooltip title={<Typography color="inherit"><b>{value}</b></Typography>}> 
-                    <Button variant="contained" size="small" color="primary" >Books</Button></LightTooltip></div>             
-                    
-                    }
-                }
-            },
-            /*{*/
-                /*name: 'Download',*/
-                /*name: '',
-                options: {
-                    filter: true,
-                    customBodyRender: (value, row) => {*/
-                        /*return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>*/
-                       /* return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>View Books</Button>
-                    }
-                }*/
-           /* },*/
-            {
-                /*name: 'Translate',*/
-                name: '',
-                options: {
-                    filter: true,
+                    filter: false,
+                    sort:false,
                     customBodyRender: (value) => {
-                        /*return <Link to={`/app/translations/projects/${value}`}>Translate</Link>*/
-                        return <Link style={{textDecoration:'none'}} to={`/app/translations/projects/${value}`}><Button variant="contained" size="small" color="primary" >Open Project</Button></Link>
-                    }
+                        var valuesbook = value.split('/')[1]
+                        var valuesTran = value.split('/')[0]
+                        // console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
+                        if (valuesbook == 0){
+                        return <Tooltip title="Book is not assigned yet">
+                        <span>
+                        <Button variant="outlined" disabled color="secondary" size="small">Open Project</Button>
+                        </span>
+                      </Tooltip>
+                        }
+                        else{
+                            return <Link style={{"text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}><Button variant="contained"  size="small" color="primary">Open Project</Button></Link>
+                        }
+                    },
                 }
             }
+            // {
+            //     /*name: 'Translate',*/
+            //     name: '',
+            //     options: {
+            //         filter: true,
+            //         customBodyRender: (value) => {
+            //             /*return <Link to={`/app/translations/projects/${value}`}>Translate</Link>*/
+            //             return <Link disabled= {this.books ==0 ? true : false} style={{textDecoration:'none'}} to={`/app/translations/projects/${value}`}><Button  disabled= {this.books ==0 ? true : false} variant="contained" size="small" color="primary" >Open Project</Button></Link>
+            //         }
+            //     }
+            // }
         ]
     }
+
+    handleTooltipClose = () => {
+        this.setState({open:false});
+      };
     
+    handleTooltipOpen = () => {
+        this.setState({open:true});
+      };
+
     handleDownload = (projectId) => {
         var project = this.props.userProjects.filter(item => item.projectId === projectId)
         if(project.length > 0){
@@ -208,17 +230,19 @@ class MyProjects extends Component {
         const { classes, userProjects, isFetching } = this.props;
         const { columns, open } = this.state;
         const data = userProjects.map(project => {
+            console.log("myProject=",project)
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
                 /*project.projectName.split('|')[1],*/ 
                 project.organisationName, 
-                project.version.name,
-                project.books.length,
-                project.books.map(book=>
-                 <ul>{book}</ul>),
-                project.projectId, 
-                project.projectId, 
+                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision,
+                project.books,
+                // project.projectId, 
+                // project.projectId, 
+                project.projectId+'/'+project.books.length, 
+                project.projectId+'/'+project.books.length,
+
             ]
         });
 
@@ -266,4 +290,45 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)
- )(withRouter(MyProjects))
+ )(withRouter(MyProjects));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ // {
+            //     name: <h4>BOOKS</h4>,
+            //     options: {
+            //         filter: true,
+            //         customBodyRender: (value) => {                                                                                                                                                  //added
+            //         return <div><MyProjectFunction books={value} />   
+                    {/*<LightTooltip title={<Typography color="inherit"><b>{value}</b></Typography>}> 
+                    <Button variant="contained" size="small" color="primary" >Books</Button></LightTooltip>*/}
+            //         </div>            
+                    
+            //         }
+            //     }
+            // },
+            /*{*/
+                /*name: 'Download',*/
+                /*name: '',
+                options: {
+                    filter: true,
+                    customBodyRender: (value, row) => {*/
+                        /*return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>Download drafts</Button>*/
+                       /* return <Button variant="contained" size="small" color="primary" onClick={() => this.handleDownload(value)}>View Books</Button>
+                    }
+                }*/
+           /* },*/
