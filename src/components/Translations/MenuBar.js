@@ -11,10 +11,10 @@ import { withRouter } from 'react-router-dom';
 const styles = theme => ({
     selectionGrid: {
         marginLeft: '4%',
-        marginTop: '1%'
+        // marginTop: '1%'
     },
     formControl: {
-        margin: theme.spacing(1),
+        // margin: theme.spacing(1),
         minWidth: 120,
         // width: '100%'
       },
@@ -27,11 +27,13 @@ const styles = theme => ({
 });
 
 class MenuBar extends Component {
-
-    componentDidMount() {
-        /* const { dispatch } = this.props;
-         dispatch(fetchUserProjects());*/
+    state= {
+        selectbook:''
     }
+    // componentDidMount() {
+    //     // const { dispatch } = this.props;
+    //     // dispatch(fetchUserProjects());
+    // }
 
     displayBooks() {
         const { userProjects, location } = this.props
@@ -49,56 +51,36 @@ class MenuBar extends Component {
         }
     }
 
+
+
+    onSelect = (e) => {
+        this.setState({
+            selectbook:e.target.value
+        })
+        this.props.updateState(e.target.value);
+        const { dispatch } = this.props
+        dispatch(setSelectedBook(e.target.value))
+    }
+
     render() {
         const { classes, selectedBook, dispatch } = this.props
         console.log('Menu Bar', this.props)
         return (
-            // <Grid container item xs={12} className={classes.selectionGrid}>
-            //     <Grid container item xs={8}>
-            //         <Grid item xs={2} md={2}>
-            //             <FormControl>
-            //                 <InputLabel htmlFor="select-books">Books</InputLabel>
-            //                 <Select
-            //                     variant="filled"
-            //                     margin="dense"
-            //                     className={classes.selectMenu}
-            //                     value={selectedBook}
-            //                     onChange={(e) => dispatch(setSelectedBook(e.target.value))}
-            //                     inputProps={{
-            //                         id: 'select-books',
-            //                     }}
-            //                 >
-            //                     {this.displayBooks()}
-            //                 </Select>
-            //             </FormControl>
-            //             <br />
-            //             <br />
-            //         </Grid>
-            //     </Grid>
-            // </Grid>
             <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Select Book</InputLabel>
-        <Select
-                                variant="filled"
-                                margin="dense"
-                                // className={classes.selectMenu}
-                                value={selectedBook}
-                                onChange={(e) => dispatch(setSelectedBook(e.target.value))}
-                                // inputProps={{
-                                //     id: 'select-books',
-                                // }}
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-        //   value={age}
-        //   onChange={handleChange}
-        >
-            {this.displayBooks()}
-          {/* <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
-        </Select>
-        
-      </FormControl>
+                <InputLabel id="demo-simple-select-label">Select Book</InputLabel>
+                <Select
+                    // native
+                    // variant=""
+                    margin="dense"
+                    // className={classes.selectMenu}
+                    value={this.state.selectbook}
+                    onChange={this.onSelect}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                >
+                {this.displayBooks()}
+                </Select>
+            </FormControl>
         )
     }
 }
@@ -114,7 +96,6 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch
 })
 
-// export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MenuBar))
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)

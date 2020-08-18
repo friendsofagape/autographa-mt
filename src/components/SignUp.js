@@ -6,6 +6,7 @@ import {
     FormControlLabel,
     Checkbox,
     Link,
+    Paper,
     Typography,
     Dialog,
     DialogActions,
@@ -27,7 +28,7 @@ const styles = theme => ({
     },
     form: {
       // backgroundColor:'blue',
-      padding: '0px 5px'
+      padding: '3% 10%'
     },
 });
 
@@ -97,7 +98,8 @@ class SignUp extends Component {
             <Grid container>
             <Header />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
-                <Typography component="h1" variant="h5">
+            <Paper elevation='3' >
+                <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%", paddingTop:"5%"}}>
                     Sign Up
                 </Typography>
                 <form className={classes.form} onSubmit={this.handleSubmit}>
@@ -112,7 +114,7 @@ class SignUp extends Component {
                                 label="First Name"
                                 name="firstName"
                                 autoComplete="fname"
-                                autoFocus
+                                size="small"
                                 onChange={(e) => this.setState({ firstName: e.target.value })}
                             />
                         </Grid>
@@ -126,7 +128,7 @@ class SignUp extends Component {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
-                                autoFocus
+                                size="small"
                                 onChange={(e) => this.setState({ lastName: e.target.value })}
                             />
                         </Grid>
@@ -142,7 +144,7 @@ class SignUp extends Component {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
+                            size="small"
                             onChange={(e) => this.setState({ email: e.target.value })}
                         />
                     </Grid>
@@ -157,29 +159,34 @@ class SignUp extends Component {
                             name="password"
                             type="password"
                             autoComplete="current-password"
-                            autoFocus
+                            size="small"
                             onChange={(e) => this.setState({ password: e.target.value })}
                         />
                     </Grid>
-                    <FormControlLabel
+                    {/* <FormControlLabel
                         control={<Checkbox value="allowExtraEmails" color="primary" />}
                         label="I want to recieve promotional emails"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                    >
-                        Sign Up
-                        </Button>
-                    <Grid container style={{ marginTop: "7px" }}>
-                        <Grid container justify="flex-end">
+                    /> */}
+                    
+                    <Grid container style={{ marginTop: "20%" }}>
+                        <Grid item  xs style={{ margin: '2%' }}>
                             <Link href="/signin" variant="body2">
-                                {"Already have an account? Sign in"}
+                                {"Sign in instead"}
                             </Link>
                         </Grid>
+                        
+                        <Grid item style={{ textAlign: "right", paddingBottom:'10%'}}>
+                            <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            >
+                            Sign Up
+                            </Button>
+                        </Grid>
                     </Grid>
+                
                 </form>
                 <Dialog
                     open={this.state.verificationDialogOpen}
@@ -204,6 +211,7 @@ class SignUp extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                </Paper>
             </Container>
             </Grid>
         )

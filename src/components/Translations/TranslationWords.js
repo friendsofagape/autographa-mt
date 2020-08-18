@@ -17,22 +17,22 @@ const styles = theme => ({
         flexGrow: 1,
       },
       tokenList: {
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
+        // textAlign: 'center',
+        // color: theme.palette.text.secondary,
         height: '30vh',
         overflowX: 'hidden',
         overflowY: 'auto',
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
       },
       containerGrid: {
         // width: '97%',
         // marginLeft: '2%',
         // marginRight: '2%',
         // border: '1px solid #3e51b5',
-        border: '1px solid "#2a2a2fbd"',
-        boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-        height: '320px',
-        backgroundColor: '#fff',
+        // border: '1px solid "#2a2a2fbd"',
+        // boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+        // height: '320px',
+        // backgroundColor: '#fff',
       },
 });
 
@@ -65,29 +65,43 @@ class TranslationWords extends Component {
     displayTranslationWords() {
         const { classes } = this.props
         const { translationWords } = this.state
-        if (translationWords) {
-            var tWkeys = Object.keys(translationWords)
-            return tWkeys.map((item, index) => {
-                return (
-                    <ExpansionPanel
-                        key={index}>
-                        <ExpansionPanelSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Typography className={classes.heading}>{item}</Typography>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <Typography color="inherit">
-                                {translationWords[item]}
-                            </Typography>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+        console.log("wdccccccccccccccccccccc",translationWords)
+        if (translationWords.definition) {
+            if (translationWords.strongs){
+                var tW = translationWords.strongs
+                var tWS = tW.replace(/,/g,', ')
+            }
+            return (
+                <Grid>
+                    <Grid>
+                        <p style={{textAlign:'left', paddingLeft:"2%", fontWeight:'bold', fontSize:'75%', margin:'2px',color:'#a6024b'}}>Defination</p>
+                        <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0'}}>{translationWords.definition}</p>
+                    </Grid>
+                    
+                    <Grid>
+                        <p style={{textAlign:'left', paddingLeft:"2%", fontWeight:'bold', fontSize:'75%', margin:'2px',color:'#a6024b'}}>Keyword</p>
+                        <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0'}}>{translationWords.keyword}</p>
+                    </Grid>
+
+                    <Grid>
+                        
+                        <p style={{textAlign:'left', paddingLeft:"2%", fontWeight:'bold', fontSize:'75%', margin:'2px',color:'#a6024b'}}>Strongs Number</p>
+                        <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0'}}>{tWS}</p>
+                    </Grid>
+
+                    <Grid>
+                        <p style={{textAlign:'left', paddingLeft:"2%", fontWeight:'bold', fontSize:'75%', margin:'2px',color:'#a6024b'}}>Translation Help</p>
+                        <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0'}}>{translationWords.translationhelp}</p>
+                    </Grid>
+
+                    <Grid>
+                        <p style={{textAlign:'left', paddingLeft:"2%", fontWeight:'bold', fontSize:'75%', margin:'2px',color:'#a6024b'}}>Word Forms</p>
+                        <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0', paddingBottom:'1%'}}>{translationWords.wordforms}</p>
+                    </Grid>
+                </Grid>
                 )
-            })
         } else {
-            return <ListItem>No data available</ListItem>
+            return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No details available for the selected token</p>
         }
     }
 
@@ -95,19 +109,23 @@ class TranslationWords extends Component {
         const { classes } = this.props
         return (
             <Grid item xs={12} className={classes.containerGrid}>
-                <Grid container item xs={12}>
-                    <Grid item xs={12}>
-                        <ComponentHeading data={{
-                            classes: classes,
-                            text: "Translation Words",
-                            styleColor: "#2a2a2fbd"
-                        }} />
-                    </Grid>
-                    <Grid item xs={12} className={classes.tokenList}>
+                <Grid item sm={12} >
+					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
+                   		Dictionary
+					</Typography>
+				</Grid>
+                <Grid item sm={12} style={{height: '120px'}}>
+                    <Grid item sm={12} style={{height: "96%",overflowX: "hidden", overflowY: "auto"}}>
                         {this.displayTranslationWords()}
                     </Grid>
                 </Grid>
             </Grid>
+
+
+
+
+
+            
         )
     }
 }

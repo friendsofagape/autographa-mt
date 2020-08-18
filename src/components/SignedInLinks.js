@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Grid, Popover} from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { setAccessToken, clearState } from '../store/actions/authActions';
-import { AppBar, Typography, Toolbar, Grid } from '@material-ui/core';
-import Popover from '@material-ui/core/Popover';
+import { AppBar, Typography, Toolbar,} from '@material-ui/core';
 
 // let decoded;
 // let tokenAliveFlag = false
@@ -56,6 +55,11 @@ class SignedInLinks extends Component {
         const open = Boolean(anchorEl);
         const id = open ? 'simple-popover' : undefined;
         return (
+            // <Menu
+            //     anchorEl={anchorEl}
+            //     open={Boolean(anchorEl)}
+            //     onClose={this.handleClose}
+            // >
             <Popover
             id={id}
             open={open}
@@ -71,16 +75,10 @@ class SignedInLinks extends Component {
               horizontal: 'right',
             }}
           >
-
-            {/* <Menu */}
-            {/* anchorEl={anchorEl}  */}
-            {/* open={Boolean(anchorEl)}  */}
-            {/* onClose={this.handleClose} */}
-            {/* >  */}
-                <MenuItem> 
-                    <Link style={{textDecoration:'none', color:'black'}} to="/" onClick={this.logOut} variant="contained" size="small" color="primary" /*className={this.props.classes.link}*/>Log Out</Link>
-                  </MenuItem> 
-                {/* </Menu>  */}
+                <MenuItem>
+                    <Link style={{"color":"red", "text-decoration": "none"}} to="/" onClick={this.logOut} className={this.props.classes.link}>Log Out</Link>
+                </MenuItem>
+            {/* // </Menu> */}
             </Popover>
         )
     }
@@ -107,31 +105,31 @@ class SignedInLinks extends Component {
         const { current_user } = this.props;
         return (
 
-            <div>
+            <Grid>
                 {
                     current_user.firstName ?  (
                         <div>
-                            <label color="inherit" style={{ padding: '5px', color: 'white' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
-                        <IconButton
-                            aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleMenu}
-                            className={classes.link}
-                            // color="inherit"
-                        >
+                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
+                            <IconButton
+                                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleMenu}
+                                size="small"
+                                className={classes.link}
+                            >
                             <AccountCircle />
-                        </IconButton>
-                        {this.getMenuItems()}
-                    </div>
+                            </IconButton>
+                            {this.getMenuItems()}
+                        </div>
                     ) 
-                    : (
-                    <div style={{paddingTop: '20px', paddingRight: '10px'}}>
-                    <Link to="/signin" className={classes.link}>Sign In</Link>
-                    <Link to="/signup" className={classes.link}>Sign Up</Link>
-                    </div>)
+                    :(  <Grid>
+                            <Link to="/signin" className={classes.link}>Sign In</Link>
+                            <Link style={{ paddingLeft:'2%', paddingRight:"1%"}} to="/signup" className={classes.link}>Sign Up</Link>
+                        </Grid>
+                    )
                 }
                 
-            </div>
+            </Grid>
         )
     }
 }

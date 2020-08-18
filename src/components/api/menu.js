@@ -27,17 +27,9 @@ export const menus = [
                 link: '/app/organisations/create',
                 roles: ['m', 'sa'],
                 key: 'create_organisations'
-            }
-
-        ]
-    },
-    {
-        name: 'Translations',
-        roles: ['m', 'ad', 'sa'],
-        key: 'translations',
-        child: [
+            },
             {
-                name: 'Sources',
+                name: 'Source Languages',
                 link: '/app/translations/sources',
                 roles: ['m', 'ad', 'sa'],
                 key: 'sources'
@@ -47,8 +39,28 @@ export const menus = [
                 link: '/app/translations/projects',
                 roles: ['m', 'ad', 'sa'],
                 key: 'my_projects'
-            },
+            }
+
         ]
     },
+    // {
+    //     name: 'Translations',
+    //     roles: ['m', 'ad', 'sa'],
+    //     key: 'translations',
+    //     child: [
+    //         {
+    //             name: 'Sources',
+    //             link: '/app/translations/sources',
+    //             roles: ['m', 'ad', 'sa'],
+    //             key: 'sources'
+    //         },
+    //         {
+    //             name: 'My projects',
+    //             link: '/app/translations/projects',
+    //             roles: ['m', 'ad', 'sa'],
+    //             key: 'my_projects'
+    //         },
+    //     ]
+    // },
 
 ]

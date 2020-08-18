@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
+import { withStyles } from '@material-ui/core/styles';
+import {createMuiTheme, Button, Tooltip } from '@material-ui/core';
 import { fetchUserProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
-import { connect } from 'react-redux'   
-import Tooltip from '@material-ui/core/Tooltip';
+import { connect } from 'react-redux';   
 import MUIDataTable from "mui-datatables";
-// import CreateProject from './CreateProject';
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
 import swal from 'sweetalert';
 import MyProjectFunction from './MyProjectFunction';
-
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -42,7 +36,10 @@ const getMuiTheme = () => createMuiTheme({
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2),
+        padding: theme.spacing(8),
+        paddingLeft:'5%',
+        paddingRight:'5%'
+
         // backgroundColor: '#ededf4',
         // minHeight: '100%'
     },
@@ -69,42 +66,6 @@ const styles = theme => ({
     }
 });
 
-const LightTooltip = withStyles((theme) => ({
-    arrow: {
-        color: theme.palette.common.white,
-      },
-    tooltip: {
-      backgroundColor: theme.palette.common.white,
-      color: 'rgba(0, 0, 0, 0.87)',
-      boxShadow: theme.shadows[1],
-      fontSize: 11,
-    },
-  }))(Tooltip);
- /* const useStylesBootstrap = makeStyles((theme) => ({
-    arrow: {
-      color: theme.palette.common.black,
-    },
-    tooltip: {
-      backgroundColor: theme.palette.common.black,
-    },
-  }));
-  
-  function BootstrapTooltip(props) {
-    const classes = useStylesBootstrap();
-  
-    return <Tooltip arrow classes={classes} {...props} />;
-  }*/
-  /*function TriggersTooltips() {
-    const [open, setOpen] = React.useState(false);
-  
-    const handleTooltipClose = () => {
-      setOpen(false);
-    };
-  
-    const handleTooltipOpen = () => {
-      setOpen(true);
-    };*/
-  
 
 class MyProjects extends Component {
     
@@ -125,39 +86,70 @@ class MyProjects extends Component {
                 }
             },
             {
-                name: <h4>PROJECT NAME</h4>,
+                name: <th>Project Name</th>,
                 options: {
-                    filter: true
-                }
-            },
-            /*{
-                name: 'Project Code',
-                options: {
-                    filter: true
-                }
-            },*/
-            {
-                name: <h4>ORGANISATION</h4>,
-                options: {
-                    filter: true
+                    filter: false,
+                    sort: false,
                 }
             },
             {
-                name: <h4>SOURCE</h4>,
+                name: <th>Organisation</th>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false,
                 }
             },
             {
-                name: <h4>ASSIGNED BOOKS</h4>,
+                name: <th>Source Details</th>,
                 options: {
-                    filter: true,
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <th>Books Assigned</th>,
+                options: {
+                    filter: false,
+                    sort: false,
                     customBodyRender: (value) => {                                                                                                                                                  //added
-                    return <div><MyProjectFunction books={value} /></div>                    
-                    
-                    }
+                        return <div><MyProjectFunction books={value} /></div>                    
+                        
+                        }
                 }
             },
+
+
+
+            {
+                name: <th></th>,
+                options: {
+                    filter: false,
+                    sort:false,
+                    customBodyRender: (value, row) => {
+                        var valuesbook = value.split('/')[1]
+                        var valuesTran = value.split('/')[0]
+                        if (valuesbook == 0){
+                        return <Tooltip title="Book is not assigned yet">
+                        <span>
+                            <Button size="small" variant="outlined" disabled style={{fontSize:'80%'}} >
+                                Download Draft
+                            </Button>
+                        </span>
+                        </Tooltip>
+                        }
+                        else{
+                            return <Button 
+                                        size="small" 
+                                        variant="contained" 
+                                        onClick={() => this.handleDownload(valuesTran)}
+                                        style={{fontSize:'80%', backgroundColor: "#21b6ae"}}>
+                                        Download Draft
+                                    </Button>
+                        }
+                    },
+                }
+            },
+
             {
                 name: <th></th>,
                 options: {
@@ -166,31 +158,35 @@ class MyProjects extends Component {
                     customBodyRender: (value) => {
                         var valuesbook = value.split('/')[1]
                         var valuesTran = value.split('/')[0]
-                        // console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',valuesbook)
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
-                        <span>
-                        <Button variant="outlined" disabled color="secondary" size="small">Open Project</Button>
-                        </span>
+                        <Button 
+                            variant="outlined" 
+                            disabled 
+                            size="small"
+                            style={{fontSize:'80%'}}>
+                                Open Project
+                        </Button>
                       </Tooltip>
                         }
                         else{
-                            return <Link style={{"text-decoration": "none"}}to={`/app/translations/projects/${valuesTran}`}><Button variant="contained"  size="small" color="primary">Open Project</Button></Link>
+                            return <Button 
+                                variant="contained" 
+                                style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
+                                size="small">
+                                    <Link 
+                                    style={{"color":"black", "text-decoration": "none"}}
+                                    to={`/app/translations/projects/${valuesTran}`}>
+                                    Open Project</Link>
+                                </Button>
                         }
                     },
                 }
             }
-            // {
-            //     /*name: 'Translate',*/
-            //     name: '',
-            //     options: {
-            //         filter: true,
-            //         customBodyRender: (value) => {
-            //             /*return <Link to={`/app/translations/projects/${value}`}>Translate</Link>*/
-            //             return <Link disabled= {this.books ==0 ? true : false} style={{textDecoration:'none'}} to={`/app/translations/projects/${value}`}><Button  disabled= {this.books ==0 ? true : false} variant="contained" size="small" color="primary" >Open Project</Button></Link>
-            //         }
-            //     }
-            // }
+            
+            
+            
+            
         ]
     }
 
@@ -203,7 +199,8 @@ class MyProjects extends Component {
       };
 
     handleDownload = (projectId) => {
-        var project = this.props.userProjects.filter(item => item.projectId === projectId)
+        var project = this.props.userProjects.filter(item => item.projectId == projectId)
+        // console.log(">>>>>>>>>>>>>>>>>>>>>>>",typeof(projectId) )
         if(project.length > 0){
             this.setState({
                 project: project[0],
@@ -219,6 +216,7 @@ class MyProjects extends Component {
     }
 
     updateState = (data) => {
+        // console.log('???????????????????????????????', data)
         this.setState(data);
     }
 
@@ -234,25 +232,25 @@ class MyProjects extends Component {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
-                /*project.projectName.split('|')[1],*/ 
+                // project.projectName.split('|')[1], 
                 project.organisationName, 
-                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision,
+                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
+                // project.version.name,
+                // project.books.length,
                 project.books,
-                // project.projectId, 
-                // project.projectId, 
                 project.projectId+'/'+project.books.length, 
-                project.projectId+'/'+project.books.length,
-
+                project.projectId+'/'+project.books.length, 
             ]
         });
 
         const options = {
             selectableRows: false,
-            print:false,                              
-            search: true,                                    
-            download: false,                                
-            viewColumns: false,                        
-            filter: false,                       
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false,
+            // responsive: "scroll"
             // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
         console.log('my projects', this.props)
@@ -262,16 +260,16 @@ class MyProjects extends Component {
         }
         return (
             <div className={classes.root}>
-               { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
+                { isFetching && <CircleLoader />}
+                {/* <MuiThemeProvider theme={getMuiTheme()}> */}
                     <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
-                    title={<h3>MY PROJECT</h3>} 
+                    title={<th>MY PROJECTS</th>}
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                {/* </MuiThemeProvider> */}
             </div>
         )
     }

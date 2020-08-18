@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Button, Typography } from '@material-ui/core';
+import { Grid, Button, Typography, Divider } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import ComponentHeading from '../ComponentHeading';
 import PopUpMessages from '../PopUpMessages';
@@ -31,6 +31,16 @@ const styles = theme => ({
         boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
         height: '320px',
         backgroundColor: '#fff',
+    },
+    tokenDetails: {
+        height: "100%",
+        overflowX: "hidden",
+        overflowY: "auto",
+        backgroundColor: "#fff",
+    },
+    containerGridToken: {
+      backgroundColor: "#fff",
+      height: "130px",
     },
     button: {
         margin: '10px'
@@ -88,11 +98,11 @@ class UpdateTokens extends Component {
 
     updateTokenSense = () => {
         const { selectedProject, selectedToken, dispatch } = this.props;
-        const { sense } = this.state;
+        const { sense,translation } = this.state;
         const apiData = {
             projectId: selectedProject.projectId,
             token: selectedToken,
-            translation: '',
+            translation: translation,
             senses: [sense]
         }
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
@@ -104,12 +114,7 @@ class UpdateTokens extends Component {
         if (senses) {
             return senses.map(item => {
                 return (
-                    <Chip
-                        key={item}
-                        label={item}
-                        component="a"
-                        clickable
-                    />
+                <span>{item}{', '}</span>
                 )
             })
         }
@@ -143,83 +148,189 @@ class UpdateTokens extends Component {
             displayLanguage = selectedProject.projectName.split('|')[0].split('-')[2]
         }
         return (
-            <Grid item xs={12} className={classes.containerGrid}>
-                <Grid item xs={12}>
-                    <ComponentHeading data={{ classes: classes, text: `Enter ${displayLanguage} Translation`, styleColor: "#2a2a2fbd" }} />
+            <Grid item xs={12} >
+                {/* <Grid item xs={12}>
+                    <ComponentHeading data={{ classes: classes, text: `${displayLanguage.toUpperCase()} Project`, styleColor: "#2a2a2fbd" }} />
+                </Grid> */}
+                {/* <PopUpMessages /> */}
+
+
+                <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
+                    Token Details
+				</Typography>
+                <Grid className={classes.containerGridToken}>
+                <Grid className={classes.tokenDetails}>
+              
+
+                <Grid item container sm={12}>
+                    <Grid item sm={4} style={{ paddingTop: '3%',paddingLeft:"4%" }}>
+                         <Typography variant="inherit" align="left" style={{ color: '#c20a6e' }}>
+                             Token:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={7} style={{paddingLeft:"4%",paddingTop: '3%'}}>
+                         {this.props.selectedToken}
+                     </Grid>
+                </Grid> 
+
+                <Grid item container sm={12}>
+                    <Grid item sm={4} style={{ paddingTop: '3%',paddingLeft:"4%" }}>
+                         <Typography variant="inherit" align="left" style={{ color: '#c20a6e' }}>
+                             Translation:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={7} style={{paddingLeft:"4%",paddingTop: '3%'}}>
+                         {this.props.translation}
+                     </Grid>
+                </Grid> 
+
+                <Grid item container sm={12}>
+                    <Grid item sm={4} style={{ paddingTop: '3%',paddingLeft:"4%"}} >
+                         <Typography variant="inherit" align="left" style={{ color: '#c20a6e' }}>
+                             Synonyms:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={7} style={{paddingLeft:"4%",paddingTop: '3%'}}>
+                         {this.displaySenses()}
+                     </Grid>
+                </Grid> 
                 </Grid>
-                <PopUpMessages />
-                <Grid container item xs={12}>
-                    <Grid item xs={12} sm={6}>
+                </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <Divider />
+                <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'2%',paddingTop:'1%'}}>
+						        Update Selected Token
+				</Typography>
+                
+                <Grid item container xs={12}>
+                    <Grid item sm={1}></Grid>
+                    <Grid item sm={5}>
                         <TextField
                             disabled
                             margin="dense"
                             variant="outlined"
-                            label={selectedToken}
+                            value={selectedToken}
+                            label={"Token"}
                             className={classes.inputField}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item sm={5}>
                         <TextField
                             required
                             label="Enter Translation"
-                            value={this.state.translation ? this.state.translation : translation}
+                            value={this.state.translation}
                             onChange={(e) => this.setState({ translation: e.target.value })}
                             margin="dense"
                             variant="outlined"
                             className={classes.inputField}
                         />
                     </Grid>
+                    <Grid item sm={1}></Grid>
                 </Grid>
+                
                 <Grid container justify="center" alignItems="center">
+                    <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)', paddingTop:'10px' }}>
+                        Add alternate translations, not mandatory
+                    </Typography>
+                </Grid>
 
+                <Grid item container xs={12}>
+                    <Grid item sm={1}></Grid>
+                    <Grid item xs={12} sm={10}>
+                            <TextField
+                                required
+                                label="Enter Senses"
+                                value={this.state.sense}
+                                onChange={(e) => this.setState({ sense: e.target.value })}
+                                margin="dense"
+                                helperText="Note: Enter each senses seprated by commas(,) "
+                                variant="outlined"
+                                className={classes.inputField}
+                            />
+                    </Grid>
+                    <Grid item sm={1}></Grid>
+                </Grid>
+
+               
+                <Grid container justify="center" alignItems="center">
                     <Button
                         variant="contained"
                         color="primary"
+                        size="small"
+                        disabled={!this.state.translation}
                         className={classes.button}
                         // style={{ marginLeft: '30%', marginTop: '3%' }}
                         // style={{ margin: 'auto' }}
-                        onClick={this.updateTokenTranslation}>Update Token</Button>
+                        onClick={this.updateTokenSense}>Save</Button>
                 </Grid>
-                <Grid container item xs={12}>
-                    {/* <Grid item xs={12} style={{ marginTop: '5%', marginBottom: '5px' }}> */}
-                    <Grid container justify="center" alignItems="center">
-                        <Typography variant="inherit" align="center" style={{ color: 'rgb(145, 148, 151)' }}>
-                            Add alternate translations
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            label="Enter Senses"
-                            value={this.state.sense}
-                            onChange={(e) => this.setState({ sense: e.target.value })}
-                            margin="dense"
-                            variant="outlined"
-                            className={classes.inputField}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Grid container justify="center" alignItems="center">
-                            {/* <Grid item xs={12} sm={6} style={{ marginTop: '7%' }}> */}
-                            <Button
-                                className={classes.button}
-                                variant="contained"
-                                color="secondary"
-                                onClick={this.updateTokenSense}>Add Senses</Button>
-                        </Grid>
-                    </Grid>
+               
+               {/* <Divider /> */}
+               {/* ------------------------------------------------------- */}
+
+               {/* <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
+                    Token Details
+				</Typography>
+                <Grid className={classes.containerGridToken}>
+                <Grid className={classes.tokenDetails}>
+               <Grid item container sm={12}>
+               
+                    <Grid item sm={4} style={{ margin: '2%' }}>
+                         <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)' }}>
+                             Token:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={4} style={{margin: '2%'}}>
+                         {this.props.selectedToken}
+                     </Grid>
+                </Grid> 
+
+
+                <Grid item container sm={12}>
+                    <Grid item sm={4} style={{ margin: '2%' }}>
+                         <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)' }}>
+                             Translation:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={4} style={{margin: '2%'}}>
+                         {this.props.translation}
+                     </Grid>
+                </Grid> 
+
+                <Grid item container sm={12}>
+                    <Grid item sm={4} style={{ margin: '2%' }}>
+                         <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)' }}>
+                             Synonyms:
+                         </Typography>
+                     </Grid>
+                     <Grid item sm={4} style={{margin: '2%'}}>
+                         {this.displaySenses()}
+                     </Grid>
+                </Grid> 
                 </Grid>
-                <Grid item xs={12} style={{ margin: '2%' }}>
-                    <Typography variant="inherit" align="left" style={{ color: 'rgb(145, 148, 151)' }}>
-                        Synonyms:
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} style={{
-                    margin: '2%',
-                }}>
-                    {this.displaySenses()}
-                </Grid>
+                </Grid> */}
+
             </Grid>
+               
+               
+               
+               
+
+
+            
         )
     }
 }
