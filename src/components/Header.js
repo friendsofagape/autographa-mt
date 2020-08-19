@@ -35,9 +35,9 @@ function Header({ classes }) {
                 </Grid>
                 ):(
                 <Grid item xs={3} style={{padding: '10px'}}>
-                    <Link to="/" className={classes.link}>
+                    {/* <Link to="/" className={classes.link}> */}
                           <span style={{fontSize: '25px', color:"white", fontWeight:'bold'}}>AutographaMT</span>  
-                    </Link>
+                    {/* </Link> */}
                 </Grid>)
             }
             <Grid item xs={9} style={{padding:'10px', textAlign: 'right'}}>

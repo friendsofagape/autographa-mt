@@ -61,7 +61,8 @@ class HomePage extends Component {
     displayTranslationWordSwitch: "none",
     tokenTranslation: "",
     senses: [],
-    bkvalue:""
+    bkvalue:"",
+    loading: false
   };
 
   updateState = (bk) => {
@@ -142,8 +143,20 @@ class HomePage extends Component {
 
 
   clickdownload = () => {
-    console.log("dddddddddddddddd", this.props.currentBook);
-    console.log('ffffffffffffffffffff',this.props)
+
+    // var proId = this.props.selectedProject.projectId;
+    // var bookname = this.state.bkvalue
+    
+    // fetch(apiUrl + '/v1/tokentranslationlist/'+proId+'/'+bookname+'')
+    //   .then(response => response.json())
+    //   .then(data =>
+    //     console.log('ddddddddd',data)
+    //   )
+    //   // Catch any errors we hit and update the app
+    //   .catch(error => this.setState({ error, isLoading: false }));
+
+    // console.log("dddddddddddddddd", this.props.currentBook);
+    // console.log('ffffffffffffffffffff',this.props)
     var tokenarray =  this.props.tokenList.map(i => [i])
     tokenarray.unshift(['token','translation','senses'])
     var wb = XLSX.utils.book_new();
@@ -170,6 +183,10 @@ class HomePage extends Component {
 
 
   clickupload = (e) => {
+    const stoploading = () => {
+      this.setState({loading:false})
+    }
+    this.setState({loading:true});
     var proId = this.props.selectedProject.projectId;
     var files = e.target.files,
     f = files[0];
@@ -193,8 +210,15 @@ class HomePage extends Component {
               Authorization: 'bearer ' + accessToken
           }
       })
-      .then(response => response.json())
-      .then(data => alert(data.message));
+      .then(response => {
+        console.log('kkkkkk', data)
+        stoploading();
+        return response.json()
+      })
+      .then(data => {
+        alert(data.message)
+        console.log('jjjjjjj', data)
+      });
     };
 
     reader.onerror = function(e) {
@@ -262,7 +286,7 @@ class HomePage extends Component {
                   size='small'
                   disabled={!this.state.bkvalue}
                   component="span"
-                >
+                >{this.state.loading && <CircleLoader />}
                   <span style={{fontSize:'78%'}}>Upload Tokens</span>
                 </Button>
                 </Tooltip>
