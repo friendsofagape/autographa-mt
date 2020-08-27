@@ -470,7 +470,7 @@ class AssignUser extends Component {
 							<TableRow>
 								<TableCell align="right">User Name</TableCell>
 								<TableCell align="right">Email Id</TableCell>
-								<TableCell align="right">Books Assined</TableCell>
+								<TableCell align="right">Books Assinged</TableCell>
 								<TableCell align="right">Remove User</TableCell>
 							</TableRow>
 						</TableHead>
