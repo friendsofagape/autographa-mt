@@ -66,7 +66,7 @@ class HomePage extends Component {
 
   updateState = (bk) => {
     this.setState({bkvalue:bk});
-    // console.log("pppppppppppppppppppppppp", bk)
+     console.log("pppppppppppppppppppppppp", bk)
     this.props.dispatch(
       fetchTokenList(
         bk,

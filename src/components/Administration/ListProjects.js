@@ -143,6 +143,11 @@ class ListProjects extends Component {
         });
         const options = {
             selectableRows: false,
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false,
             // onRowClick: rowData => this.setState({ redirect: rowData[0] })
         };
         console.log('projects', this.props)
