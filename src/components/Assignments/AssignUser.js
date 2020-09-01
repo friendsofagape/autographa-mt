@@ -311,7 +311,8 @@ class AssignUser extends Component {
                 Authorization: 'bearer ' + accessToken
             }
         })
-        const response = await data.json()
+		const response = await data.json()                                  //books details assigned to user
+		// console.log("AssignuserPage=",response)
 		this.setState({ userId, projectId, listBooks: true, availableBooksData: response });
 	
 
@@ -327,6 +328,7 @@ class AssignUser extends Component {
 
 	displayAssignedUsers = () => {
 		const { assignedUsers } = this.props;
+		console.log("assignuserPage",assignedUsers)
 		return assignedUsers.map((user) => {
 			const { userName, email, userId } = user.user;
 			return (
