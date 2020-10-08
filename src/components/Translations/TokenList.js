@@ -28,36 +28,65 @@ const styles = (theme) => ({
   },
   containerGrid: {
     backgroundColor: "#fff",
-    height: "405px",
+    height: "305px",
   },
 });
 
 class TokenList extends Component {
   state = {
     tokenList: [],
+    // checkBox:true
   };
 
+  
   getTokens() {
-    const { tokenList, dispatch } = this.props;
-    if (tokenList) {
-      return tokenList.map((item, index) => {
-        return (
-          <div key={item + index}>
-            <ListItem
-              button
-              name={item}
-              value={item}
-              onClick={() => dispatch(setSelectedToken(item))}
-            >
-              {item}
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      });
-    } else {
-      return <ListItem>Select Target Language to display tokens</ListItem>;
+    console.log('afdfacasfc', this.props.checkvalue)
+    if(this.props.checkvalue==false){
+      const { tokenList, dispatch } = this.props;
+      if (tokenList) {
+        return tokenList.map((item, index) => {
+          return (
+            <div key={item + index}>
+              <ListItem
+                button
+                name={item}
+                style={{fontSize:'14px'}}
+                value={item}
+                onClick={() => dispatch(setSelectedToken(item))}
+              >
+                {item}
+              </ListItem>
+              <Divider />
+            </div>
+          );
+        });
+      } else {
+        return <ListItem>Select Target Language to display tokens</ListItem>;
+      }
+    }else{
+      const { untoken, dispatch } = this.props;
+      if (untoken) {
+        return untoken.map((item, index) => {
+          return (
+            <div key={item + index}>
+              <ListItem
+                button
+                name={item}
+                style={{fontSize:'14px', color:'#a3811c'}}
+                value={item}
+                onClick={() => dispatch(setSelectedToken(item))}
+              >
+                {item}
+              </ListItem>
+              <Divider />
+            </div>
+          );
+        });
+      } else {
+        return <ListItem>Select Target Language to display tokens</ListItem>;
+      }
     }
+    
   }
 
 

@@ -26,6 +26,13 @@ import {
 import XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import apiUrl from "../GlobalUrl";
+
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
+
+
 const accessToken = localStorage.getItem('accessToken');
 
 
@@ -62,12 +69,45 @@ class HomePage extends Component {
     tokenTranslation: "",
     senses: [],
     bkvalue:"",
-    loading: false
+    loading: false,
+    checkBox:false,
+    allTokenList: [],
+    untranslatedToken:[]
   };
 
   updateState = (bk) => {
     this.setState({bkvalue:bk});
     // console.log("pppppppppppppppppppppppp", bk)
+
+    var proId = this.props.selectedProject.projectId;
+    var bookname = bk;    
+    fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
+      method: 'GET',
+      headers: {
+          Authorization: 'bearer ' + accessToken
+      }
+      })
+      .then(response => response.json())
+      .then(data =>
+        {
+          // this.setState({allTokenList:data})
+          var unList = []
+          data.map(i=>{
+            if(i[1]==null){
+              unList.push(i)
+            }
+          })
+
+          this.setState({untranslatedToken:unList, allTokenList:data})
+
+          }
+    )
+    .catch(error => this.setState({ error, isLoading: false }));
+  
+
+
+
+
     this.props.dispatch(
       fetchTokenList(
         bk,
@@ -76,6 +116,18 @@ class HomePage extends Component {
     );
     
   };
+  
+  // updateCheckBox = () => {
+  //   this.setState({bkvalue:bk});
+  //   // console.log("pppppppppppppppppppppppp", bk)
+  //   this.props.dispatch(
+  //     fetchTokenList(
+  //       bk,
+  //       this.props.selectedProject.sourceId
+  //     )
+  //   );
+    
+  // };
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -140,78 +192,67 @@ class HomePage extends Component {
   };
 
 
-
+  checkHandleChange = () =>{ 
+    // console.log("iiiiiiiiiiiiiiiiiii", this.state.checkBox)
+    if(this.state.checkBox == true) {
+      this.setState({checkBox:false})
+    }else {
+      this.setState({checkBox:true})
+    }
+  }
 
   clickdownload = () => {
-      //  full translations
-    var proId = this.props.selectedProject.projectId;
-    var bookname = this.state.bkvalue
-    
-    fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
-      method: 'GET',
-      headers: {
-          Authorization: 'bearer ' + accessToken
-      }
-      })
-      .then(response => response.json())
-      .then(data =>
-        {
-          var tokenarray =  data
-          tokenarray.unshift(['token','translation','senses'])
-          // console.log('lllllllllllllllllllllllllll', tokenarray)
-          var wb = XLSX.utils.book_new();
-          wb.Props = {
-            Title : "TokenList",
-            Subject : "TokenList",
-            Author : "TokenList",
-            CreatedDate : new Date()
-            };
-            wb.SheetNames.push("TokenList");
-            var ws_data = tokenarray;
-            var ws = XLSX.utils.aoa_to_sheet(ws_data);
-            wb.Sheets["TokenList"] = ws;
-            var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
-            function s2ab(s) {
-              var buf = new ArrayBuffer(s.length);
-              var view = new Uint8Array(buf);
-              for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-              return buf;
-            }
-        saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+      //  full token translations
+    if(this.state.checkBox==false){
+      const tokenarray =  this.state.allTokenList
+      tokenarray.unshift(['token','translation','senses'])
+      // console.log('lllllllllllllllllllllllllll', tokenarray)
+      var wb = XLSX.utils.book_new();
+      wb.Props = {
+        Title : "TokenList",
+        Subject : "TokenList",
+        Author : "TokenList",
+        CreatedDate : new Date()
+        };
+        wb.SheetNames.push("TokenList");
+        var ws_data = tokenarray;
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["TokenList"] = ws;
+        var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+        function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
         }
-        
-      )
-      .catch(error => this.setState({ error, isLoading: false }));
-
-
-      //  -------------------- 2nd trnasln---------------------
-      
-    // console.log("dddddddddddddddd", this.props.currentBook);
-    // console.log('ffffffffffffffffffff',this.props)
-    // var tokenarray =  this.props.tokenList.map(i => [i])
-    // tokenarray.unshift(['token','translation','senses'])
-    // var wb = XLSX.utils.book_new();
-    //   wb.Props = {
-    //     Title : "TokenList",
-    //     Subject : "TokenList",
-    //     Author : "TokenList",
-    //     CreatedDate : new Date()
-    //     };
-    //     wb.SheetNames.push("TokenList");
-    //     var ws_data = tokenarray;
-    //     var ws = XLSX.utils.aoa_to_sheet(ws_data);
-    //     wb.Sheets["TokenList"] = ws;
-
-    //     var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
-    //     function s2ab(s) {
-    //       var buf = new ArrayBuffer(s.length);
-    //       var view = new Uint8Array(buf);
-    //       for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-    //       return buf;
-    //     }
-    // saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
-  };
-
+      saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+    }
+    else{
+      //  ----------Untraslated Tokens----------
+      const untokenarray =  this.state.untranslatedToken
+      untokenarray.unshift(['token','translation','senses'])
+      var wb = XLSX.utils.book_new();
+      wb.Props = {
+        Title : "TokenList",
+        Subject : "TokenList",
+        Author : "TokenList",
+        CreatedDate : new Date()
+        };
+        wb.SheetNames.push("TokenList");
+        var ws_data = untokenarray;
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["TokenList"] = ws;
+        var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+        function s2ab(s) {
+          var buf = new ArrayBuffer(s.length);
+          var view = new Uint8Array(buf);
+          for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+          return buf;
+        }
+      saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+    }
+  }
+          
 
   clickupload = (e) => {
     const stoploading = () => {
@@ -273,6 +314,10 @@ class HomePage extends Component {
     console.log("homepagessssssssssss", this.props);
     var projName = this.props.selectedProject.projectName
     // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
+    var alltokenProgress = this.state.allTokenList.length
+    var completedTokenProgress = this.state.untranslatedToken.length
+    // console.log("pppppppppppppppppppppppppppppppppppppppppppppppppppppp", alltokenProgress, completedTokenProgress)
+
     return (
       <Grid container /*className={classes.root}*/>
         {isFetching && <CircleLoader />}
@@ -286,22 +331,48 @@ class HomePage extends Component {
 						  {this.props.selectedProject.projectName && this.props.selectedProject.projectName.split('|')[0].toUpperCase()}
             </Typography>
 					</Grid>
-					
+          { this.state.bkvalue &&
           <Grid item container sm={5} style={{marginTop:'1%'}}>
-            <Grid item sm={4}></Grid>
-            <Grid item sm={4} style={{paddingLeft:'5%'}}>
-            <Tooltip title="Download source tokens for offline translation">
+            <Grid item sm={6}>
+            <Typography component="h4" variant="h7" style={{textAlign:"right" ,paddingRight:"10px"}}>
+                  Translation Progress
+					      </Typography>
+            </Grid>
+            <Grid item sm={4} style={{textAlign:'right', paddingRight:'5px'}}>
+              <progress value={alltokenProgress-completedTokenProgress} max={alltokenProgress} />
+            </Grid>
+            <Grid item sm={2}>
+              {alltokenProgress-completedTokenProgress}/{alltokenProgress}
+            </Grid>
+            {/* <Grid item sm={3} style={{textAlign:'right'}}>
+            <Tooltip title="Download all source tokens for offline translation">
               <Button
                 color="primary"
                 variant="contained"
                 size='small'
                 disabled={!this.state.bkvalue}
                 onClick ={this.clickdownload}>
-                <span style={{fontSize:'78%'}}>Download Tokens</span>
+                <span style={{fontSize:'78%'}}>All Tokens</span>
               </Button>
               </Tooltip>
             </Grid>
-            <Grid item sm={4} >
+
+            <Grid item sm={3} style={{paddingLeft:'3%'}}>
+            <Tooltip title="Download remaining untranslated tokens for offline translation">
+              <Button
+                color="primary"
+                variant="contained"
+                size='small'
+                disabled={!this.state.bkvalue}
+                onClick ={this.untranslated}>
+                <span style={{fontSize:'78%'}}> Tokens</span>
+              </Button>
+              </Tooltip>
+            </Grid>
+            
+            
+            
+            <Grid item sm={3} >
               <label tmlFor="upload-photo">
                 <input
                   style={{ display: 'none' }}
@@ -322,7 +393,7 @@ class HomePage extends Component {
                 </Button>
                 </Tooltip>
               </label>
-            </Grid>
+            </Grid> */}
 
             {/* <Grid item sm={3}>
               <Tooltip title="Download the target draft">
@@ -337,6 +408,7 @@ class HomePage extends Component {
               </Tooltip>
             </Grid> */}
           </Grid>
+        }
         
      
           <Grid item sm={12} style={{marginTop:'2%'}}>
@@ -357,10 +429,73 @@ class HomePage extends Component {
 					          </Typography>
                   </Grid>
               </Paper>
-              <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'2%',paddingBottom:'2%'}}>
+              
+              <Grid item sm={12}>
+                <FormControlLabel
+                  control={ <Checkbox
+                  onChange={this.checkHandleChange}
+                  size="small"
+                  inputProps={{ 'aria-label': 'checkbox with small size' }}
+                  /> }
+                  label='Untranslated Tokens'
+                />
+              </Grid>
+              
+            
+            <Grid container style={{paddingBottom:'2%'}}>
+              <Grid item sm={2}></Grid>
+
+            <Grid item sm={4}>
+            <Tooltip title="Download remaining untranslated tokens for offline translation">
+              <Button
+                color="primary"
+                variant="contained"
+                size='small'
+                disabled={!this.state.bkvalue}
+                onClick ={this.clickdownload}>
+                <span style={{fontSize:'78%'}}> Download</span>
+              </Button>
+              </Tooltip>
+            </Grid>
+              
+              
+              <Grid item sm={4}>
+                <label tmlFor="upload-photo">
+                  <input
+                    style={{ display: 'none' }}
+                    id="upload-photo"
+                    name="upload-photo"
+                    type="file"
+                    onChange={this.clickupload}
+                  />
+                  <Tooltip title="Upload translated tokens">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size='small'
+                    disabled={!this.state.bkvalue}
+                    component="span"
+                  >{this.state.loading && <CircleLoader />}
+                    <span style={{fontSize:'78%'}}>Upload</span>
+                  </Button>
+                  </Tooltip>
+                </label>
+              </Grid>
+              <Grid item sm={2}></Grid>
+              </Grid>
+              
+              
+              
+              
+              <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'3%',paddingBottom:'2%'}}>
+              <Grid item sm={12} >
+					      <Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
+                  Token List
+					      </Typography>
+				      </Grid>
                 <Paper elevation='1'>
-              <TokenList/>
-              </Paper>
+                  <TokenList checkvalue={this.state.checkBox} untoken={this.state.untranslatedToken} />
+                </Paper>
               </Grid>
             </Grid>
 
