@@ -82,7 +82,7 @@ class AssignUser extends Component {
             // console.log("statisticsSummary",this.props)
             const data = await fetch(apiUrl + 'v1/autographamt/statistics/projects/' + projectId)
             const response = await data.json()
-            console.log('statistics response', response)
+            // console.log('statistics response', response)
             if (response.success === false) {
                 swal({
                     title: 'Statistics',
@@ -123,17 +123,15 @@ class AssignUser extends Component {
 			if(bookWiseDatas != null){ 
 			for(var i in books){
                     for (var j in Object.keys(bookList.bookWiseData)){
-						if(books[i].includes(Object.keys(bookList.bookWiseData)[j])){ 
+						if(books[i] == Object.keys(bookList.bookWiseData)[j]) 
 							matches.push(Object.values(bookList.bookWiseData)[j])
-						}
 					}
 			    }
 		    }
-         console.log('stateeeeeeeeeee',matches )
+         // console.log('stateeeeeeeeeee',user )
           return matches.map ((matches,i) =>{
 			return (
-			<TableRow key={i}
-				>
+				<TableRow key={i}>
 				   <TableCell align="left">
 						{matches.bookName}
 					</TableCell>
@@ -163,7 +161,7 @@ class AssignUser extends Component {
 		let sum = 0;
 		const reducer = (a,c) => a + c;
 		sum = booksNumber.reduce(reducer,0);
-	    console.log('stateeeeeeeeeee',sum)
+	    // console.log('stateeeeeeeeeee',sum)
 		return (
 			<TableRow >
 				<TableCell align="right"> 

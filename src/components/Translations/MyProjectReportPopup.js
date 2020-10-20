@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -65,8 +64,7 @@ function LinearProgressWithLabel(props) {
     React.useEffect(() => {
       fetch("https://stagingapi.autographamt.com/v1/autographamt/statistics/projects/" + props.projectWiseId)
         .then(results => results.json())
-        .then(data => {       
-          // console.log('PROJECTBOOKWISEDATA----',data)                               
+        .then(data => {                                     
           let matches = [];
           if (data.bookWiseData != null && Object.keys(data.bookWiseData).length !=0) {
             for (var j in props.projectBooks) {  
@@ -136,7 +134,6 @@ return (
       /> 
       </Popover>}
         </div>
-          {/* <LinearProgress variant="determinate" style ={{width: '62px'}} value={FirstBookLength} />   */}
     </div>
   );
 }

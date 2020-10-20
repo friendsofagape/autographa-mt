@@ -116,7 +116,6 @@ class MyProjects extends Component {
                         let valueBooks = value.split('/')[1].split(',')                       
                         let valueId = value.split('/')[0]
                         valueBooks = valueBooks.filter(function(entry) { return entry.trim() != ''; });                                  
-                        console.log("valueProject=========",valueBooks.length)
                         return <div><MyProjectReportPopup projectBooks = {valueBooks} projectWiseId= {valueId} /></div>                    
                         
                     }

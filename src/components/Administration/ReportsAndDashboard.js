@@ -131,8 +131,7 @@ class ListProjects extends Component {
 
     render() {
         const { classes, projects, isFetching } = this.props;
-        console.log("@@@@@@@@@@@",projects)
-        // const { assignedUsers } = this.props
+        // console.log("@@@@@@@@@@@",projects)
         const { columns, open } = this.state;
         const data = projects.map(project => {
             return [
