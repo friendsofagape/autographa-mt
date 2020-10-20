@@ -39,28 +39,13 @@ export const menus = [
                 link: '/app/translations/projects',
                 roles: ['m', 'ad', 'sa'],
                 key: 'my_projects'
-            }
-
+            },
+            {
+                name: 'Reports and Dashboard',
+                link: '/app/report',
+                roles: ['ad','sa'],
+                key: 'report'
+            },
         ]
     },
-    // {
-    //     name: 'Translations',
-    //     roles: ['m', 'ad', 'sa'],
-    //     key: 'translations',
-    //     child: [
-    //         {
-    //             name: 'Sources',
-    //             link: '/app/translations/sources',
-    //             roles: ['m', 'ad', 'sa'],
-    //             key: 'sources'
-    //         },
-    //         {
-    //             name: 'My projects',
-    //             link: '/app/translations/projects',
-    //             roles: ['m', 'ad', 'sa'],
-    //             key: 'my_projects'
-    //         },
-    //     ]
-    // },
-
 ]

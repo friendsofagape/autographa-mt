@@ -49,7 +49,7 @@ const styles = theme => ({
       flexShrink: 0,
     },
     drawerPaper: {
-      width: 160,
+      width: 168,
       backgroundColor: 'black'
     },
     drawerContainer: {
@@ -146,11 +146,12 @@ class DrawerPane extends Component {
         return (
                 <div>
                 {
-                    menus.map(menu => {
+                    menus.map((menu,i) => {
                         if(menu.roles.includes(current_user.role)){
                             return (
                                 <Drawer
                                 className={classes.drawer}
+                                key={i}
                                 variant="permanent"
                                 classes={{
                                   paper: classes.drawerPaper,

@@ -29,10 +29,9 @@ class StatisticsSummary extends Component {
     async getProjectStatistcs() {
         try {
             const { projectId } = this.props
-            console.log("statisticsSummary",this.props)
             const data = await fetch(apiUrl + 'v1/autographamt/statistics/projects/' + projectId)
             const response = await data.json()
-            console.log('statistics response', response)
+            // console.log('statistics response', response)
             if (response.success === false) {
                 swal({
                     title: 'Statistics',

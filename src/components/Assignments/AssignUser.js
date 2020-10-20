@@ -33,7 +33,9 @@ import {
 } from '../../store/actions/userActions';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import DataTable from 'react-data-table-component';
 import CircleLoader from '../loaders/CircleLoader';
+
 
 const styles = (theme) => ({
 	root: {
@@ -91,6 +93,7 @@ class AssignUser extends Component {
 		userStatus: {},
 		userData: [],
 		statistics: null,
+		dataTable: []
 	};
 
 	// async getUsers() {
@@ -210,10 +213,11 @@ class AssignUser extends Component {
 		this.setState({ userId: '', projectId: '', listBooks: false, availableBooksData: {} });
 	};
 
-	getUserNames = () => {
+	getUserNames = () => {                                  //edited
 		// const { userData } = this.state
 		const { users } = this.props;
-		return users.map((user) => {
+		// console.log("88888888888----",users)
+	    return users.map((user) => {
 			return (
 				<div key={user.userId}>
 					<ListItem
@@ -221,13 +225,15 @@ class AssignUser extends Component {
 						button
 						onClick={() => this.selectUser(user.userId)}
 					>
-						{user.firstName + ' ' + user.lastName}
+					{user.firstName + ' ' + user.lastName} 
 					</ListItem>
 					<Divider />
 				</div>
 			);
 		});
 	};
+
+
 
 	// async deleteUser(apiData) {
 	//     const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments', {
@@ -311,11 +317,11 @@ class AssignUser extends Component {
                 Authorization: 'bearer ' + accessToken
             }
         })
-		const response = await data.json()                                  //books details assigned to user
+		const response = await data.json()                                  //books details assigned to user in true false formate
 		// console.log("AssignuserPage=",response)
 		this.setState({ userId, projectId, listBooks: true, availableBooksData: response });
 	
-
+		console.log("assignuserPage",response)
 
 		// // console.log()
 		// // this.getUserBooks(userId)
@@ -323,12 +329,11 @@ class AssignUser extends Component {
 		
 		// // const { }
 		// this.setState({ userId, projectId, listBooks: false, availableBooksData: this.props.userBooks });
-		// // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiii', this.props.userBooks )
+		console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiii', response )
 	};
 
 	displayAssignedUsers = () => {
 		const { assignedUsers } = this.props;
-		console.log("assignuserPage",assignedUsers)
 		return assignedUsers.map((user) => {
 			const { userName, email, userId } = user.user;
 			return (
@@ -392,7 +397,6 @@ class AssignUser extends Component {
 		// const { projectId } = this.props.project
 		const { dispatch, location } = this.props;
 		const projectId = location.pathname.split('/').pop();
-
 		const checkedBooks = Object.keys(availableBooksData).filter(
 			(book) => availableBooksData[book]['assigned'] === true
 		);
@@ -410,13 +414,14 @@ class AssignUser extends Component {
 
 	render() {
 		const { classes, isFetching, location } = this.props;
+
 		const { userListing, listBooks } = this.state;
 
 		// const { dispatch, location } = this.props;
 		// const projectId = location.pathname.split('/').pop()
 		// console.log(this.state)
-		console.log('Assign User', this.props);
-		console.log('stateeeeeeeeeee', this.state);
+		// console.log('Assign User', this.props);
+		// console.log('stateeeeeeeeeee', this.state);
 		return (
 			<div className={classes.root}>
 				<Grid item xs={12} className={classes.statisticsPane}>
@@ -500,9 +505,6 @@ class AssignUser extends Component {
 						</Button>
 					</DialogActions>
 				</Dialog>
-			
-			
-			
 			</div>
 		);
 	}

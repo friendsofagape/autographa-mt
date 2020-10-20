@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Tooltip } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
 import { fetchUserProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
 import PopUpMessages from '../PopUpMessages';
-import MUIDataTable from "mui-datatables";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import MUIDataTable from "mui-datatables";                                                                                                                                                                                                                                                    
 // import CreateProject from './CreateProject';
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
-import purple from '@material-ui/core/colors/purple';
 import swal from 'sweetalert';
+import StatisticsSummary from '../StatisticsSummary'
 import color from '@material-ui/core/colors/amber';
-import MyProjectFunction from './MyProjectFunction';
+import MyProjectReportPopup from './MyProjectReportPopup';
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -85,11 +78,12 @@ class MyProjects extends Component {
         booksPane: false,
         project: {},
         columns: [
+            
             {
                 name: 'id',
                 options: {    
                     display: false,
-                    filter: false
+                    filter: false,
                 }
             },
             {
@@ -118,16 +112,17 @@ class MyProjects extends Component {
                 options: {
                     filter: false,
                     sort: false,
-                    customBodyRender: (value) => {                                                                                                                                                  //added
-                        return <div><MyProjectFunction books={value} /></div>                    
+                    customBodyRender: (value) => {    
+                        let valueBooks = value.split('/')[1].split(',')                       
+                        let valueId = value.split('/')[0]
+                        valueBooks = valueBooks.filter(function(entry) { return entry.trim() != ''; });                                  
+                        console.log("valueProject=========",valueBooks.length)
+                        return <div><MyProjectReportPopup projectBooks = {valueBooks} projectWiseId= {valueId} /></div>                    
                         
-                        }
+                    }
                 }
             },
-
-
-
-            {
+            { 
                 name: <th></th>,
                 options: {
                     filter: false,
@@ -223,9 +218,12 @@ class MyProjects extends Component {
         const { dispatch } = this.props;
         dispatch(fetchUserProjects());
     }
+    
     render () {
         const { classes, userProjects, isFetching } = this.props;
+
         const { columns, open } = this.state;
+
         const data = userProjects.map(project => {
             return [
                 project.projectId, 
@@ -235,11 +233,12 @@ class MyProjects extends Component {
                 project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
                 // project.version.name,
                 // project.books.length,
-                project.books,
+                project.projectId+'/'+project.books,
                 project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
         });
+        console.log("userproject=",userProjects)
         const options = {
             selectableRows: false,
             download: false,
@@ -250,7 +249,7 @@ class MyProjects extends Component {
             // responsive: "scroll"
             // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
-        console.log('my projects', this.props)
+        // console.log('my projects', this.props)
         const { redirect, project, booksPane } = this.state;
         if(redirect) {
             return <Redirect to={`/app/translations/projects/${redirect}`} />
