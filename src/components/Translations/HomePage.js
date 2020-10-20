@@ -143,42 +143,73 @@ class HomePage extends Component {
 
 
   clickdownload = () => {
-
-    // var proId = this.props.selectedProject.projectId;
-    // var bookname = this.state.bkvalue
+      //  full translations
+    var proId = this.props.selectedProject.projectId;
+    var bookname = this.state.bkvalue
     
-    // fetch(apiUrl + '/v1/tokentranslationlist/'+proId+'/'+bookname+'')
-    //   .then(response => response.json())
-    //   .then(data =>
-    //     console.log('ddddddddd',data)
-    //   )
-    //   // Catch any errors we hit and update the app
-    //   .catch(error => this.setState({ error, isLoading: false }));
+    fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
+      method: 'GET',
+      headers: {
+          Authorization: 'bearer ' + accessToken
+      }
+      })
+      .then(response => response.json())
+      .then(data =>
+        {
+          var tokenarray =  data
+          tokenarray.unshift(['token','translation','senses'])
+          // console.log('lllllllllllllllllllllllllll', tokenarray)
+          var wb = XLSX.utils.book_new();
+          wb.Props = {
+            Title : "TokenList",
+            Subject : "TokenList",
+            Author : "TokenList",
+            CreatedDate : new Date()
+            };
+            wb.SheetNames.push("TokenList");
+            var ws_data = tokenarray;
+            var ws = XLSX.utils.aoa_to_sheet(ws_data);
+            wb.Sheets["TokenList"] = ws;
+            var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+            function s2ab(s) {
+              var buf = new ArrayBuffer(s.length);
+              var view = new Uint8Array(buf);
+              for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+              return buf;
+            }
+        saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+        }
+        
+      )
+      .catch(error => this.setState({ error, isLoading: false }));
 
+
+      //  -------------------- 2nd trnasln---------------------
+      
     // console.log("dddddddddddddddd", this.props.currentBook);
     // console.log('ffffffffffffffffffff',this.props)
-    var tokenarray =  this.props.tokenList.map(i => [i])
-    tokenarray.unshift(['token','translation','senses'])
-    var wb = XLSX.utils.book_new();
-      wb.Props = {
-        Title : "TokenList",
-        Subject : "TokenList",
-        Author : "TokenList",
-        CreatedDate : new Date()
-        };
-        wb.SheetNames.push("TokenList");
-        var ws_data = tokenarray;
-        var ws = XLSX.utils.aoa_to_sheet(ws_data);
-        wb.Sheets["TokenList"] = ws;
+    // var tokenarray =  this.props.tokenList.map(i => [i])
+    // tokenarray.unshift(['token','translation','senses'])
+    // var wb = XLSX.utils.book_new();
+    //   wb.Props = {
+    //     Title : "TokenList",
+    //     Subject : "TokenList",
+    //     Author : "TokenList",
+    //     CreatedDate : new Date()
+    //     };
+    //     wb.SheetNames.push("TokenList");
+    //     var ws_data = tokenarray;
+    //     var ws = XLSX.utils.aoa_to_sheet(ws_data);
+    //     wb.Sheets["TokenList"] = ws;
 
-        var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
-        function s2ab(s) {
-          var buf = new ArrayBuffer(s.length);
-          var view = new Uint8Array(buf);
-          for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-          return buf;
-        }
-    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
+    //     var wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+    //     function s2ab(s) {
+    //       var buf = new ArrayBuffer(s.length);
+    //       var view = new Uint8Array(buf);
+    //       for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+    //       return buf;
+    //     }
+    // saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
   };
 
 
