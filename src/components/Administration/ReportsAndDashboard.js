@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import { fetchProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
 import MUIDataTable from "mui-datatables";
@@ -12,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import ReportAndDashboardPopup from '../Translations/ReportAndDashboardPopup';
+import { fetchUserProjects } from '../../store/actions/projectActions';
 
 
 const getMuiTheme = () => createMuiTheme({
@@ -126,19 +126,19 @@ class ListProjects extends Component {
     componentDidMount() {
         const { dispatch } = this.props;
         // const {projects} = this.props
-        dispatch(fetchProjects());                                   //Fetching projects for the page
+        dispatch(fetchUserProjects());                               //Fetching projects for the page
     }
 
     render() {
-        const { classes, projects, isFetching } = this.props;
-        // console.log("@@@@@@@@@@@",projects)
+        const { classes, userProjects, isFetching } = this.props;
         const { columns, open } = this.state;
-        const data = projects.map(project => {
+        console.log("@@@@@@@@@@@",userProjects)
+        const data = userProjects.map(project => {
             return [
                 project.projectId,
                 project.projectName.split('|')[0],
                 project.organisationName,
-                project.version.name,
+                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision,
                 project.projectId,                                   //To get Assigned User
                 project.projectId                                    //To get the Source Books Details
             ]
@@ -169,9 +169,9 @@ class ListProjects extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    projects: state.project.projects,
     isFetching: state.project.isFetching,
     // current_user: state.auth.current_user
+    userProjects: state.project.userProjects
 })
 
 const mapDispatchToProps = (dispatch) => ({

@@ -186,21 +186,21 @@ class AssignUser extends Component {
 				<Paper className={classes.root}>       
 				<Grid item sm={12} style={{backgroundColor:'#f2eddf'}}>
                     <Typography component="h4" variant="h6" style={{textAlign:"center" ,padding:"2%"}}>
-				        ASSIGNED BOOKS                                         {/*Heading for the page*/}
+				        ASSIGNED BOOKS{/*Heading of the page*/}
 				    </Typography>
-                </Grid>                                                        
-				<Table className={classes.table}>                              {/*Headings for the column*/}            
+                </Grid>    
+				<Table className={classes.table}>            
 					<TableHead>                                                                  
 						<TableRow>
-							<TableCell align="left"><h4>BOOK NAME</h4></TableCell>
+							<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Headings of the columns*/}
 							<TableCell align="center"><h4>USER</h4></TableCell>
 							<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
 							<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
 							<TableCell align="center"><h4>DRAFT READY</h4></TableCell>
 						</TableRow>
 					</TableHead>
-				<TableBody >{this.displayAssignedUsers()}</TableBody>                    {/*To get users data*/}
-				<TableBody>{this.displayAssignedUsersCount()}</TableBody>                {/*To get Total users and Books count*/}
+				<TableBody >{this.displayAssignedUsers()}</TableBody>{/*To get user data*/}
+				<TableBody>{this.displayAssignedUsersCount()}</TableBody>{/*To get users and books count*/}
 				</Table>
 				</Paper> 
 			</div>
