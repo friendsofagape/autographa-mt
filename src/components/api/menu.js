@@ -41,7 +41,7 @@ export const menus = [
                 key: 'my_projects'
             },
             {
-                name: 'Reports and Dashboard',
+                name: 'Reports Dashboard',
                 link: '/app/report',
                 roles: ['ad','sa'],
                 key: 'report'

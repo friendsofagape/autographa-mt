@@ -5,7 +5,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
 import MUIDataTable from "mui-datatables";
-
+import { fetchProjects } from '../../store/actions/projectActions';
 import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import compose from 'recompose/compose';
@@ -112,7 +112,7 @@ class ListProjects extends Component {
                 }
             },
             {
-                name: <h4>Total Source Books</h4>,         
+                name: <h4>Available Source Books</h4>,         
                 options: {
                     filter: true,
                     customBodyRender: (value) => {
@@ -126,20 +126,22 @@ class ListProjects extends Component {
     componentDidMount() {
         const { dispatch } = this.props;
         // const {projects} = this.props
-        dispatch(fetchUserProjects());                               //Fetching projects for the page
+        dispatch(fetchProjects());                                   //Fetching projects for the page
+        // dispatch(fetchUserProjects());                               
     }
 
     render() {
-        const { classes, userProjects, isFetching } = this.props;
+        const { classes, userProjects, projects, isFetching } = this.props;
         const { columns, open } = this.state;
-        console.log("@@@@@@@@@@@",userProjects)
-        const data = userProjects.map(project => {
+        console.log("@@@@@@@@@@@",projects)
+        const data = projects.map(project => {
             return [
                 project.projectId,
                 project.projectName.split('|')[0],
                 project.organisationName,
-                project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision,
-                project.projectId,                                   //To get Assigned User
+                project.projectName.split('-')[0]+' - '+ project.version.code,
+                // +' - '+ project.version.code + ' - ' + project.version.revision,
+                project.projectId+ '/' +project.projectName.split('|')[0],                                   //To get Assigned User
                 project.projectId                                    //To get the Source Books Details
             ]
         });
@@ -157,7 +159,7 @@ class ListProjects extends Component {
                 {isFetching && <CircleLoader />}
                 <MuiThemeProvider theme={getMuiTheme()}>
                     <MUIDataTable
-                        title={<h4>PROJECTS DASHBOARD</h4>}
+                        title={<h4>REPORTS DASHBOARD</h4>}
                         data={data}                                  //MUIDataTable for datas on the page
                         columns={columns}
                         options={options}
@@ -169,6 +171,7 @@ class ListProjects extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    projects: state.project.projects,
     isFetching: state.project.isFetching,
     // current_user: state.auth.current_user
     userProjects: state.project.userProjects

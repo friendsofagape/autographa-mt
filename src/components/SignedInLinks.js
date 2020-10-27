@@ -106,7 +106,18 @@ class SignedInLinks extends Component {
                 {
                     current_user.firstName ?  (
                         <div>
-                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)}</label>
+                            { current_user.role == 'ad'?                       
+                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, 
+                            {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)} 
+                            {current_user.role == 'ad'?<label> &nbsp;(Admin) </label>:null}</label>: null}
+                            { current_user.role == 'sa'?                       
+                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, 
+                            {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)} 
+                            {current_user.role == 'sa'?<label> &nbsp;(Super Admin) </label>:null}</label>: null}
+                            { current_user.role == 'm'?                       
+                            <label color="inherit" style={{ padding: '5px',paddingRight:'2%', color: '#e0ba1f' }}>Welcome, 
+                            {current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)} 
+                            {current_user.role == 'm'?<label> &nbsp;(Translator) </label>:null}</label>: null}
                             <IconButton
                                 aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                                 aria-haspopup="true"
