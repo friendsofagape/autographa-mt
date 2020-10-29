@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
-import { fetchProjects } from '../../store/actions/projectActions';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
-import PopUpMessages from '../PopUpMessages';
 import MUIDataTable from "mui-datatables";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import CreateProject from './CreateProject';
-import { Redirect, Link } from 'react-router-dom';
+import { fetchProjects } from '../../store/actions/projectActions';
+import { Link } from 'react-router-dom';
+import Button from "@material-ui/core/Button";
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
+import ReportAndDashboardPopup from '../Translations/ReportAndDashboardPopup';
+import { fetchUserProjects } from '../../store/actions/projectActions';
 
-const accessToken = localStorage.getItem('accessToken')
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -48,8 +41,6 @@ const styles = theme => ({
         padding: theme.spacing(2),
         paddingRight:'10%',
         paddingLeft:'10%'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
     },
     cursorPointer: {
         cursor: 'pointer',
@@ -73,9 +64,8 @@ const styles = theme => ({
 
 class ListProjects extends Component {
     state = {
-        redirect: null,
         open: false,
-        columns: [
+        columns: [                                                              //columns of the page     
             {
                 name: 'id',
                 options: {
@@ -84,97 +74,97 @@ class ListProjects extends Component {
                 }
             },
             {
-                name: 'Project Name',
+                name: <h4>Project Name</h4>,
                 options: {
                     filter: true
                 }
             },
             {
-                name: 'Project Code',
+                name: <h4>Organisation</h4>,
                 options: {
                     filter: true
                 }
             },
             {
-                name: 'Organisation',
+                name: <h4>Source</h4>,
                 options: {
                     filter: true
                 }
             },
             {
-                name: 'Source',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Action',
+                name: <center><h4>Books Assigned </h4></center>,
                 options: {
                     filter: true,
                     customBodyRender: (value) => {
-                        return <Link to={`/app/projects/${value}`}>Assign users</Link>
+                        return  (                                      
+                            <center>
+                            <Button
+                            size="small"
+                            variant="contained"
+                            style={{fontSize:'80%', backgroundColor: "#21b6ae"}}
+                            >
+                            <Link to={`/app/statistics/report/${value}`} style={{textDecoration:'none'}}>USERS                        
+                            </Link>                                                                                       
+                            </Button>
+                            </center>
+                        ) 
                     }
                 }
-            }
+            },
+            {
+                name: <h4>Available Source Books</h4>,         
+                options: {
+                    filter: true,
+                    customBodyRender: (value) => {
+                        return <ReportAndDashboardPopup projectId = {value} />
+                    }
+                }
+            },
         ]
     }
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(fetchProjects());
-    }
-
-    handleClose = () => {
-        this.setState({ open: false })
+        // const {projects} = this.props
+        dispatch(fetchProjects());                                   //Fetching projects for the page
+        // dispatch(fetchUserProjects());                               
     }
 
     render() {
-        const { classes, projects, isFetching, current_user } = this.props;
-        // console.log("current_user",current_user)
+        const { classes, userProjects, projects, isFetching } = this.props;
         const { columns, open } = this.state;
+        console.log("@@@@@@@@@@@",projects)
         const data = projects.map(project => {
             return [
                 project.projectId,
                 project.projectName.split('|')[0],
-                project.projectName.split('|')[1],
                 project.organisationName,
-                project.version.name,
-                project.projectId,
+                project.projectName.split('-')[0]+' - '+ project.version.code,
+                // +' - '+ project.version.code + ' - ' + project.version.revision,
+                project.projectId+ '/' +project.projectName.split('|')[0],                                   //To get Assigned User
+                project.projectId                                    //To get the Source Books Details
             ]
         });
         const options = {
             selectableRows: false,
-            download: false,
-            print: false,
+            // download: false,
+            // print: false,
             filter: false,
-            viewColumns: false,
-            pagination:false,
-            // onRowClick: rowData => this.setState({ redirect: rowData[0] })
+            viewColumns: false,                                      //To customise the columns
+            pagination:false,                                        //For page customisation
         };
-        // console.log('list projects', this.props)
-        const { redirect } = this.state;
-        // if (redirect) {
-        //     return <Redirect to={`/app/projects/${redirect}`} />
-        // }
+
         return (
-            <div className={classes.root}>
-                {/* <PopUpMessages /> */}
+            <div className={classes.root} >
                 {isFetching && <CircleLoader />}
                 <MuiThemeProvider theme={getMuiTheme()}>
                     <MUIDataTable
-                        title={"Projects List"}
-                        data={data}
+                        title={<h4>REPORTS DASHBOARD</h4>}
+                        data={data}                                  //MUIDataTable for datas on the page
                         columns={columns}
                         options={options}
                     />
                 </MuiThemeProvider>
-                <CreateProject open={open} close={this.handleClose} />
-                {
-                    current_user.role !== 'm' &&
-                    <Fab aria-label={'add'} className={classes.fab} color={'primary'} onClick={() => this.setState({ open: true })}>
-                        <AddIcon />
-                    </Fab>
-                }
             </div>
         )
     }
@@ -183,15 +173,14 @@ class ListProjects extends Component {
 const mapStateToProps = (state) => ({
     projects: state.project.projects,
     isFetching: state.project.isFetching,
-    current_user: state.auth.current_user
+    // current_user: state.auth.current_user
+    userProjects: state.project.userProjects
 })
 
 const mapDispatchToProps = (dispatch) => ({
     dispatch
 })
 
-
-// export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ListProjects));
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)

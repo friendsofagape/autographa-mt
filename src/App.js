@@ -11,7 +11,7 @@ function App(props) {
   return (
           <BrowserRouter>
             <Switch>
-              <Route exact path="/signin" component={() => <LoginPage />} /> */}
+              <Route exact path="/signin" component={() => <LoginPage />} /> 
               <Route path="/signup" component={() => <SignUp />} />
               <Route exact path="/" component={() => <HomePage />} />
               <Route path="/app" component={() => <Wrapper />} />

@@ -40,8 +40,16 @@ export const menus = [
           roles: ["member", "admin", "sa"],
           key: "users",
         },
+
+        {
+          name: 'Reports Dashboard',
+          link: '/app/report',
+          roles: ['ad','sa'],
+          key: 'report'
+      },
       ],
     },
+    
     // {
     //     name: 'Translations',
     //     roles: ['m', 'ad', 'sa'],

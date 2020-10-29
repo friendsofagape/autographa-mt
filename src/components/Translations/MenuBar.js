@@ -64,7 +64,7 @@ class MenuBar extends Component {
 
     render() {
         const { classes, selectedBook, dispatch } = this.props
-        console.log('Menu Bar', this.props)
+        // console.log('Menu Bar', this.props)
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">Select Book</InputLabel>

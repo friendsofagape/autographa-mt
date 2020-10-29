@@ -96,6 +96,7 @@ export const getAssignedUsers = (projectId) => async dispatch => {
     }
 }
 
+
 export const assignUserToProject = (apiData, close) => async dispatch => {
     dispatch(setIsFetching(true))
     try {

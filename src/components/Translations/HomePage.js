@@ -274,7 +274,7 @@ class HomePage extends Component {
         "projectId":proId,
         "tokenTranslations":tknlist
       }
-      console.log("ttttttttttt", jsondata)
+      // console.log("ttttttttttt", jsondata)
       var respdata = fetch(apiUrl + 'v1/autographamt/projects/bulktranslations',{
           method: 'POST',
           body: JSON.stringify(jsondata),
@@ -311,7 +311,7 @@ class HomePage extends Component {
       translationNotesPane,
       displayTranslationWordSwitch,
     } = this.state;
-    console.log("homepagessssssssssss", this.props);
+    // console.log("homepagessssssssssss", this.props);
     var projName = this.props.selectedProject.projectName
     // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
     var alltokenProgress = this.state.allTokenList.length
