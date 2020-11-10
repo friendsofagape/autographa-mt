@@ -293,13 +293,9 @@ class AssignUser extends Component {
         >
           {isFetching && <CircleLoader />}
           <ComponentHeading
-            data={{ classes: classes, text: "Add User", styleColor: "#2e639a" }}
+            data={{ classes: classes, text: "Assign Users", styleColor: "#2e639a" }}
           />
-          <DialogTitle id="form-dialog-title"> </DialogTitle>
           <DialogContent style={{height:'300px'}}>
-            <DialogContentText>
-              <Typography variant="body1">Select User</Typography>
-            </DialogContentText>
             <Table className={classes.table}>
               <TableHead style={{ padding: "0px" }}>
                 <TableRow>
