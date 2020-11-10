@@ -18,14 +18,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import AddIcon from "@material-ui/icons/Add";
 import ListItem from "@material-ui/core/ListItem";
 import { Divider } from "@material-ui/core";
-import PopUpMessages from "../PopUpMessages";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { displaySnackBar } from "../../store/actions/sourceActions";
 import { connect } from "react-redux";
 import StatisticsSummary from "../StatisticsSummary";
 import {
-  getUserBooks,
   getAssignedUsers,
   fetchUsers,
   assignUserToProject,
@@ -39,10 +36,6 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(2),
-    // backgroundColor: '#383c5d',
-    // backgroundColor: '#f8f8fa',
-    // backgroundColor: '#ededf4',
-    // height: '100vh'
   },
   toolbar: theme.mixins.toolbar,
   gridSize: {
@@ -53,28 +46,14 @@ const styles = (theme) => ({
     border: "1px solid #eee",
   },
   checkBox: {
-    // backgroundColor: '#383c5d',
-    // backgroundColor: '#5b3a89',
-    // padding:'10px',
-    // color: '#fff',
     border: "1px solid #eee",
-    // border: '1px solid #eee',
-    // padding: '10px'
-    // backgroundColor: '#141c29'
   },
   statisticsPane: {
-    // backgroundColor: '#383c5d',
-    // backgroundColor: '#fff',
-    // backgroundColor: '#626ed4',
-    // padding: '10px',
-    // color: '#fff',
-    // border: '1px solid #eee',
-    // borderRadius: '5px',
     minHeight: "50px",
   },
   bookCard: {
     width: "400px",
-  },
+  }
 });
 
 const accessToken = localStorage.getItem("accessToken");
@@ -92,61 +71,10 @@ class AssignUser extends Component {
     userData: [],
     statistics: null,
   };
-
-  // async getUsers() {
-  //     const { userStatus } = this.state
-  //     const data = await fetch(apiUrl + '/v1/autographamt/users', {
-  //         method: 'GET',
-  //         headers: {
-  //             "Authorization": 'bearer ' + accessToken
-  //         }
-  //     })
-  //     const userData = await data.json()
-  //     if ("success" in userData) {
-  //         this.props.displaySnackBar({
-  //             snackBarMessage: userData.message,
-  //             snackBarOpen: true,
-  //             snackBarVariant: (userData.success) ? "success" : "error"
-  //         })
-  //     } else {
-  //         userData.map(item => {
-  //             if (item.roleId > 1) {
-  //                 userStatus[item.userId] = {
-  //                     "admin": true,
-  //                     "verified": item.verified
-  //                 }
-  //             } else {
-  //                 userStatus[item.userId] = {
-  //                     "admin": false,
-  //                     "verified": item.verified
-  //                 }
-  //             }
-  //         })
-  //         this.setState({ userData: userData, userStatus: userStatus })
-  //     }
-  // }
-
-  // async getAssignedUsers() {
-  //     const { projectId } = this.props.project
-  //     const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments/' + projectId, {
-  //         method: 'GET',
-  //         headers: {
-  //             Authorization: 'bearer ' + accessToken
-  //         }
-  //     })
-  //     const assignedUsers = await data.json()
-  //     if (!assignedUsers.message) {
-  //         this.setState({ assignedUsers })
-  //     }
-  // }
-
+  
   componentDidMount() {
-    // this.getUsers()
-    // this.getAssignedUsers()
     const { dispatch, location } = this.props;
     const projectId = location.pathname.split("/").pop();
-    // console.log('project id', projectId)
-    // dispatch(getUserBooks())
     dispatch(fetchUsers());
     dispatch(getAssignedUsers(projectId));
   }
@@ -155,39 +83,13 @@ class AssignUser extends Component {
     const { project } = nextProps;
     const { statistics } = this.state;
     if (nextProps.userBooks !== this.props.userBooks) {
-      // this.setState({})
       this.setState({ availableBooksData: this.props.userBooks });
     }
-    // if (statistics === null) {
-    //     this.getProjectStatistcs(project)
-    // }
   }
 
   addUser() {
     this.setState({ userListing: true });
   }
-
-  // async assignUserToProject(apiData) {
-  //     try {
-  //         const data = await fetch(apiUrl + 'v1/autographamt/projects/assignments', {
-  //             method: 'POST',
-  //             body: JSON.stringify(apiData)
-  //         })
-  //         const myJson = await data.json()
-  //         this.props.displaySnackBar({
-  //             snackBarMessage: myJson.message,
-  //             snackBarOpen: true,
-  //             snackBarVariant: "success"
-  //         })
-  //         this.getAssignedUsers()
-  //     } catch (ex) {
-  //         this.props.displaySnackBar({
-  //             snackBarMessage: "Server Error",
-  //             snackBarOpen: true,
-  //             snackBarVariant: "error"
-  //         })
-  //     }
-  // }
 
   selectUser = (userId) => {
     const { dispatch } = this.props;
@@ -196,9 +98,7 @@ class AssignUser extends Component {
       projectId: projectId,
       userId: userId,
       books: [],
-      // action:'add'
     };
-    // this.assignUserToProject(apiData)
     dispatch(assignUserToProject(apiData, this.closeUserListing));
   };
 
@@ -220,38 +120,36 @@ class AssignUser extends Component {
     return users.map((user) => {
       return (
         <TableRow
-          key={user.userId}
+          key={user.userId} hover
           onClick={() => this.selectUser(user.userId)}
         >
-          <TableCell style={{ padding: "0px" }}>
-            <ListItem button >
+          <TableCell style={{ padding:"0px" }}>
+            <ListItem >
               {user.firstName + " " + user.lastName}
             </ListItem>
           </TableCell>
-          <TableCell style={{ padding: "0px" }}>
-            <ListItem button >
+          <TableCell style={{ padding:"0px"}}>
+            <ListItem >
               {user.emailId}
             </ListItem>
           </TableCell>
           {user.roleId == "3" ? (
-            <TableCell style={{ padding: "0px" }}>
-              <ListItem
-                button
-              >
+            <TableCell style={{ padding:"0px"}}>
+              <ListItem>
                 Super Admin
               </ListItem>
             </TableCell>
           ) : null}
           {user.roleId == "2" ? (
-            <TableCell style={{ padding: "0px" }}>
-              <ListItem button >
+            <TableCell style={{ padding:"0px"}}>
+              <ListItem >
                 Admin
               </ListItem>
             </TableCell>
           ) : null}
           {user.roleId == "1" ? (
-            <TableCell style={{ padding: "0px" }}>
-              <ListItem button >
+            <TableCell style={{ padding:"0px"}}>
+              <ListItem >
                 Translator
               </ListItem>
             </TableCell>
@@ -354,11 +252,9 @@ class AssignUser extends Component {
     const { userId, availableBooksData } = this.state;
     const { dispatch, location } = this.props;
     const projectId = location.pathname.split("/").pop();
-
     const checkedBooks = Object.keys(availableBooksData).filter(
       (book) => availableBooksData[book]["assigned"] === true
     );
-
     const apiData = {
       projectId: projectId,
       userId: userId,
