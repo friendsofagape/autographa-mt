@@ -226,7 +226,7 @@ class AssignUser extends Component {
     this.setState({ availableBooksData });
   };
 
-  displayBooks = () => {
+  displayOldBooks = () => {                                                     //Function for sorting Old Testment Books
     const { availableBooksData } = this.state;
     const { assignedUsers } = this.props;
     let assignedUsersBooks = [];                                                 
@@ -237,9 +237,17 @@ class AssignUser extends Component {
     }
     let assignedBooks = assignedUsersBooks.join().split(',')
     const allBooks = Object.keys(availableBooksData);                           //Three code book name are getting listed into allBooks variable
-    return allBooks.map((book) => {
+    const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", 
+    "1sa", "2sa", "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", 
+    "ecc", "sng", "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", 
+    "mic", "nam", "hab", "zep", "hag", "zec", "mal"]
+    let oldTestments = [];
+    bibleBookOldTestments.map((book)=>{
+    return allBooks.includes(book)? oldTestments.push(book): null
+    })
+    return oldTestments.map((book,i) => {
       return (
-        <Grid item xs={2} className={this.props.classes.checkBox} key={book}>
+        <Grid item xs={2} className={this.props.classes.checkBox} key={i}>
           <FormControlLabel
             control={
               <Checkbox
@@ -255,6 +263,44 @@ class AssignUser extends Component {
       );
     });
   };
+
+  displayNewBooks = () => {                                                     //Function for sorting New Testment Books
+    const { availableBooksData } = this.state;
+    const { assignedUsers } = this.props;
+    let assignedUsersBooks = [];                                                 
+    for(var i in assignedUsers){                                                //Listing the books of users
+      if (assignedUsers[i].user.userId !== this.state.userId){                  //Checking if not current user then push the books
+      assignedUsersBooks.push(assignedUsers[i].books)
+      }
+    }
+    let assignedBooks = assignedUsersBooks.join().split(',')
+    const allBooks = Object.keys(availableBooksData);                           //Three code book name are getting listed into allBooks variable
+    const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom",
+    "1co", "2co", "gal", "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit",
+    "phm", "heb", "jas", "1pe", "2pe", "1jn", "2jn", "3jn", "jud", "rev"]
+    let newTestments = [];
+    bibleBookNewTestments.map((book)=>{
+    return allBooks.includes(book)? newTestments.push(book): null
+    })
+    return newTestments.map((book,i) => {
+      return (
+        <Grid item xs={2} className={this.props.classes.checkBox} key={i}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                disabled={assignedBooks.includes(book)}                          //Disabling the books assigned to the previous users
+                checked={availableBooksData[book]["assigned"]}
+                onChange={() => this.handleBooksChecked(book)}
+                value={availableBooksData[book]["assigned"]}
+              />
+            }
+            label={book}
+          />
+        </Grid>
+      );
+    });
+  };
+  
 
   assignBooksToUser = () => {
     const { userId, availableBooksData } = this.state;
@@ -370,8 +416,13 @@ class AssignUser extends Component {
         <Dialog open={listBooks}>
           {isFetching && <CircleLoader />}
           <DialogContent>
+            <h4>OLD TESTMENT</h4>
             <Grid container item spacing={1} className={classes.bookCard}>
-              {this.displayBooks()}
+              {this.displayOldBooks()}
+            </Grid>
+            <h4>NEW TESTMENT</h4>
+            <Grid container item spacing={1} className={classes.bookCard}>
+              {this.displayNewBooks()}
             </Grid>
           </DialogContent>
           <DialogActions>
