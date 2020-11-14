@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { selectBook } from '../../store/actions/sourceActions';
 import { setSelectedBook, fetchUserProjects } from '../../store/actions/projectActions';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
@@ -11,12 +10,9 @@ import { withRouter } from 'react-router-dom';
 const styles = theme => ({
     selectionGrid: {
         marginLeft: '4%',
-        // marginTop: '1%'
     },
     formControl: {
-        // margin: theme.spacing(1),
         minWidth: 120,
-        // width: '100%'
       },
     selectMenu: {
         width: '140px',
@@ -30,18 +26,24 @@ class MenuBar extends Component {
     state= {
         selectbook:''
     }
-    // componentDidMount() {
-    //     // const { dispatch } = this.props;
-    //     // dispatch(fetchUserProjects());
-    // }
-
+    
     displayBooks() {
         const { userProjects, location } = this.props
+        const books = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa", 
+        "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
+        "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
+        "zep", "hag", "zec", "mal", "mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
+        "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
+        "2jn", "3jn", "jud", "rev"]
         if (userProjects.length > 0 ) {
             const data = userProjects.filter(project => project.projectId === parseInt(location.pathname.split('/').pop()));
-            return data[0].books.map(item => {
-                return (
-                    <MenuItem key={item} value={item}>{item}</MenuItem>
+            let assignedBooks = [];
+            books.map((book)=>{                                                                              //map function for pushing the books in order
+            return data[0].books.includes(book)? assignedBooks.push(book): null
+            })
+            return assignedBooks.map(item => {                                                               //map function for displaying books on UI
+                return ( 
+                    <MenuItem key={item} value={item} style={{fontSize:"80%"}}>{item.toUpperCase()}</MenuItem>
                 )
             })
         } else {
@@ -50,8 +52,6 @@ class MenuBar extends Component {
             )
         }
     }
-
-
 
     onSelect = (e) => {
         this.setState({
@@ -63,16 +63,13 @@ class MenuBar extends Component {
     }
 
     render() {
-        const { classes, selectedBook, dispatch } = this.props
+        const { classes } = this.props
         console.log('Menu Bar', this.props)
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">Select Book</InputLabel>
                 <Select
-                    // native
-                    // variant=""
                     margin="dense"
-                    // className={classes.selectMenu}
                     value={this.state.selectbook}
                     onChange={this.onSelect}
                     labelId="demo-simple-select-label"
