@@ -229,14 +229,22 @@ class AssignUser extends Component {
 
   displayBooks = () => {
     const { availableBooksData } = this.state;
-    const { userBooks } = this.props;
-    const allBooks = Object.keys(availableBooksData);
+    const { assignedUsers } = this.props;
+    let assignedUsersBooks = [];                                                 
+    for(var i in assignedUsers){                                                //Listing the books of users
+      if (assignedUsers[i].user.userId !== this.state.userId){                  //Checking if not current user then push the books
+      assignedUsersBooks.push(assignedUsers[i].books)
+      }
+    }
+    let assignedBooks = assignedUsersBooks.join().split(',')
+    const allBooks = Object.keys(availableBooksData);                           //Three code book name are getting listed into allBooks variable
     return allBooks.map((book) => {
       return (
         <Grid item xs={2} className={this.props.classes.checkBox} key={book}>
           <FormControlLabel
             control={
               <Checkbox
+                disabled={assignedBooks.includes(book)}                          //Disabling the books assigned to the previous users
                 checked={availableBooksData[book]["assigned"]}
                 onChange={() => this.handleBooksChecked(book)}
                 value={availableBooksData[book]["assigned"]}
