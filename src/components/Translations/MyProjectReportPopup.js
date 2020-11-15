@@ -84,9 +84,6 @@ export default function SimplePopover(props) {
               }
             }
           }
-          // Object.values(data.bookWiseData).map((item) => {
-          //   matches.push(item);
-          // });
           setBookDetails(matches);
           setProId(props.projectWiseId);
         });
@@ -116,9 +113,6 @@ export default function SimplePopover(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // const open = Boolean(anchorEl);
-  // const id = open ? 'simple-popover' : undefined;
 
   const columns = [
     {
@@ -162,6 +156,8 @@ export default function SimplePopover(props) {
         open={open}
         onClose={handleCloses}
         scroll={scroll}
+        fullWidth={true} 
+        maxWidth = {'sm'}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
@@ -196,43 +192,6 @@ export default function SimplePopover(props) {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* {BookDetails !== null && (
-        <div>
-          
-            <Dialog
-              open={open}
-              onClose={handleCloses}
-              scroll={scroll}
-              aria-labelledby="scroll-dialog-title"
-              aria-describedby="scroll-dialog-description"
-            >
-              <DialogTitle id="scroll-dialog-title">
-                Bookwise Translation Progress
-              </DialogTitle>
-              <DialogContent dividers={scroll === "paper"}>
-                <DialogContentText
-                  id="scroll-dialog-description"
-                  ref={descriptionElementRef}
-                  tabIndex={-1}
-                >
-                  
-                    <DataTable
-                      // title="Book Progress"
-                      columns={columns}
-                      data={BookDetails}
-                    />
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloses} color="primary">
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
-          
-        </div>
-      )} */}
     </div>
   );
 }

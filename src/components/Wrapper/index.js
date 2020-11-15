@@ -17,9 +17,9 @@ import ListProjects from '../Administration/ListProjects';
 import ListOrganisations from '../Administration/ListOrganisations';
 import HomePage from '../Translations/HomePage';
 import ListUsers from '../Administration/ListUsers';
-import ReportsAndDashboard from '../Administration/ReportsAndDashboard';
+import ReportsAndDashboard from '../ReportsDashboard/ReportsAndDashboard.js';
 import StatisticsSummary from '../StatisticsSummary';
-import ReportsAndDashboardUsers from '../Assignments/ReportsAndDashboardUsers';
+import ReportsAndDashboardUsers from '../ReportsDashboard/ReportsAndDashboardUsers';
 import { connect } from 'react-redux';
 import { validateAccessToken } from '../../store/actions/authActions';
 import AssignUser from '../Assignments/AssignUser';
@@ -46,58 +46,11 @@ export const PrivateRoute = ({ component: Component, location, ...rest }) => (
 const drawerWidth = 140;
 
 const styles = theme => ({
-    // root: {
-    //     display: 'flex',
-    //     flexGrow: 1,
-    //     // backgroundColor: '#ededf4',
-    //     backgroundColor: '#f2f2f2ab'
-    // },
-    // exp: {
-    //     backgroundColor: '#100f0ffa',
-    //     '&:hover': {
-    //         background: "#f00",
-    //     },
-    //     paddingLeft: '40px'
-    // },
-    // appBar: {
-    //     zIndex: theme.zIndex.drawer + 1,
-    // },
-    // drawer: {
-    //     width: drawerWidth,
-    //     flexShrink: 0,
-    // },
-    // drawerPaper: {
-    //     // width: '100%',
-    //     zIndex: -1,
-    //     backgroundColor: '#262f3d'
-    // },
-    // content: {
-    //     // flexGrow: 1,
-    //     minHeight: '100vh'
-    //     // padding: theme.spacing(1),
-    // },
-    // toolbar: theme.mixins.toolbar,
-
-
     root: {
         display: 'flex',
       },
-    //   appBar: {
-    //     zIndex: 1201,
-    //   },
-    //   drawer: {
-    //     width: 240,
-    //     flexShrink: 0,
-    //   },
-    //   drawerPaper: {
-    //     width: 240,
-    //   },
-    //   drawerContainer: {
-    //     overflow: 'auto',
-    //   },
       content: {
         flexGrow: 1,
-        // padding: 20,
       }
 
 

@@ -316,10 +316,10 @@ class ViewSources extends Component {
     const options = {
       selectableRows: false,
       download: false,
-            print: false,
-            filter: false,
-            viewColumns: false,
-            pagination:false,
+      print: false,
+      filter: false,
+      viewColumns: false,
+      pagination:false,
       // onRowClick: rowData => this.setState({redirect: rowData[0]})
     };
     return (

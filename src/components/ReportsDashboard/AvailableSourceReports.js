@@ -5,6 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import DataTable from 'react-data-table-component';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Box from '@material-ui/core/Box';
 // import Progress from 'react-progressbar';
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
   
-  export default function SimplePopover(props) {
+  export default function AvailableSourceReport(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [FirstBookLength, setFirstBookLength] = React.useState(null);
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) =>
         sortable: true,
       }, 
       {
-        name: 'Token Translation Progress',
+        name: 'Token  Progress',
         sortable: true,
         cell: row => 
         <div className = {classes.fullWidth}>
@@ -95,13 +96,25 @@ const useStyles = makeStyles((theme) =>
     ];
 
   return (
-    <div>                                                 {/*Popup of the Total Source Books */}
-      <Button  aria-describedby={id} 
-        color="primary" 
-        size="small" 
-        onClick={handleClick}>
-       {FirstBookLength}▼
+    <div>
+      {FirstBookLength ? (<Button  aria-describedby={id} 
+        size="small"
+        variant="contained"
+        style={{ fontSize: "80%", backgroundColor: "#21b6ae" }}
+        onClick={handleClick}> {FirstBookLength}▼
+       
+      </Button>) : (<Button  aria-describedby={id} 
+        size="small"
+        disabled
+        variant="contained"
+        style={{ fontSize: "80%", backgroundColor: "#21b6ae" }}
+        onClick={handleClick}> 
+        <CircularProgress className={classes.circularProgress} size={20}/>
+        Loading
       </Button>
+      
+      )}                                                 {/*Popup of the Total Source Books */}
+      
         {LastBookDetails !== null &&                
       <Popover
         id={id}
