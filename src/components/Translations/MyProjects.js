@@ -93,28 +93,28 @@ class MyProjects extends Component {
                 }
             },
             {
-                name: <th>Project Name</th>,
+                name: <h4>Project Name</h4>,
                 options: {
                     filter: false,
                     sort: false,
                 }
             },
             {
-                name: <th>Organisation</th>,
+                name: <h4>Organisation</h4>,
                 options: {
                     filter: false,
                     sort: false,
                 }
             },
             {
-                name: <th>Source Details</th>,
+                name: <h4>Source Details</h4>,
                 options: {
                     filter: false,
                     sort: false
                 }
             },
             {
-                name: <th>Books Assigned</th>,
+                name: <h4>Books Assigned</h4>,
                 options: {
                     filter: false,
                     sort: false,
@@ -128,7 +128,7 @@ class MyProjects extends Component {
 
 
             {
-                name: <th></th>,
+                name: <h4></h4>,
                 options: {
                     filter: false,
                     sort:false,
@@ -158,7 +158,7 @@ class MyProjects extends Component {
             },
 
             {
-                name: <th></th>,
+                name: <h4></h4>,
                 options: {
                     filter: false,
                     sort:false,
@@ -182,7 +182,7 @@ class MyProjects extends Component {
                                 style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
                                 size="small">
                                     <Link 
-                                    style={{"color":"black", "text-decoration": "none"}}
+                                    style={{color:"black", textDecoration: "none"}}
                                     to={`/app/translations/projects/${valuesTran}`}>
                                     Open Project</Link>
                                 </Button>
@@ -199,7 +199,6 @@ class MyProjects extends Component {
 
     handleDownload = (projectId) => {
         var project = this.props.userProjects.filter(item => item.projectId == projectId)
-        // console.log(">>>>>>>>>>>>>>>>>>>>>>>",typeof(projectId) )
         if(project.length > 0){
             this.setState({
                 project: project[0],
@@ -215,7 +214,6 @@ class MyProjects extends Component {
     }
 
     updateState = (data) => {
-        // console.log('???????????????????????????????', data)
         this.setState(data);
     }
 
@@ -261,7 +259,7 @@ class MyProjects extends Component {
                 {/* <MuiThemeProvider theme={getMuiTheme()}> */}
                     <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
-                    title={<th>MY PROJECTS</th>}
+                    title={<h4>MY PROJECTS</h4>}
                     data={data} 
                     columns={columns} 
                     options={options} 

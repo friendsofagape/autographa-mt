@@ -1,19 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core';
+import { Typography, withStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { booksDialog } from '../store/actions/dialogActions';
-import { displaySnackBar, selectProject } from '../store/actions/sourceActions';
 import ComponentHeading from './ComponentHeading';
-import apiUrl from './GlobalUrl';
-import PopUpMessages from './PopUpMessages';
 import { getTranslatedText } from '../store/actions/projectActions';
 import CircleLoader from './loaders/CircleLoader';
+
 var FileSaver = require('file-saver');
 
 var accessToken = localStorage.getItem('accessToken')
@@ -32,86 +29,38 @@ class BooksDownloadable extends Component {
         targetBooksChecked: {}
     }
 
-
-    // componentWillReceiveProps(nextProps){
-    //     const { project } = nextProps
-    //     // const { project } =  this.props
-    //     if(project){
-    //         let targetBooks = project.books
-    //         let targetBooksChecked = {}
-    //         targetBooks.map(book => targetBooksChecked[book] = {"checked": false})
-    //         this.setState({ targetBooks, targetBooksChecked})
-    //     }
-    // }
-
-    // componentDidUpdate(prevProps) {
-    //     const { selectedProject } = this.props;
-    //     if(prevProps.selectedProject !== selectedProject){
-
-    //     }
-    // }
-
-    // async getTranslatedText(projectId, bookList) {
-    // const { selectedProject } =  this.props
-    // const { targetBooksChecked, targetBooks } = this.state
-    // var bookList = []
-    // targetBooks.map(book => {
-    //     if (targetBooksChecked[book]['checked']) {
-    //         bookList.push(book)
-    //     }
-    // })
-    //     const apiData = {
-    //         projectId,
-    //         bookList
-    //     }
-    //     try {
-    //         const data = await fetch(apiUrl + 'v1/downloaddraft', {
-    //             method: 'POST',
-    //             body: JSON.stringify(apiData),
-    //             headers: {
-    //                 Authorization: 'bearer ' + accessToken
-    //             }
-    //         })
-    //         const myJson = await data.json()
-    //         if("translatedUsfmText" in myJson){
-    //             const usfmTexts = myJson.translatedUsfmText
-    //             Object.keys(usfmTexts).map(book => {
-    //                 let blob = new Blob([usfmTexts[book]], { type: "text/plain;charset=utf-8" });
-    //                 FileSaver.saveAs(blob, book + "_" + project.projectName.split("|")[0] + "_.usfm");
-    //             })
-    //         }
-    //     }
-    //     catch (ex) {
-    //         this.props.displaySnackBar({
-    //             snackBarMessage: "server Error",
-    //             snackBarOpen: true,
-    //             snackBarVariant: "error"
-    //         })
-    //         // this.setState({ variant: "error", message: "server Error", snackBarOpen: true })
-    //     }
-    // }
-
-
     handleChange = (book) => {
         var { targetBooks } = this.state
-        // const temp = targetBooksChecked.book
         const isChecked = targetBooks.includes(book);
         if (isChecked) {
             targetBooks = targetBooks.filter(item => item !== book)
         } else {
             targetBooks.push(book)
         }
-        // targetBooksChecked[book]['checked'] = !targetBooksChecked[book]['checked']
         this.setState({ targetBooks })
         console.log("---------------------------",this.state.targetBooks.length)
     }
 
-    getBooksCheckbox = () => {
+    getOldBooksCheckbox = () => {                                                                                     //function for old testment books
         const { targetBooks, targetBooksChecked } = this.state
         const { project } = this.props
-        if (project.books) {
-            return project.books.map((book, index) => {
+        const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", 
+        "1sa", "2sa", "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", 
+        "ecc", "sng", "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", 
+        "mic", "nam", "hab", "zep", "hag", "zec", "mal"]
+        let oldTestment = [];
+        if(project.books) {                                                                                         
+        bibleBookOldTestments.map((book)=>{                                                                            //map function for pushing books in order to oldTestment variable
+            return project.books.includes(book)? oldTestment.push(book): null
+            })
+        }
+        if (oldTestment.length == 0){
+            return (<React.Fragment key={oldTestment}>No Books Assigned in old Testment</React.Fragment>)                                //checking if books prensent or not if any of the old testment books are not available
+        }                                                                                                              //then print NO BOOKS ASSIGNED IN OLD TESTMENT
+        if (oldTestment) {                                                                                                            
+            return oldTestment.map((book, index) => {                                                                  //map function for printing books in UI
                 return (
+                    <React.Fragment key={book}>
                     <FormControlLabel key={book}
                         control={
                             <Checkbox
@@ -120,12 +69,51 @@ class BooksDownloadable extends Component {
                                 value={targetBooks.includes(book)}
                             />
                         }
-                        label={book}
+                        label={book.toUpperCase()}
                     />
+                    </React.Fragment>
                 )
             })
         }
     }
+
+    getNewBooksCheckbox = () => {                                                                                        //function for new testment books
+        const { targetBooks, targetBooksChecked } = this.state
+        const { project } = this.props
+        const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom",
+        "1co", "2co", "gal", "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit",
+        "phm", "heb", "jas", "1pe", "2pe", "1jn", "2jn", "3jn", "jud", "rev"]
+        let newTestments = [];
+        if(project.books) {
+            bibleBookNewTestments.map((book)=>{                                                                          //map function for pushing books in order to newTestment variable
+            return project.books.includes(book)? newTestments.push(book): null
+            })
+        }
+        if (newTestments.length == 0){                                                                                   
+        return (<React.Fragment key={newTestments}>No Books Assigned in New Testment</React.Fragment>)                                      //checking if books prensent or not if any of the new testment books are not available
+        }                                                                                                                //then print NO BOOKS ASSIGNED IN NEW TESTMENT
+        if (newTestments) {                                                                                              
+            return newTestments.map((book, index) => {                                                                    //map function for printing books in UI
+                console.log("BOOKSDOWNLODABLE===",book)
+                return (
+                    <React.Fragment key={book}>
+                    <FormControlLabel key={book}
+                        control={
+                            <Checkbox
+                                checked={targetBooks.includes(book)}
+                                onChange={() => this.handleChange(book)}
+                                value={targetBooks.includes(book)}
+                            />
+                        }
+                        label={book.toUpperCase()}
+                    />
+                    </React.Fragment>
+                )
+            })
+        } 
+    }
+
+
     handleDownload = () => {
         const { project, dispatch } = this.props;
         const { targetBooks } = this.state;
@@ -145,32 +133,29 @@ class BooksDownloadable extends Component {
 
     canBeSubmitted() {
         const { targetBooks } = this.state;
-        // console.log("jhjadbjbxjhbasjnbdjbasjnnbas", this.state.targetBooks.length)
         return targetBooks.length > 0;
 	}
 
     render() {
         const isEnabled = this.canBeSubmitted();
-        const { updateState, booksPane, classes, project, isFetching } = this.props
+        const { updateState, booksPane, classes, isFetching } = this.props
         return (
             <Dialog
                 open={booksPane}
                 onClose={this.handleClose}
-            // value={this.state.value}
             >
-                {/* <PopUpMessages /> */}
                 {
                     isFetching &&
                     <CircleLoader />
                 }
                 <ComponentHeading data={{ classes: classes, text: "Select Books", styleColor: '#2a2a2fbd' }} />
-                {/* <DialogTitle id="form-dialog-title">Select Books to Download</DialogTitle> */}
-                <DialogContent>
-                    {this.getBooksCheckbox()}
-
+                <DialogContent style={{maxHeight:'400px'}}>
+                <h4>OLD TESTMENT</h4>
+                {this.getOldBooksCheckbox()}
+                <h4>NEW TESTMENT</h4>
+                 {this.getNewBooksCheckbox()}
                 </DialogContent>
                 <DialogActions>
-                    {/* <Button onClick={this.handleClose} variant="raised" color="primary">Close</Button> */}
                     <Button onClick={this.handleClose} size="small" variant="contained" color="secondary" >Close</Button>
                     <Button onClick={this.handleDownload} size="small" disabled={!isEnabled} variant="contained" color="primary" >Download</Button>
                 </DialogActions>
