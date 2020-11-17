@@ -9,7 +9,6 @@ import { Component } from 'react';
 import Drawer from './Drawer';
 import { Redirect, Route, Switch, BrowserRouter } from 'react-router-dom';
 import { CssBaseline ,ListItem, List, Toolbar, Typography, ListItemText, Divider } from '@material-ui/core';
-
 // import HomePage from '../HomePage'
 import DownloadDraft from '../DownloadDraft';
 import ViewSources from '../ViewSources';
@@ -18,12 +17,14 @@ import ListProjects from '../Administration/ListProjects';
 import ListOrganisations from '../Administration/ListOrganisations';
 import HomePage from '../Translations/HomePage';
 import ListUsers from '../Administration/ListUsers';
+import ReportsAndDashboard from '../ReportsDashboard/ReportsAndDashboard.js';
+import StatisticsSummary from '../StatisticsSummary';
+import ReportsAndDashboardUsers from '../ReportsDashboard/ReportsAndDashboardUsers';
 import { connect } from 'react-redux';
 import { validateAccessToken } from '../../store/actions/authActions';
 import AssignUser from '../Assignments/AssignUser';
 import MyProjects from '../Translations/MyProjects';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
-// import ProjectStatistics from '../Reports/ProjectStatistics'
 
 export const PrivateRoute = ({ component: Component, location, ...rest }) => (
     <Route
@@ -45,58 +46,11 @@ export const PrivateRoute = ({ component: Component, location, ...rest }) => (
 const drawerWidth = 140;
 
 const styles = theme => ({
-    // root: {
-    //     display: 'flex',
-    //     flexGrow: 1,
-    //     // backgroundColor: '#ededf4',
-    //     backgroundColor: '#f2f2f2ab'
-    // },
-    // exp: {
-    //     backgroundColor: '#100f0ffa',
-    //     '&:hover': {
-    //         background: "#f00",
-    //     },
-    //     paddingLeft: '40px'
-    // },
-    // appBar: {
-    //     zIndex: theme.zIndex.drawer + 1,
-    // },
-    // drawer: {
-    //     width: drawerWidth,
-    //     flexShrink: 0,
-    // },
-    // drawerPaper: {
-    //     // width: '100%',
-    //     zIndex: -1,
-    //     backgroundColor: '#262f3d'
-    // },
-    // content: {
-    //     // flexGrow: 1,
-    //     minHeight: '100vh'
-    //     // padding: theme.spacing(1),
-    // },
-    // toolbar: theme.mixins.toolbar,
-
-
     root: {
         display: 'flex',
       },
-    //   appBar: {
-    //     zIndex: 1201,
-    //   },
-    //   drawer: {
-    //     width: 240,
-    //     flexShrink: 0,
-    //   },
-    //   drawerPaper: {
-    //     width: 240,
-    //   },
-    //   drawerContainer: {
-    //     overflow: 'auto',
-    //   },
       content: {
         flexGrow: 1,
-        // padding: 20,
       }
 
 
@@ -126,11 +80,12 @@ class Wrapper extends Component {
                             {/* <Route path="/signup" component={() => <SignUp />} /> */}
                             {/* <Route exact path="/app" component={() => <HomePage />} /> */}
                             <PrivateRoute exact path="/user/dashboard" component={() => <UserDashboard />} />
-                            {/* <PrivateRoute path="/dashboard" component={() => <AdminPage />} /> */}
                             <PrivateRoute path="/download" component={() => <DownloadDraft />} />
                             <PrivateRoute path="/app/viewsources" component={() => <ViewSources />} />
                             <PrivateRoute exact path="/app/projects" component={() => <ListProjects />} />
                             <PrivateRoute path="/app/users" component={() => <ListUsers />} />
+                            <PrivateRoute path="/app/statistics/report/:id" component={() => <ReportsAndDashboardUsers />} />
+                            <PrivateRoute path="/app/report" component={() => <ReportsAndDashboard />} />
                             <PrivateRoute exact path="/app/organisations" component={() => <ListOrganisations />} />
                             <PrivateRoute path="/app/organisations/create" component={() => <CreateOrganisations />} />
                             <PrivateRoute path="/app/projects/:id" location={this.props.location} component={() => <AssignUser />} />
@@ -138,6 +93,7 @@ class Wrapper extends Component {
                             <PrivateRoute exact path="/app/translations/projects" component={() => <MyProjects />} />
                             <PrivateRoute exact path="/app/translations/download" component={() => <DownloadDraft />} />
                             <PrivateRoute exact path="/app/translations/sources" component={() => <ViewSources />} />
+                            <PrivateRoute exact path="/app/translations/statistics" component={() => <StatisticsSummary />} />
                         </Switch>
                 </Grid>
       </main> 

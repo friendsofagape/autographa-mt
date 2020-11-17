@@ -130,6 +130,7 @@ class ListProjects extends Component {
 
     render() {
         const { classes, projects, isFetching, current_user } = this.props;
+        // console.log("current_user",current_user)
         const { columns, open } = this.state;
         const data = projects.map(project => {
             return [
@@ -143,9 +144,14 @@ class ListProjects extends Component {
         });
         const options = {
             selectableRows: false,
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false,
             // onRowClick: rowData => this.setState({ redirect: rowData[0] })
         };
-        console.log('projects', this.props)
+        // console.log('list projects', this.props)
         const { redirect } = this.state;
         // if (redirect) {
         //     return <Redirect to={`/app/projects/${redirect}`} />

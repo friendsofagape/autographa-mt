@@ -49,7 +49,7 @@ const styles = theme => ({
       flexShrink: 0,
     },
     drawerPaper: {
-      width: 160,
+      width: 168,
       backgroundColor: 'black'
     },
     drawerContainer: {
@@ -146,11 +146,12 @@ class DrawerPane extends Component {
         return (
                 <div>
                 {
-                    menus.map(menu => {
+                    menus.map((menu,i) => {
                         if(menu.roles.includes(current_user.role)){
                             return (
                                 <Drawer
                                 className={classes.drawer}
+                                key={i}
                                 variant="permanent"
                                 classes={{
                                   paper: classes.drawerPaper,
@@ -160,6 +161,18 @@ class DrawerPane extends Component {
                                 <Toolbar />
                             <div className={classes.drawerContainer}>
                                    <List>
+                                        {/* {current_user.role == 'sa'?<ListItemText disableTypography divider="true"
+                                            primary={<Typography variant="caption" style={{ color: '#e0ba1f' }}
+                                             >&nbsp;&nbsp;&nbsp;&nbsp;Super Admin</Typography>}
+                                        />:null}
+                                        {current_user.role == 'ad'?<ListItemText disableTypography divider="true"
+                                            primary={<Typography variant="caption" style={{ color: '#e0ba1f' }}
+                                             >&nbsp;&nbsp;&nbsp;&nbsp;Admin</Typography>}
+                                        />:null}
+                                        {current_user.role == 'm'?<ListItemText disableTypography divider="true"
+                                            primary={<Typography variant="caption" style={{ color: '#e0ba1f' }}
+                                             >&nbsp;&nbsp;&nbsp;&nbsp;Translator</Typography>}
+                                        />:null} */}
                                         {
                                             menu.child &&
                                             menu.child.map(childMenu => {
@@ -171,7 +184,6 @@ class DrawerPane extends Component {
                                                             >
                                                                 <ListItemText disableTypography divider="true"
                                                                     primary={<Typography variant="caption" style={{ color: 'white' }}
-        
                                                                     >{childMenu.name}</Typography>}
                                                                 />
                                                             </ListItem>

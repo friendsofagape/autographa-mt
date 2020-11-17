@@ -1,28 +1,16 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Tooltip } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
+import { createMuiTheme, Button, Tooltip } from '@material-ui/core';
 import { fetchUserProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
-import PopUpMessages from '../PopUpMessages';
-import MUIDataTable from "mui-datatables";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-// import CreateProject from './CreateProject';
+import MUIDataTable from "mui-datatables";                                                                                                                                                                                                                                                    
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
-import purple from '@material-ui/core/colors/purple';
 import swal from 'sweetalert';
-import color from '@material-ui/core/colors/amber';
-import MyProjectFunction from './MyProjectFunction';
+import MyProjectReportPopup from './MyProjectReportPopup';
 
 const getMuiTheme = () => createMuiTheme({
     overrides: {
@@ -48,12 +36,9 @@ const getMuiTheme = () => createMuiTheme({
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(8),
+        padding: theme.spacing(2),
         paddingLeft:'5%',
         paddingRight:'5%'
-
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -85,11 +70,12 @@ class MyProjects extends Component {
         booksPane: false,
         project: {},
         columns: [
+            
             {
                 name: 'id',
                 options: {    
                     display: false,
-                    filter: false
+                    filter: false,
                 }
             },
             {
@@ -118,10 +104,24 @@ class MyProjects extends Component {
                 options: {
                     filter: false,
                     sort: false,
-                    customBodyRender: (value) => {                                                                                                                                                  //added
-                        return <div><MyProjectFunction books={value} /></div>                    
-                        
-                        }
+                    customBodyRender: (value) => {    
+                        let valueBooks = value.split('/')[1].split(',')                       
+                        let valueId = value.split('/')[0]
+                        valueBooks = valueBooks.filter(function(entry) { return entry.trim() != ''; });                                  
+                        if (valueBooks.length == 0){
+                            return <Tooltip title="Book is not assigned yet">
+                            <span>
+                                <Button size="small" variant="outlined" disabled style={{fontSize:'80%'}} >
+                                    {/* {valueBooks.length} */}
+                                    View
+                                </Button>
+                            </span>
+                            </Tooltip>
+                            }
+                            else{
+                        return <div><MyProjectReportPopup projectBooks = {valueBooks} projectWiseId= {valueId} bookCount= {valueBooks.length} /></div>                    
+                    }
+                    }
                 }
             },
 
@@ -167,13 +167,15 @@ class MyProjects extends Component {
                         var valuesTran = value.split('/')[0]
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
-                        <Button 
-                            variant="outlined" 
-                            disabled 
-                            size="small"
-                            style={{fontSize:'80%'}}>
-                                Open Project
-                        </Button>
+                        <span>
+                            <Button 
+                                variant="outlined" 
+                                disabled 
+                                size="small"
+                                style={{fontSize:'80%'}}>
+                                    Open Project
+                            </Button>
+                        </span>
                       </Tooltip>
                         }
                         else{
@@ -190,10 +192,6 @@ class MyProjects extends Component {
                     },
                 }
             }
-            
-            
-            
-            
         ]
     }
 
@@ -221,19 +219,19 @@ class MyProjects extends Component {
         const { dispatch } = this.props;
         dispatch(fetchUserProjects());
     }
+    
     render () {
         const { classes, userProjects, isFetching } = this.props;
-        const { columns, open } = this.state;
+
+        const { columns } = this.state;
+
         const data = userProjects.map(project => {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
-                // project.projectName.split('|')[1], 
                 project.organisationName, 
                 project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
-                // project.version.name,
-                // project.books.length,
-                project.books,
+                project.projectId+'/'+project.books,
                 project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
@@ -248,7 +246,6 @@ class MyProjects extends Component {
             // responsive: "scroll"
             // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
-        console.log('my projects', this.props)
         const { redirect, project, booksPane } = this.state;
         if(redirect) {
             return <Redirect to={`/app/translations/projects/${redirect}`} />
@@ -256,15 +253,13 @@ class MyProjects extends Component {
         return (
             <div className={classes.root}>
                 { isFetching && <CircleLoader />}
-                {/* <MuiThemeProvider theme={getMuiTheme()}> */}
-                    <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
+                <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
                     title={<h4>MY PROJECTS</h4>}
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                {/* </MuiThemeProvider> */}
             </div>
         )
     }
