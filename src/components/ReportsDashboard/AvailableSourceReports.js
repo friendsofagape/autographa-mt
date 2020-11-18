@@ -17,7 +17,7 @@ function LinearProgressWithLabel(props) {
         <LinearProgress variant="determinate" value = {props.completedValue} style ={{width: '50px'}} />
       </Box>
       <Box minWidth={65}>
-        <Typography variant="body10" color="textSecondary" style={{fontSize: 9}}>{`${
+        <Typography variant="body2" color="textSecondary" style={{fontSize: 9}}>{`${
           props.translatedValue} / ${props.value}`}</Typography>
       </Box>
     </Box>
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) =>
   export default function AvailableSourceReport(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [newTestmentBooks, setNewTestmentBooks] = React.useState(null);
+    const [oldTestmentBooks, setOldTestmentBooks] = React.useState(null);
     const [FirstBookLength, setFirstBookLength] = React.useState(null);
     const [LastBookDetails, setLastBookDetails] = React.useState(null);
   
@@ -62,12 +64,36 @@ const useStyles = makeStyles((theme) =>
         .then(results => results.json())    
         .then(data => {
           let matches = [];
+          const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
+            "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
+            "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
+            "zep", "hag", "zec", "mal"]
+            const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
+            "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
+            "2jn", "3jn", "jud", "rev"]
+            let oldBooks = [];
+            let newBooks = [];
           if (data.bookWiseData != null && Object.keys(data.bookWiseData).length !=0) {
+            for (let book of bibleBookOldTestments){                                        //for order objects and also adding three code book name to the object
+              let booksKey = data.bookWiseData[book]
+              if (booksKey != null){
+                booksKey.bookCode = book
+              }
+              oldBooks.push(booksKey);
+            }
+            setOldTestmentBooks(oldBooks)                 //Data for the popup column
+            for (let book of bibleBookNewTestments){                                        //for order objects and also adding three code book name to the object
+              let booksKey = data.bookWiseData[book]
+              if (booksKey != null){
+                booksKey.bookCode = book
+              }
+              newBooks.push(booksKey);
+            }
+            setNewTestmentBooks(newBooks)                  //Data for the popup column
             for (var j in Object.keys(data.bookWiseData)){
                matches.push(Object.values(data.bookWiseData)[j])
               }
             }
-          setLastBookDetails(matches);                    //Data for the popup column
           setFirstBookLength(matches.length)              //Data for the text on the button for popup        
         }
       );  
@@ -75,12 +101,13 @@ const useStyles = makeStyles((theme) =>
 
     const columns = [                                     //columns for the popup
       {
-        name: 'Book Name',
-        selector: 'bookName',
+        name: 'BOOK NAME',
+        selector: 'bookCode',
         sortable: true,
+        cell: (row) => (<React.Fragment >{`${row.bookCode.toUpperCase()}`}</React.Fragment>)
       }, 
       {
-        name: 'Token  Progress',
+        name: 'TOKEN PROGRESS',
         sortable: true,
         cell: row => 
         <div className = {classes.fullWidth}>
@@ -88,7 +115,7 @@ const useStyles = makeStyles((theme) =>
         </div>
       },
       {
-        name: 'Draft Progress',                 
+        name: 'DRAFT PROGRESS',                 
         sortable: true,
         cell: row => <React.Fragment >{`${row.completed}%`}</React.Fragment>,
       }
@@ -115,7 +142,7 @@ const useStyles = makeStyles((theme) =>
       
       )}                                                 {/*Popup of the Total Source Books */}
       
-        {LastBookDetails !== null &&                
+        {oldTestmentBooks !== null && newTestmentBooks !== null &&               
       <Popover
         id={id}
         open={open}
@@ -132,9 +159,14 @@ const useStyles = makeStyles((theme) =>
         }}
       >
       <DataTable
-        title="Book Wise Data"
+        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>OLD TESTMENT</span>}
         columns={columns}
-        data={LastBookDetails}             
+        data={oldTestmentBooks}             
+      />
+      <DataTable
+        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+        columns={columns}
+        data={newTestmentBooks}             
       /> 
       </Popover>}
     </div>
