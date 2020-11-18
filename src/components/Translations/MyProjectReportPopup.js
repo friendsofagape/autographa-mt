@@ -2,7 +2,6 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { Typography } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Popover from "@material-ui/core/Popover";
 import LinearProgress, {
   LinearProgressProps,
 } from "@material-ui/core/LinearProgress";
@@ -42,9 +41,9 @@ const useStyles = makeStyles((theme) => createStyles({}));
 
 export default function SimplePopover(props) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [BookDetails, setBookDetails] = React.useState(null);
-
+  const [newTestmentBooks, setNewTestmentBooks] = React.useState(null);
+  const [oldTestmentBooks, setOldTestmentBooks] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
   const [loading, setLoading] = React.useState(false);
@@ -57,7 +56,6 @@ export default function SimplePopover(props) {
     const stoploading = () => {
       setLoading(false);
     };
-
     if (proId != props.projectWiseId) {
       fetch(
         apiUrl + "/v1/autographamt/statistics/projects/" + props.projectWiseId
@@ -67,22 +65,44 @@ export default function SimplePopover(props) {
           return results.json();
         })
         .then((data) => {
-          console.log("eeeeeeeeeeeeeeee", data);
           let matches = [];
           if (
             data.bookWiseData != null &&
             Object.keys(data.bookWiseData).length != 0
           ) {
-            for (var j in props.projectBooks) {
-              // console.log('???????????????????????????????',data)
-              for (var i in Object.keys(data.bookWiseData)) {
-                if (
-                  Object.keys(data.bookWiseData)[i] == props.projectBooks[j]
-                ) {
-                  matches.push(Object.values(data.bookWiseData)[i]);
-                }
+            const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
+            "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
+            "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
+            "zep", "hag", "zec", "mal"]
+            const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
+            "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
+            "2jn", "3jn", "jud", "rev"]
+            let oldTestments = [];
+            bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testment books in order
+            return props.projectBooks.includes(book)? oldTestments.push(book): null
+            })
+            let newTestments = [];
+            bibleBookNewTestments.map((book)=>{                                                                          //map function to push new testment books in order
+            return props.projectBooks.includes(book)? newTestments.push(book): null
+            })
+            let oldBooks = []
+            for (let book of oldTestments){                                                                              //for order objects and also adding three code book name to the object
+              let booksKey = data.bookWiseData[book]
+              if (booksKey != null){
+                booksKey.bookCode = book
               }
+              oldBooks.push(booksKey);
             }
+            setOldTestmentBooks(oldBooks)
+            let newBooks = []
+            for(let book of newTestments){                                                                               //for order objects and also adding three code book name to the object
+              let booksKey = data.bookWiseData[book]
+              if (booksKey != null){
+                booksKey.bookCode = book
+              }
+              newBooks.push(booksKey);
+            }
+            setNewTestmentBooks(newBooks)
           }
           setBookDetails(matches);
           setProId(props.projectWiseId);
@@ -106,22 +126,15 @@ export default function SimplePopover(props) {
     }
   }, [open]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const columns = [
     {
-      name: "Book Name",
-      selector: "bookName",
+      name: <span style={{fontSize:'90%'}}>BOOK NAME</span>,
+      selector: "bookCode",
       sortable: true,
+      cell: (row) => (<React.Fragment >{`${row.bookCode.toUpperCase()}`}</React.Fragment>)
     },
     {
-      name: "Token Translation Progress",
+      name: <span style={{fontSize:'90%'}}>TOKEN TRANSLATION PROGRESS</span>,
       sortable: true,
       cell: (row) => (
         <div className={classes.fullWidth}>
@@ -134,12 +147,12 @@ export default function SimplePopover(props) {
       ),
     },
     {
-      name: "Draft Progress",
+      name: <span style={{fontSize:'90%'}}>DRAFT PROGRESS</span>,
       sortable: true,
       cell: (row) => <React.Fragment>{`${row.completed}%`}</React.Fragment>,
     },
   ];
-  console.log("oooooooooooooooooooooooooooooooooooo", BookDetails);
+
   return (
     <div>
       <Button
@@ -162,7 +175,7 @@ export default function SimplePopover(props) {
         aria-describedby="scroll-dialog-description"
       >
         <DialogTitle id="scroll-dialog-title">
-          Bookwise Translation Progress
+          Bookwise Translation Progress <span style={{fontSize:'70%'}}>({"Books Assigned  -  " + props.bookCount})</span>
         </DialogTitle>
 
         <DialogContent dividers={scroll === "paper"}>
@@ -175,11 +188,18 @@ export default function SimplePopover(props) {
               <CircleLoader />
             ) : (
               <div>
-                {BookDetails != null && (
+              {oldTestmentBooks != null && (
                   <DataTable
-                    title={"Books Assigned  -  " + props.bookCount}
+                    title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
                     columns={columns}
-                    data={BookDetails}
+                    data={oldTestmentBooks}
+                  />
+                )}
+                {newTestmentBooks != null && (
+                  <DataTable
+                    title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+                    columns={columns}
+                    data={newTestmentBooks}
                   />
                 )}
               </div>
@@ -188,7 +208,7 @@ export default function SimplePopover(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloses} color="primary">
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>
