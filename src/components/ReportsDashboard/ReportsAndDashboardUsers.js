@@ -88,7 +88,8 @@ export default function UsersReports(props) {
   const [assignedUsers, setAssignedUsers] = React.useState([]);
   const [userId, setUserId] = React.useState("");
   const [projectId, setProjectId] = React.useState("");
-  const [statistics, setStatistics] = React.useState(null);
+  const [oldBooksLength, setOldBooksLength] = React.useState(null);
+  const [newBooksLength, setNewBooksLength] = React.useState(null);
   const [bookList, setBookList] = React.useState({});
 
   const [open, setOpen] = React.useState(false);
@@ -173,25 +174,36 @@ export default function UsersReports(props) {
     
   };
 
-   const displayAssignedUsers = () => {
+   const displayOldBooks = () => {                                   //Function for old testment books along with the assigned users
       //This function is for the datas of assigned users
       const bookWiseDatas = bookList.bookWiseData;
       return assignedUsers.map((user, i) => {
         const { books } = user;
         const { userName, email, userId } = user.user;
         let matches = [];
+        let oldBooks = []
+        const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
+          "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
+          "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
+          "zep", "hag", "zec", "mal"]
+          let oldTestments = [];
+          bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testment books in order
+          return books.includes(book)? oldTestments.push(book): null
+          })
+        console.log("REPORTS AND DASHBOARD*****",oldTestments)
         if (bookWiseDatas != null) {
-          for (var i in books) {
-            for (var j in Object.keys(bookList.bookWiseData)) {
-              if (books[i] == Object.keys(bookList.bookWiseData)[j])
-                matches.push(Object.values(bookList.bookWiseData)[j]);
+          for (let book of oldTestments) {
+            let booksKey = bookList.bookWiseData[book]
+            if (booksKey != null){
+              booksKey.bookCode = book
             }
+            oldBooks.push(booksKey);
           }
         }
-        return matches.map((matches, i) => {
+        return oldBooks.map((matches, i) => {
           return (
             <TableRow key={i}>
-              <TableCell align="left">{matches.bookName}</TableCell>
+              <TableCell align="left">{matches.bookCode.toUpperCase()}</TableCell>
               <TableCell align="center">{userName}</TableCell>
               <TableCell align="center">{email}</TableCell>
               <TableCell align="center" key={i}>
@@ -203,23 +215,71 @@ export default function UsersReports(props) {
               </TableCell>
               <TableCell align="center">{matches.completed}%</TableCell>
             </TableRow>
+            
           );
         });
       });
     };
 
-  let projectName = props.value.split("/")[1].toUpperCase();
-  // const assignedUsers  = assignedUsers;
-  if (assignedUsers.length > 0) {
-    const booksNumber = assignedUsers.map((user, i) => {
+    const displayNewBooks = () => {                                      //Function for new testment books along with the assigned users
+      const bookWiseDatas = bookList.bookWiseData;
+      return assignedUsers.map((user, i) => {
+        const { books } = user;
+        const { userName, email, userId } = user.user;
+        let matches = [];
+        let newBooks = []
+        const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
+            "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
+            "2jn", "3jn", "jud", "rev"]
+          let newTestments = [];
+          bibleBookNewTestments.map((book)=>{                                                                          //map function to push old testment books in order
+          return books.includes(book)? newTestments.push(book): null
+          })
+        if (bookWiseDatas != null) {
+          for (let book of newTestments) {
+            let booksKey = bookList.bookWiseData[book]
+            if (booksKey != null){
+              booksKey.bookCode = book
+            }
+            newBooks.push(booksKey);
+            }
+          }
+        return newBooks.map((matches, i) => {
+          return (
+            <TableRow key={i}>
+              <TableCell align="left">{matches.bookCode.toUpperCase()}</TableCell>
+              <TableCell align="center">{userName}</TableCell>
+              <TableCell align="center">{email}</TableCell>
+              <TableCell align="center" key={i}>
+                <LinearProgressWithLabel
+                  value={matches.allTokensCount}
+                  translatedValue={matches.translatedTokensCount}
+                  completedValue={matches.completed}
+                />
+              </TableCell>
+              <TableCell align="center">{matches.completed}%</TableCell>
+            </TableRow>
+            
+          );
+        });
+      });
+    };
+
+  const displayAssignedUsersNumber = () => {
+   if (assignedUsers.length > 0) {
+    let booksNumber = assignedUsers.map((user, i) => {
       const { books } = user;
       return books.length;
     });
     let assignedUsersSum = 0;
     const reducer = (a, c) => a + c;
     assignedUsersSum = booksNumber.reduce(reducer, 0);
+    console.log("REPORTS AND DASHBOARD*****",booksNumber)
+    return <span>{assignedUsersSum}</span>
+    }
   }
-  //   });
+  
+    let projectName = props.value.split("/")[1].toUpperCase();
 
   return (
     <div>
@@ -242,7 +302,8 @@ export default function UsersReports(props) {
         maxWidth = {'md'}
       >
         <DialogTitle id="scroll-dialog-title">
-          Assigned Books Details
+          { projectName = props.value.split("/")[1].toUpperCase()} - 
+          (Assigned Books Details) 
         </DialogTitle>
 
         <DialogContent dividers={scroll === "paper"} >
@@ -256,15 +317,31 @@ export default function UsersReports(props) {
               <div>
               <Table>
              		<TableHead>
+                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;OLD TESTMENT</span>      
              			<TableRow>
-             				<TableCell align="left"><h4>Book Name</h4></TableCell>{/*Headings of the columns*/}
+             				<TableCell align="left"><h4>Book Name</h4></TableCell>{/*Heading for the old testment table*/}
              				<TableCell align="center"><h4>User Name</h4></TableCell>
              				<TableCell align="center"><h4>Email ID</h4></TableCell>
              				<TableCell align="left"><h4>Translation Progress</h4></TableCell>
              				<TableCell align="center"><h4>Draft Ready</h4></TableCell>
              			</TableRow>
              		</TableHead>
-             	<TableBody >{displayAssignedUsers()}</TableBody>
+             	<TableBody >{displayOldBooks()}</TableBody>
+             	</Table>
+           
+              <Table>
+             		<TableHead>
+                <h4></h4>
+                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;NEW TESTMENT</span> 
+             			<TableRow>
+             				<TableCell align="left"><h4>Book Name</h4></TableCell>{/*Heading for the old testment table*/}
+             				<TableCell align="center"><h4>User Name</h4></TableCell>
+             				<TableCell align="center"><h4>Email ID</h4></TableCell>
+             				<TableCell align="left"><h4>Translation Progress</h4></TableCell>
+             				<TableCell align="center"><h4>Draft Ready</h4></TableCell>
+             			</TableRow>
+             		</TableHead>
+             	<TableBody >{displayNewBooks()}</TableBody>
              	</Table>
             </div>
              ) : (
@@ -273,12 +350,13 @@ export default function UsersReports(props) {
 
             )
             }
+            
           </DialogContentText>
         </DialogContent>
 
         <DialogActions>
           <Button onClick={handleCloses} color="primary">
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>
