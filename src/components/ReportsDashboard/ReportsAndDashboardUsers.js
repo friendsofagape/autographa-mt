@@ -190,7 +190,7 @@ export default function UsersReports(props) {
           bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testment books in order
           return books.includes(book)? oldTestments.push(book): null
           })
-        console.log("REPORTS AND DASHBOARD*****",oldTestments)
+        // console.log("REPORTS AND DASHBOARD*****",oldTestments)
         if (bookWiseDatas != null) {
           for (let book of oldTestments) {
             let booksKey = bookList.bookWiseData[book]
@@ -265,17 +265,26 @@ export default function UsersReports(props) {
       });
     };
 
-  const displayAssignedUsersNumber = () => {
+  const displayAssignedUsersNumber = () => {                       //for the headings in the POPUP
+    const bookWiseDatas = bookList.bookWiseData;
+    let bookData = [];
    if (assignedUsers.length > 0) {
     let booksNumber = assignedUsers.map((user, i) => {
-      const { books } = user;
+      let { books } = user;
+      books = books.filter(item => item);                          //Filtering the empty string and saving the assigned users books length
       return books.length;
     });
+    for (var i in bookWiseDatas){                                   
+      bookData.push(bookWiseDatas[i])                               //converting object to array
+    }
+    console.log("REPORTS AND DASHBOARD*****",bookData.length)
     let assignedUsersSum = 0;
     const reducer = (a, c) => a + c;
-    assignedUsersSum = booksNumber.reduce(reducer, 0);
-    console.log("REPORTS AND DASHBOARD*****",booksNumber)
-    return <span>{assignedUsersSum}</span>
+    assignedUsersSum = booksNumber.reduce(reducer, 0);              //total of assigned books to the users
+    return (<React.Fragment>
+      <span style={{fontSize:'80%', fontWeight:'bold'}}>&nbsp;Assigned Books- ({assignedUsersSum})</span>
+      <span style={{fontSize:'80%', fontWeight:'bold'}}>&nbsp;Unassigned Books- ({bookData.length-assignedUsersSum})</span>
+    </React.Fragment>)
     }
   }
   
@@ -302,8 +311,8 @@ export default function UsersReports(props) {
         maxWidth = {'md'}
       >
         <DialogTitle id="scroll-dialog-title">
-          { projectName = props.value.split("/")[1].toUpperCase()} - 
-          (Assigned Books Details) 
+          <span style={{fontSize:'80%', fontWeight:'bold'}}>{projectName = props.value.split("/")[1].toUpperCase()}</span> - 
+          <span style={{fontSize:'80%', fontWeight:'bold'}}>(Assigned Books Details)</span> {displayAssignedUsersNumber()}
         </DialogTitle>
 
         <DialogContent dividers={scroll === "paper"} >
@@ -319,11 +328,11 @@ export default function UsersReports(props) {
              		<TableHead>
                 <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;OLD TESTMENT</span>      
              			<TableRow>
-             				<TableCell align="left"><h4>Book Name</h4></TableCell>{/*Heading for the old testment table*/}
-             				<TableCell align="center"><h4>User Name</h4></TableCell>
-             				<TableCell align="center"><h4>Email ID</h4></TableCell>
-             				<TableCell align="left"><h4>Translation Progress</h4></TableCell>
-             				<TableCell align="center"><h4>Draft Ready</h4></TableCell>
+             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testment table*/}
+             				<TableCell align="center"><h4>USER NAME</h4></TableCell>
+             				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
+             				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
+             				<TableCell align="center"><h4>DRAFT READY</h4></TableCell>
              			</TableRow>
              		</TableHead>
              	<TableBody >{displayOldBooks()}</TableBody>
@@ -334,11 +343,11 @@ export default function UsersReports(props) {
                 <h4></h4>
                 <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;NEW TESTMENT</span> 
              			<TableRow>
-             				<TableCell align="left"><h4>Book Name</h4></TableCell>{/*Heading for the old testment table*/}
-             				<TableCell align="center"><h4>User Name</h4></TableCell>
-             				<TableCell align="center"><h4>Email ID</h4></TableCell>
-             				<TableCell align="left"><h4>Translation Progress</h4></TableCell>
-             				<TableCell align="center"><h4>Draft Ready</h4></TableCell>
+             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testment table*/}
+             				<TableCell align="center"><h4>USER NAME</h4></TableCell>
+             				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
+             				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
+             				<TableCell align="center"><h4>DRAFT READY</h4></TableCell>
              			</TableRow>
              		</TableHead>
              	<TableBody >{displayNewBooks()}</TableBody>
