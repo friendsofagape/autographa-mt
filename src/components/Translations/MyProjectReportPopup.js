@@ -90,15 +90,18 @@ export default function SimplePopover(props) {
               let booksKey = data.bookWiseData[book]
               if (booksKey != null){
                 booksKey.bookCode = book
+                booksKey.id = book
               }
               oldBooks.push(booksKey);
             }
+            // setRows(oldBooks)
             setOldTestmentBooks(oldBooks)
             let newBooks = []
             for(let book of newTestments){                                                                               //for order objects and also adding three code book name to the object
               let booksKey = data.bookWiseData[book]
               if (booksKey != null){
                 booksKey.bookCode = book
+                booksKey.id = book
               }
               newBooks.push(booksKey);
             }
@@ -135,6 +138,7 @@ export default function SimplePopover(props) {
     },
     {
       name: <span style={{fontSize:'90%'}}>TOKEN TRANSLATION PROGRESS</span>,
+      selector: "completed",
       sortable: true,
       cell: (row) => (
         <div className={classes.fullWidth}>
@@ -148,8 +152,10 @@ export default function SimplePopover(props) {
     },
     {
       name: <span style={{fontSize:'90%'}}>DRAFT PROGRESS</span>,
-      sortable: true,
-      cell: (row) => <React.Fragment>{`${row.completed}%`}</React.Fragment>,
+      selector: "completed",
+      sortable:true,
+      cell: (row) => <React.Fragment>
+      {`${row.completed}%`}</React.Fragment>,
     },
   ];
 
@@ -187,21 +193,21 @@ export default function SimplePopover(props) {
             {loading ? (
               <CircleLoader />
             ) : (
-              <div>
+              <div style={{ height: 400, width: '100%' }}>
               {oldTestmentBooks != null && (
-                  <DataTable
-                    title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
-                    columns={columns}
-                    data={oldTestmentBooks}
-                  />
+                <DataTable
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
+                  columns={columns}
+                  data={oldTestmentBooks}
+                />
                 )}
-                {newTestmentBooks != null && (
-                  <DataTable
-                    title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
-                    columns={columns}
-                    data={newTestmentBooks}
-                  />
-                )}
+              {newTestmentBooks != null && (
+                <DataTable
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+                  columns={columns}
+                  data={newTestmentBooks}
+                />
+               )}
               </div>
             )}
           </DialogContentText>
