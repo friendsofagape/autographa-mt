@@ -108,6 +108,7 @@ const useStyles = makeStyles((theme) =>
       }, 
       {
         name: 'TOKEN PROGRESS',
+        selector: 'completed', 
         sortable: true,
         cell: row => 
         <div className = {classes.fullWidth}>
@@ -115,7 +116,8 @@ const useStyles = makeStyles((theme) =>
         </div>
       },
       {
-        name: 'DRAFT PROGRESS',                 
+        name: 'DRAFT PROGRESS',  
+        selector: 'completed',               
         sortable: true,
         cell: row => <React.Fragment >{`${row.completed}%`}</React.Fragment>,
       }
