@@ -47,6 +47,12 @@ export const menus = [
           roles: ['ad','sa'],
           key: 'report'
       },
+      {
+        name: 'User Details',
+        link: '/app/roleDetails',
+        roles: ['ad','sa', 'm'],
+        key: 'report'
+    }
       ],
     },
     

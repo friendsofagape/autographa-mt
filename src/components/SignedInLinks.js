@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { setAccessToken, clearState } from '../store/actions/authActions';
+import Avatar from "@material-ui/core/Avatar";
 
 // let decoded;
 // let tokenAliveFlag = false
@@ -79,6 +80,20 @@ class SignedInLinks extends Component {
             </Popover>
         )
     }
+
+    avatarChange(){
+        const { current_user } = this.props;
+        if(current_user.role=='ad'){
+            return <Avatar alt="A" src="../images/admin.jpg" />
+        }
+        if(current_user.role=='m'){
+            return <Avatar alt="T" src="../images/translator.png" />
+        }
+        if(current_user.role=='sa'){
+            return <Avatar alt="SA" src="../images/superadmin.jpg" />
+        }
+    }
+
     render() {
         const { classes } = this.props
         const { anchorEl } = this.state
@@ -125,7 +140,8 @@ class SignedInLinks extends Component {
                                 size="small"
                                 className={classes.link}
                             >
-                            <AccountCircle />
+                            {/* <AccountCircle /> */}
+                            {this.avatarChange()}
                             </IconButton>
                             {this.getMenuItems()}
                         </div>

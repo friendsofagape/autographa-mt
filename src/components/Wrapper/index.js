@@ -25,6 +25,7 @@ import { validateAccessToken } from '../../store/actions/authActions';
 import AssignUser from '../Assignments/AssignUser';
 import MyProjects from '../Translations/MyProjects';
 import CreateOrganisations from '../Assignments/CreateOrganisations';
+import RoleDetails from '../RoleDetails.js'
 
 export const PrivateRoute = ({ component: Component, location, ...rest }) => (
     <Route
@@ -85,6 +86,7 @@ class Wrapper extends Component {
                             <PrivateRoute exact path="/app/projects" component={() => <ListProjects />} />
                             <PrivateRoute path="/app/users" component={() => <ListUsers />} />
                             <PrivateRoute path="/app/statistics/report/:id" component={() => <ReportsAndDashboardUsers />} />
+                            <PrivateRoute path="/app/roleDetails" component={() => <RoleDetails />} />
                             <PrivateRoute path="/app/report" component={() => <ReportsAndDashboard />} />
                             <PrivateRoute exact path="/app/organisations" component={() => <ListOrganisations />} />
                             <PrivateRoute path="/app/organisations/create" component={() => <CreateOrganisations />} />
