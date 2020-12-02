@@ -38,7 +38,7 @@ class BooksDownloadable extends Component {
             targetBooks.push(book)
         }
         this.setState({ targetBooks })
-        console.log("---------------------------",this.state.targetBooks.length)
+        // console.log("---------------------------",this.state.targetBooks.length)
     }
 
     getOldBooksCheckbox = () => {                                                                                     //function for old testment books
@@ -94,7 +94,7 @@ class BooksDownloadable extends Component {
         }                                                                                                                //then print NO BOOKS ASSIGNED IN NEW TESTMENT
         if (newTestments) {                                                                                              
             return newTestments.map((book, index) => {                                                                    //map function for printing books in UI
-                console.log("BOOKSDOWNLODABLE===",book)
+                // console.log("BOOKSDOWNLODABLE===",book)
                 return (
                     <React.Fragment key={book}>
                     <FormControlLabel key={book}

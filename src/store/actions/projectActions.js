@@ -14,6 +14,8 @@ import apiUrl from '../../components/GlobalUrl.js';
 import swal from 'sweetalert';
 // import { setDisplayName } from 'recompose';
 var FileSaver = require('file-saver');
+var JSZip = require("jszip");
+// var zip;
 
 const accessToken = localStorage.getItem('accessToken');
 
@@ -164,10 +166,18 @@ export const getTranslatedText = (projectId, bookList, projectName) => async dis
         const myJson = await data.json()
         if ("translatedUsfmText" in myJson) {
             const usfmTexts = myJson.translatedUsfmText
+            var zip = new JSZip();
+
             Object.keys(usfmTexts).map(book => {
-                let blob = new Blob([usfmTexts[book]], { type: "text/plain;charset=utf-8" });
-                FileSaver.saveAs(blob, book + "_" + projectName.split("|")[0] + "_.usfm");
+                // let blob = new Blob([usfmTexts[book]], { type: "text/plain;charset=utf-8" });
+                zip.file(book+".usfm",usfmTexts[book])
+                // FileSaver.saveAs(blob, book + "_" + projectName.split("|")[0] + "_.usfm");
             })
+            zip.generateAsync({type:"blob"})
+            .then(function(content) {
+            // see FileSaver.js
+            FileSaver.saveAs(content, projectName.split("|")[0]+".zip");
+            });
         } else {
 
             swal({

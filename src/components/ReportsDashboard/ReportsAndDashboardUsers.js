@@ -86,11 +86,13 @@ const accessToken = localStorage.getItem("accessToken");
 
 export default function UsersReports(props) {
   const [assignedUsers, setAssignedUsers] = React.useState([]);
-  const [userId, setUserId] = React.useState("");
-  const [projectId, setProjectId] = React.useState("");
-  const [oldBooksLength, setOldBooksLength] = React.useState(null);
-  const [newBooksLength, setNewBooksLength] = React.useState(null);
+  // const [userId, setUserId] = React.useState("");
+  // const [projectId, setProjectId] = React.useState("");
+  // const [oldBooksLength, setOldBooksLength] = React.useState(null);
+  // const [newBooksLength, setNewBooksLength] = React.useState(null);
   const [bookList, setBookList] = React.useState({});
+  const [bookNTlist, setbookNTlist] = React.useState(null);
+
 
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
@@ -123,7 +125,7 @@ export default function UsersReports(props) {
       apiUrl + "v1/autographamt/statistics/projects/" + projectId
     );
     const response = await data.json();
-    console.log('111111', response);
+    // console.log('111111', response);
     if (data.status != 200) {
       swal({
         title: "Statistics",
@@ -144,7 +146,7 @@ export default function UsersReports(props) {
       }
     );
     const response1 = await data1.json();
-    console.log("44444", response1);
+    // console.log("44444", response1);
     if (data1.status != 200) {
       swal({
         title: "Statistics",
@@ -160,10 +162,10 @@ export default function UsersReports(props) {
 
   const handleClickOpen = (scrollType) => () => {
     const projectIdCheck = props.value.split("/")[0];
-    console.log("nnnnnnn",(proId) ,(projectIdCheck))
+    // console.log("nnnnnnn",(proId) ,(projectIdCheck))
 
     if (proId != projectIdCheck) {
-      console.log("dddd")
+      // console.log("dddd")
       setLoading(true);
       setOpen(true);
       setScroll(scrollType);
@@ -177,94 +179,101 @@ export default function UsersReports(props) {
    const displayOldBooks = () => {                                   //Function for old testment books along with the assigned users
       //This function is for the datas of assigned users
       const bookWiseDatas = bookList.bookWiseData;
-      return assignedUsers.map((user, i) => {
-        const { books } = user;
-        const { userName, email, userId } = user.user;
-        let matches = [];
-        let oldBooks = []
-        const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
+      const combineDict = {}
+      assignedUsers.map((data)=>{
+        const { books } = data;
+        const { userName, email } = data.user;
+        books.map((bk)=>{
+          const checkBook = bookWiseDatas[bk]
+          if (checkBook){
+            const addData = checkBook
+            addData.userName = userName
+            addData.email = email
+            combineDict[bk] = addData
+          }
+        })
+      })
+      
+      const book_keys = Object.keys(combineDict)
+      const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
           "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
           "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
           "zep", "hag", "zec", "mal"]
-          let oldTestments = [];
-          bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testment books in order
-          return books.includes(book)? oldTestments.push(book): null
-          })
-        // console.log("REPORTS AND DASHBOARD*****",oldTestments)
-        if (bookWiseDatas != null) {
-          for (let book of oldTestments) {
-            let booksKey = bookList.bookWiseData[book]
-            if (booksKey != null){
-              booksKey.bookCode = book
-            }
-            oldBooks.push(booksKey);
-          }
+
+      const sortOT = []
+      bibleBookOldTestments.map((book)=>{
+        if(book_keys.includes(book)){
+          sortOT.push(combineDict[book])
         }
-        return oldBooks.map((matches, i) => {
-          return (
-            <TableRow key={i}>
-              <TableCell align="left">{matches.bookCode.toUpperCase()}</TableCell>
-              <TableCell align="center">{userName}</TableCell>
-              <TableCell align="center">{email}</TableCell>
-              <TableCell align="center" key={i}>
-                <LinearProgressWithLabel
-                  value={matches.allTokensCount}
-                  translatedValue={matches.translatedTokensCount}
-                  completedValue={matches.completed}
-                />
-              </TableCell>
-              <TableCell align="center">{matches.completed}%</TableCell>
-            </TableRow>
-            
-          );
-        });
-      });
+      })
+      return sortOT.map((bkdetails,i)=>{
+        return (
+          <TableRow key={i}>
+            <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
+            <TableCell align="center">{bkdetails.userName}</TableCell>
+            <TableCell align="center">{bkdetails.email}</TableCell>
+            <TableCell align="center" key={i}>
+              <LinearProgressWithLabel
+                value={bkdetails.allTokensCount}
+                translatedValue={bkdetails.translatedTokensCount}
+                completedValue={bkdetails.completed}
+              />
+            </TableCell>
+            <TableCell align="center">{bkdetails.completed}%</TableCell>
+          </TableRow>
+        );
+      })
     };
 
     const displayNewBooks = () => {                                      //Function for new testment books along with the assigned users
       const bookWiseDatas = bookList.bookWiseData;
-      return assignedUsers.map((user, i) => {
-        const { books } = user;
-        const { userName, email, userId } = user.user;
-        let matches = [];
-        let newBooks = []
-        const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
+      const combineDict = {}
+      assignedUsers.map((data)=>{
+        const { books } = data;
+        const { userName, email } = data.user;
+        books.map((bk)=>{
+          const checkBook = bookWiseDatas[bk]
+          if (checkBook){
+            const addData = checkBook
+            addData.userName = userName
+            addData.email = email
+            combineDict[bk] = addData
+          }
+        })
+      })
+      const book_keys = Object.keys(combineDict)
+      const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
             "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
             "2jn", "3jn", "jud", "rev"]
-          let newTestments = [];
-          bibleBookNewTestments.map((book)=>{                                                                          //map function to push old testment books in order
-          return books.includes(book)? newTestments.push(book): null
-          })
-        if (bookWiseDatas != null) {
-          for (let book of newTestments) {
-            let booksKey = bookList.bookWiseData[book]
-            if (booksKey != null){
-              booksKey.bookCode = book
-            }
-            newBooks.push(booksKey);
-            }
-          }
-        return newBooks.map((matches, i) => {
-          return (
-            <TableRow key={i}>
-              <TableCell align="left">{matches.bookCode.toUpperCase()}</TableCell>
-              <TableCell align="center">{userName}</TableCell>
-              <TableCell align="center">{email}</TableCell>
-              <TableCell align="center" key={i}>
-                <LinearProgressWithLabel
-                  value={matches.allTokensCount}
-                  translatedValue={matches.translatedTokensCount}
-                  completedValue={matches.completed}
-                />
-              </TableCell>
-              <TableCell align="center">{matches.completed}%</TableCell>
-            </TableRow>
-            
-          );
-        });
-      });
+
+      const sortNT = [];
+
+      bibleBookNewTestments.map((book)=>{
+        if(book_keys.includes(book)){
+          sortNT.push(combineDict[book])
+        }
+      })
+
+      return sortNT.map((bkdetails,i)=>{
+        return (
+          <TableRow key={i}>
+            <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
+            <TableCell align="center">{bkdetails.userName}</TableCell>
+            <TableCell align="center">{bkdetails.email}</TableCell>
+            <TableCell align="center" key={i}>
+              <LinearProgressWithLabel
+                value={bkdetails.allTokensCount}
+                translatedValue={bkdetails.translatedTokensCount}
+                completedValue={bkdetails.completed}
+              />
+            </TableCell>
+            <TableCell align="center">{bkdetails.completed}%</TableCell>
+          </TableRow>
+        );
+      })
     };
 
+    
   const displayAssignedUsersNumber = () => {                       //for the headings in the POPUP
     const bookWiseDatas = bookList.bookWiseData;
     let bookData = [];
