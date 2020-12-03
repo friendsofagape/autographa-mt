@@ -76,17 +76,11 @@ const useStyles = makeStyles((theme) =>
           if (data.bookWiseData != null && Object.keys(data.bookWiseData).length !=0) {
             for (let book of bibleBookOldTestments){                                        //for order objects and also adding three code book name to the object
               let booksKey = data.bookWiseData[book]
-              if (booksKey != null){
-                booksKey.bookCode = book
-              }
               oldBooks.push(booksKey);
             }
             setOldTestmentBooks(oldBooks)                 //Data for the popup column
             for (let book of bibleBookNewTestments){                                        //for order objects and also adding three code book name to the object
               let booksKey = data.bookWiseData[book]
-              if (booksKey != null){
-                booksKey.bookCode = book
-              }
               newBooks.push(booksKey);
             }
             setNewTestmentBooks(newBooks)                  //Data for the popup column
@@ -104,7 +98,7 @@ const useStyles = makeStyles((theme) =>
         name: 'BOOK NAME',
         selector: 'bookCode',
         sortable: true,
-        cell: (row) => (<React.Fragment >{`${row.bookCode.toUpperCase()}`}</React.Fragment>)
+        cell: (row) => (<React.Fragment >{`${row.bookName.toUpperCase()}`}</React.Fragment>)
       }, 
       {
         name: 'TOKEN PROGRESS',
@@ -148,15 +142,11 @@ const useStyles = makeStyles((theme) =>
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        style={{height: 300}}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+        // style={{height: 500, width:'100%'}}
+        PaperProps={{
+          style: { width: '35%', height:'70%'},
         }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+
       >
       <DataTable
         title={<span style={{fontSize:'80%', fontWeight:'bold'}}>OLD TESTMENT</span>}

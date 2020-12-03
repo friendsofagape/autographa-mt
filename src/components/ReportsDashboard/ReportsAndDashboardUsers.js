@@ -206,23 +206,27 @@ export default function UsersReports(props) {
           sortOT.push(combineDict[book])
         }
       })
-      return sortOT.map((bkdetails,i)=>{
-        return (
-          <TableRow key={i}>
-            <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
-            <TableCell align="center">{bkdetails.userName}</TableCell>
-            <TableCell align="center">{bkdetails.email}</TableCell>
-            <TableCell align="center" key={i}>
-              <LinearProgressWithLabel
-                value={bkdetails.allTokensCount}
-                translatedValue={bkdetails.translatedTokensCount}
-                completedValue={bkdetails.completed}
-              />
-            </TableCell>
-            <TableCell align="center">{bkdetails.completed}%</TableCell>
-          </TableRow>
-        );
-      })
+      if (sortOT.length !=0){
+        return sortOT.map((bkdetails,i)=>{
+          return (
+            <TableRow key={i}>
+              <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
+              <TableCell align="center">{bkdetails.userName}</TableCell>
+              <TableCell align="center">{bkdetails.email}</TableCell>
+              <TableCell align="center" key={i}>
+                <LinearProgressWithLabel
+                  value={bkdetails.allTokensCount}
+                  translatedValue={bkdetails.translatedTokensCount}
+                  completedValue={bkdetails.completed}
+                />
+              </TableCell>
+              <TableCell align="center">{bkdetails.completed}%</TableCell>
+            </TableRow>
+          );
+        })
+      }else{
+        return <span style={{color:'red'}}>No book assigned</span>
+      }
     };
 
     const displayNewBooks = () => {                                      //Function for new testment books along with the assigned users
@@ -254,23 +258,27 @@ export default function UsersReports(props) {
         }
       })
 
-      return sortNT.map((bkdetails,i)=>{
-        return (
-          <TableRow key={i}>
-            <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
-            <TableCell align="center">{bkdetails.userName}</TableCell>
-            <TableCell align="center">{bkdetails.email}</TableCell>
-            <TableCell align="center" key={i}>
-              <LinearProgressWithLabel
-                value={bkdetails.allTokensCount}
-                translatedValue={bkdetails.translatedTokensCount}
-                completedValue={bkdetails.completed}
-              />
-            </TableCell>
-            <TableCell align="center">{bkdetails.completed}%</TableCell>
-          </TableRow>
-        );
-      })
+      if (sortNT !=0){
+        return sortNT.map((bkdetails,i)=>{
+          return (
+            <TableRow key={i}>
+              <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
+              <TableCell align="center">{bkdetails.userName}</TableCell>
+              <TableCell align="center">{bkdetails.email}</TableCell>
+              <TableCell align="center" key={i}>
+                <LinearProgressWithLabel
+                  value={bkdetails.allTokensCount}
+                  translatedValue={bkdetails.translatedTokensCount}
+                  completedValue={bkdetails.completed}
+                />
+              </TableCell>
+              <TableCell align="center">{bkdetails.completed}%</TableCell>
+            </TableRow>
+          );
+        })
+      }else{
+        return <span style={{color:'red'}}>No book assigned</span>
+      }
     };
 
     
@@ -292,7 +300,7 @@ export default function UsersReports(props) {
     assignedUsersSum = booksNumber.reduce(reducer, 0);              //total of assigned books to the users
     return (<React.Fragment>
       <span style={{fontSize:'80%', fontWeight:'bold'}}>&nbsp;Assigned Books- ({assignedUsersSum})</span>
-      <span style={{fontSize:'80%', fontWeight:'bold'}}>&nbsp;Unassigned Books- ({bookData.length-assignedUsersSum})</span>
+      <span style={{fontSize:'80%', fontWeight:'bold', paddingLeft:"5%"}}>&nbsp;Unassigned Books- ({bookData.length-assignedUsersSum})</span>
     </React.Fragment>)
     }
   }
@@ -320,8 +328,15 @@ export default function UsersReports(props) {
         maxWidth = {'md'}
       >
         <DialogTitle id="scroll-dialog-title">
-          <span style={{fontSize:'80%', fontWeight:'bold'}}>{projectName = props.value.split("/")[1].toUpperCase()}</span> - 
-          <span style={{fontSize:'80%', fontWeight:'bold'}}>(Assigned Books Details)</span> {displayAssignedUsersNumber()}
+          
+          <Grid container>
+            <Grid item sm={6} style={{fontSize:'80%', fontWeight:'bold'}}>
+              {projectName = props.value.split("/")[1].toUpperCase()}
+            </Grid>
+            <Grid item sm={6} style={{fontSize:'80%', fontWeight:"bold", textAlign:"right"}}>
+            {displayAssignedUsersNumber()}
+            </Grid>
+          </Grid>
         </DialogTitle>
 
         <DialogContent dividers={scroll === "paper"} >
