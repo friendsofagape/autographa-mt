@@ -12,31 +12,9 @@ import BooksDownloadable from '../BooksDownloadable';
 import swal from 'sweetalert';
 import MyProjectReportPopup from './MyProjectReportPopup';
 
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2),
         paddingLeft:'5%',
         paddingRight:'5%'
     },

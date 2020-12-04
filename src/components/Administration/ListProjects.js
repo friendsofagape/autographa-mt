@@ -73,7 +73,7 @@ const styles = theme => ({
 
 class ListProjects extends Component {
     state = {
-        redirect: null,
+        // redirect: null,
         open: false,
         columns: [
             {
@@ -84,33 +84,38 @@ class ListProjects extends Component {
                 }
             },
             {
-                name: 'Project Name',
+                name: <h4>Project Name</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Project Code',
+                name: <h4>Project Code</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Organisation',
+                name: <h4>Organisation</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Source',
+                name: <h4>Source</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Action',
+                name: <h4>Action</h4>,
                 options: {
-                    filter: true,
+                    filter: false,
+                    sort: false,
                     customBodyRender: (value) => {
                         return <Link to={`/app/projects/${value}`}>Assign users</Link>
                     }
@@ -158,16 +163,13 @@ class ListProjects extends Component {
         // }
         return (
             <div className={classes.root}>
-                {/* <PopUpMessages /> */}
                 {isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
                     <MUIDataTable
-                        title={"Projects List"}
+                        title={<h4>PROJECTS LIST</h4>}
                         data={data}
                         columns={columns}
                         options={options}
                     />
-                </MuiThemeProvider>
                 <CreateProject open={open} close={this.handleClose} />
                 {
                     current_user.role !== 'm' &&

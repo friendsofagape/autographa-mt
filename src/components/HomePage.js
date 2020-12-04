@@ -55,10 +55,10 @@ class HomePage extends Component {
                 <Card className={classes.card} style={{marginTop: '80px', "backgroundColor":"#ededed", marginLeft:'10px', marginRight:'10px'}}>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
-                        Autographa Machine Translation
+                        Autographa Machine Translation Version 2.0
                       </Typography>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        AutographaMT is a web-based application that aims to support automatic translation of the Bible into languages that have no available digital text useful for training conventional machine translation models. AutographaMT attempts to generate a machine translations of the source text employing minimal effort of human translators.
+                      AutographaMT is a web-based application that aims to support automatic translation of the Bible into languages that have no available digital text. Autographa MT supports machine translation of source text by reducing effort of human translators. 
                       </Typography>
                     </CardContent>
                 </Card>
@@ -72,26 +72,26 @@ class HomePage extends Component {
                         Workflow
                       </Typography>
                       <Typography variant="body2" color="textSecondary" component="p">
-                        In its initial phase, it employs a simple strategy that is able to achieve reasonable success with little human translation effort. The process that is followed to achieve this is:
+                      AgMT employs a simple strategy that is able to achieve reasonable success with little human translation effort. The process that is followed to achieve this is: 
                            <List component="nav" aria-label="main mailbox folders">
                               <ListItem>
                                 <ListItemText>
-                                <span style={{ fontWeight: 'bold'}} >Identification/Initialization:</span> A suitable source language (usually a gateway language) in which a Bible translation already exists and available is selected. Ideally, the selected source language would have similar syntanctic structure with the target language. This is then uploaded into the system.
+                                <span style={{ fontWeight: 'bold'}} >Identification/Initialization:</span> A suitable source language (usually a gateway language) in which a Bible translation already exists and available is selected. Ideally, the selected source language would have similar syntactic structure with the target language. This is then uploaded into the system.
                                 </ListItemText>
                               </ListItem>
                               <ListItem>
                                 <ListItemText>
-                                  <span style={{ fontWeight: 'bold'}} >Extraction:</span> All the unique occurances of tokens (also phrases) are extracted and listed. This includes inflected forms of words.
+                                  <span style={{ fontWeight: 'bold'}} >Extraction:</span> All the unique occurrences of tokens (and phrases) are extracted and listed. This includes inflected forms of words. 
                                 </ListItemText>
                               </ListItem>
                               <ListItem li>
                                 <ListItemText>
-                                  <span style={{ fontWeight: 'bold'}} >Human Translation:</span> A qualified translator then translates all the tokens extracted in step 2.
+                                  <span style={{ fontWeight: 'bold'}} >Human Translation:</span> A qualified translation team then translates all the tokens extracted and uploads back into the system. 
                                 </ListItemText>
                               </ListItem>
                               <ListItem li>
                                 <ListItemText>
-                                  <span style={{ fontWeight: 'bold'}} >Machine Generation:</span> The system then generates a draft translation (called draft 0) of the source text by way of simple replacements.
+                                  <span style={{ fontWeight: 'bold'}} >Machine Generation:</span> The system then generates a draft translation (called draft 0) of the source text by way of simple replacements. 
                                 </ListItemText>
                               </ListItem>
                             </List>

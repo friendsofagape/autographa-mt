@@ -1,56 +1,41 @@
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import { Checkbox, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ComponentHeading from '../ComponentHeading';
-import apiUrl from '../GlobalUrl'
 import PopUpMessages from '../PopUpMessages'
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-
-
 import { fetchUsers, updateAdminStatus } from '../../store/actions/userActions';
-
-
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
 
-const accessToken = localStorage.getItem('accessToken')
-
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
+// const getMuiTheme = () => createMuiTheme({
+//     overrides: {
+//       MUIDataTable: {
+//         root: {
+//         },
+//         paper: {
+//           boxShadow: "none",
+//         }
+//       },
+//       MUIDataTableBodyRow: {
+//         root: {
+//           '&:nth-child(odd)': { 
+//             backgroundColor: '#eaeaea'
+//           }
+//         }
+//       },
+//       MUIDataTableBodyCell: {
+//       }
+//     }
+//   })
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: theme.spacing(2),
-        padding: '16px'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
+        // padding: '16px'
+        paddingTop: '2%',
+        paddingLeft:'8%',
+        paddingRight:'8%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -85,29 +70,30 @@ class ListUsers extends Component {
                 }
             },
             {
-                name: 'Name',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Email',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Verified',
+                name: <h4>Name</h4>,
                 options: {
                     filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Email</h4>,
+                options: {
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Verified</h4>,
+                options: {
+                    filter: false,
+                    sort: false,
                     customBodyRender: (value, row) => {
-                        // console.log(rowIndex)
                         return <FormControlLabel
                         control={
                             <Switch
                             checked={value}
                             disabled
-                            // onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
                         />
                         }
                         label={value ? "Verified" : "Unverified"}
@@ -118,7 +104,7 @@ class ListUsers extends Component {
                 }
             },
             {
-                name: 'Admin',
+                name: <h4>Admin</h4>,
                 options: {
                     filter: false,
                     customBodyRender: (value, row) => {
@@ -155,13 +141,6 @@ class ListUsers extends Component {
         dispatch(updateAdminStatus(apiData));
     }
 
-    handleChange = (userId) => {
-        const { userStatus } = this.state
-        const admin = !userStatus[userId]["admin"]
-        this.userAdminAssignment(admin, userId)
-        userStatus[userId]["admin"] = admin
-        this.setState({ userId, admin: !admin })
-    }
 
     closeSnackBar = (item) => {
         this.setState(item)
@@ -170,7 +149,14 @@ class ListUsers extends Component {
     render() {
         const {  classes, users, isFetching } = this.props;
         const { columns } = this.state;
-        const data = users.map(user => {
+        const data =  Object.values(users)
+        const sortedData = [] 
+        data.map(user => {
+            if (user.roleId != 3) {
+                sortedData.push(user)
+            }    
+        });
+        const filteredData = sortedData.map(user=>{
             return [
                 user.userId,
                 user.firstName + " " + user.lastName,
@@ -178,22 +164,26 @@ class ListUsers extends Component {
                 user.verified,
                 user.roleId > 1
             ]
-        });
+        })
+                
         const options = {
             selectableRows: false,
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false
           };
         return (
             <div className={classes.root}>
                 <PopUpMessages />
                 { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
                 <MUIDataTable 
-                    title={"Users List"} 
-                    data={data} 
+                    title={<h4>USERS LIST</h4>} 
+                    data={filteredData} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
             </div>
         )
     }

@@ -9,11 +9,8 @@ import TableHead from "@material-ui/core/TableHead";
 import { Checkbox, Button, Paper, List } from "@material-ui/core";
 import ComponentHeading from "../ComponentHeading";
 import apiUrl from "../GlobalUrl";
-import { Typography } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import AddIcon from "@material-ui/icons/Add";
 import ListItem from "@material-ui/core/ListItem";
@@ -57,7 +54,6 @@ const styles = (theme) => ({
   }
 });
 
-const accessToken = localStorage.getItem("accessToken");
 
 class AssignUser extends Component {
   state = {
@@ -81,8 +77,6 @@ class AssignUser extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { project } = nextProps;
-    const { statistics } = this.state;
     if (nextProps.userBooks !== this.props.userBooks) {
       this.setState({ availableBooksData: this.props.userBooks });
     }
@@ -124,15 +118,16 @@ class AssignUser extends Component {
           key={user.userId} hover
           onClick={() => this.selectUser(user.userId)}
         >
-          <TableCell style={{ padding:"0px" }}>
-            <ListItem >
+          <TableCell  align="center" style={{ padding:"0px" }}>
+            {/* <ListItem > */}
               {user.firstName + " " + user.lastName}
-            </ListItem>
+            {/* </ListItem> */}
           </TableCell>
-          <TableCell style={{ padding:"0px"}}>
-            <ListItem >
+          
+          <TableCell align="center" style={{ padding:"0px"}}>
+            {/* <ListItem > */}
               {user.emailId}
-            </ListItem>
+            {/* </ListItem> */}
           </TableCell>
           {user.roleId == "3" ? (
             <TableCell style={{ padding:"0px"}}>
@@ -195,9 +190,9 @@ class AssignUser extends Component {
       const { userName, email, userId } = user.user;
       return (
         <TableRow key={userId}>
-          <TableCell align="right">{userName}</TableCell>
-          <TableCell align="right">{email}</TableCell>
-          <TableCell align="right">
+          <TableCell align="right" style={{ padding:"5px" }}>{userName}</TableCell>
+          <TableCell align="right" style={{ padding:"5px" }}>{email}</TableCell>
+          <TableCell align="right" style={{ padding:"5px" }}>
             <Button
               size="small"
               variant="contained"
@@ -207,7 +202,7 @@ class AssignUser extends Component {
               Books
             </Button>
           </TableCell>
-          <TableCell align="right">
+          <TableCell align="right" style={{ padding:"5px" }}>
             <Button
               small="true"
               onClick={() => this.handleDelete(userId, user.projectId)}
@@ -323,9 +318,9 @@ class AssignUser extends Component {
     const { userListing, listBooks } = this.state;
     return (
       <div className={classes.root}>
-        <Grid item xs={12} className={classes.statisticsPane}>
+        {/* <Grid item xs={8} className={classes.statisticsPane}> */}
           <StatisticsSummary projectId={location.pathname.split("/").pop()} />
-        </Grid>
+        {/* </Grid> */}
         <Button
           onClick={() => this.addUser()}
           variant="contained"
@@ -345,6 +340,8 @@ class AssignUser extends Component {
           open={userListing}
           onClose={this.closeUserListing}
           aria-labelledby="form-dialog-title"
+          fullWidth={true} 
+          maxWidth = {'md'}
         >
           {isFetching && <CircleLoader />}
           <ComponentHeading
@@ -367,14 +364,14 @@ class AssignUser extends Component {
                     <h4>EMAIL</h4>
                   </TableCell>
                   <TableCell
-                    align="center"
+                    align="left"
                     style={{ paddingBottom: "0px", paddingTop: "0px" }}
                   >
                     <h4>ROLE</h4>
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody >{this.getUserNames()}</TableBody>
+              <TableBody>{this.getUserNames()}</TableBody>
             </Table>
           </DialogContent>
 
@@ -403,10 +400,10 @@ class AssignUser extends Component {
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell align="right">User Name</TableCell>
-                <TableCell align="right">Email Id</TableCell>
-                <TableCell align="right">Books Assinged</TableCell>
-                <TableCell align="right">Remove User</TableCell>
+                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>User Name</h3></TableCell>
+                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Email Id</h3></TableCell>
+                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Books Assinged</h3></TableCell>
+                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Remove User</h3></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.displayAssignedUsers()}</TableBody>

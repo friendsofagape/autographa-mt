@@ -1,53 +1,21 @@
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import { Checkbox, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import ComponentHeading from '../ComponentHeading';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import apiUrl from '../GlobalUrl';
-import PopUpMessages from '../PopUpMessages';
 import { connect } from 'react-redux';
 import { fetchOrganisations, updateOrganisationVerifiedStatus } from '../../store/actions/organisationActions';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import CircleLoader from '../loaders/CircleLoader';
-import CreateOrganisation from './CreateOrganisation';
 
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
 
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: theme.spacing(2),
-        padding: '16px'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
+        paddingTop:'3%',
+        paddingLeft:'10%',
+        paddingRight:'10%',
+        paddingBottom:'3%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -69,7 +37,6 @@ const styles = theme => ({
     }
 });
 
-const accessToken = localStorage.getItem('accessToken')
 
 class ListOrganisations extends Component {
     state = {
@@ -83,33 +50,38 @@ class ListOrganisations extends Component {
                 }
             },
             {
-                name: 'Organisation Name',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Email',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Address',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Phone',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Verified',
+                name: <h4>Organisation Name</h4>,
                 options: {
                     filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Email</h4>,
+                options: {
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Address</h4>,
+                options: {
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Phone</h4>,
+                options: {
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Verified</h4>,
+                options: {
+                    filter: false,
+                    // sort: false,
                     customBodyRender: (value, row) => {
                         return <Switch
                                 checked={value}
@@ -119,9 +91,10 @@ class ListOrganisations extends Component {
                 }
             },
             {
-                name: 'Admin Id',
+                name: <h4>Admin Id</h4>,
                 options: {
-                    filter: true,
+                    filter: false,
+                    sort: false,
                     display: false
                 }
             }
@@ -161,24 +134,21 @@ class ListOrganisations extends Component {
             ]
         });
         const options = {
-            selectableRows: false,
+            selectableRows: false,download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false
           };
         return (
             <div className={classes.root}>
-                {/* <PopUpMessages /> */}
                 { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
                 <MUIDataTable 
-                    title={"Organisations List"} 
+                    title={<h4>ORGANISATION LIST</h4>} 
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
-                {/* <CreateOrganisation open={open} close={this.handleClose} /> */}
-                {/* <Fab aria-label={'add'} className={classes.fab} color={'primary'} onClick={() => this.setState({open: true})}>
-                    <AddIcon />
-                </Fab> */}
             </div>
         )
     }
