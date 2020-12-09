@@ -2,9 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import { Grid, Typography } from "@material-ui/core";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import LinearProgress, {
-  LinearProgressProps,
-} from "@material-ui/core/LinearProgress";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import DataTable from "react-data-table-component";
 import Box from "@material-ui/core/Box";
 
@@ -89,18 +87,12 @@ export default function SimplePopover(props) {
             for (let book of oldTestments){                                                                              //for order objects and also adding three code book name to the object
               let booksKey = data.bookWiseData[book]
               oldBooks.push(booksKey);
-              // if (booksKey != null){
-              //   booksKey.bookCode = book
-              // }
             }
             setOldTestmentBooks(oldBooks)
             let newBooks = []
             for(let book of newTestments){                                                                               //for order objects and also adding three code book name to the object
               let booksKey = data.bookWiseData[book]
               newBooks.push(booksKey);
-              // if (booksKey != null){
-              //   booksKey.bookCode = book
-              // }
             }
             setNewTestmentBooks(newBooks)
           }
@@ -147,9 +139,11 @@ export default function SimplePopover(props) {
       ),
     },
     {
-      name: <span style={{fontSize:'90%', fontWeight: 'bold'}}>DRAFT PROGRESS</span>,
-      sortable: true,
-      cell: (row) => <React.Fragment>{`${row.completed}%`}</React.Fragment>,
+      name: <span style={{fontSize:'90%'}}>DRAFT PROGRESS</span>,
+      selector: "completed",
+      sortable:true,
+      cell: (row) => <React.Fragment>
+      {`${row.completed}%`}</React.Fragment>,
     },
   ];
 
@@ -163,8 +157,6 @@ export default function SimplePopover(props) {
       >
         View
       </Button>
-      {/* {loading && <CircleLoader />} */}
-
       <Dialog
         open={open}
         onClose={handleCloses}
@@ -194,21 +186,21 @@ export default function SimplePopover(props) {
             {loading ? (
               <CircleLoader />
             ) : (
-              <div>
+              <div style={{ height: 400, width: '100%' }}>
               {oldTestmentBooks != null && (
-                  <DataTable
-                    title={<span style={{fontSize:'90%', fontWeight:'bold'}}>OLD TESTMENT</span>}
-                    columns={columns}
-                    data={oldTestmentBooks}
-                  />
+                <DataTable
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
+                  columns={columns}
+                  data={oldTestmentBooks}
+                />
                 )}
-                {newTestmentBooks != null && (
-                  <DataTable
-                    title={<span style={{fontSize:'90%', fontWeight:'bold'}}>NEW TESTMENT</span>}
-                    columns={columns}
-                    data={newTestmentBooks}
-                  />
-                )}
+              {newTestmentBooks != null && (
+                <DataTable
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+                  columns={columns}
+                  data={newTestmentBooks}
+                />
+               )}
               </div>
             )}
           </DialogContentText>

@@ -40,15 +40,15 @@ export default function RoleDetails() {
         const id = userDetails.current_user.role;
         if (id=="ad"){
             return (<Typography variant="caption" style={{color:"#001e96"}}>
-                        An admin can create project, assign books to translator etc.. sample content here. Provide your personal information, even if the account is used for a business, a pet or something else. This won't be a part of your public profile.
+                        As an Admin, you can  Create Projects. You can assign and unassign Translators to Projects. You can also Request to be assigned to more Organisations. You can download tokens, translate tokens and upload tokens from  the books assigned to you in the project.  
                     </Typography>)
         }else if(id=="m"){
             return <Typography variant="caption" style={{color:"#001e96"}}>
-                        If there is no projects assigned to you wait for the admin or super admin assign a project.. sample content here. Provide your personal information, even if the account is used for a business, a pet or something else. This won't be a part of your public profile.
+                        If there is no projects assigned to you, wait for the admin or super admin assign a project.. As a Translator, you can access the Projects you have been assigned. You can download tokens, translate tokens and upload tokens in your assigned project both online and offline. 
                    </Typography>
         }else{
             return <Typography variant="caption" style={{color:"#001e96"}}>
-                    Have access to all the features of agmtv2. sample content here. Provide your personal information, even if the account is used for a business, a pet or something else. This won't be a part of your public profile.
+                    A Super Admin has oversight of all Projects created in the system. A Super Admin approves the Admin request. A Super Admin can change the user roles from admin to member vice versa. You can view the Reports Dashboard that gives you details of all the Projects in the System and also the Projects that have been assigned to you.  
                    </Typography>
         }
     }

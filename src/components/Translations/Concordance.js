@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
-import ComponentHeading from '../ComponentHeading';
 import { ListItem, Typography} from '@material-ui/core';
 import { Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import apiUrl from '../GlobalUrl';
-import { saveReference } from '../../store/actions/sourceActions';
 import { connect } from 'react-redux';
 import { fetchConcordances, setReference } from '../../store/actions/projectActions';
 
@@ -19,23 +17,12 @@ const styles = (theme) => ({
 		backgroundColor: 'yellow',
 	},
 	textDisplay: {
-		// padding: theme.spacing(),
-		// color: theme.palette.text.secondary,
 		backgroundColor: '#fff',
 		height: '120px',
 		overflow: 'auto',
 		textAlign: 'justify',
 		lineHeight: '20px',
-	},
-	containerGrid: {
-		// width: '97%',
-		// marginLeft: '2%',
-		// marginRight: '2%',
-		// border: '1px solid "#2a2a2fbd"',
-		// // boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-		// height: '320px',
-		// backgroundColor: '#fff',
-	},
+	}
 });
 
 class Concordance extends Component {
@@ -67,13 +54,9 @@ class Concordance extends Component {
 		const { selectedToken, selectedProject, selectedBook, dispatch } = this.props;
 		if (prevProps.selectedToken !== selectedToken) {
 			dispatch(fetchConcordances(selectedToken, selectedProject.sourceId, selectedBook));
-			// this.getVerseText(token, project.sourceId, book )
 		}
 	}
 
-	// componentWillReceiveProps(nextProps){
-
-	// }
 
 	storeBCV = (book, chapter, verse) => {
 		this.props.dispatch(
@@ -132,12 +115,11 @@ class Concordance extends Component {
 	render() {
 		const { classes } = this.props;
 		const { selectedBook, selectedToken, concordance } = this.props;
-		// const { concordance } = this.state
 		return (
-			<Grid container sm={12} className={classes.containerGrid}>
+			<Grid container sm={12}>
 				<Grid item sm={12} >
 					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
-                   		{selectedBook.toUpperCase()} Concordance
+                   		Book Concordance
 					</Typography>
 				</Grid>
 				<Grid item sm={12} style={{height: '100px'}}>
@@ -154,29 +136,7 @@ class Concordance extends Component {
 						{this.displayConcordance(concordance.all, selectedToken)}
 					</Grid>
 				</Grid>
-
-
-				{/* <Grid item sm={12} >
-					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
-                   		All Books Concordance
-					</Typography>
-					<Grid item sm={12} style={{overflow:'auto', height:"20%"}}>
-						{this.displayConcordance(concordance.all, selectedToken)}
-					</Grid>
-				</Grid>
-				 */}
-
-
-
 				
-				{/* <Grid item xs={12} className={classes.textDisplay}>
-					{this.displayConcordance(concordance.all, selectedToken)}
-				</Grid> */} 
-
-
-
-				{/* </Grid> */}
-				{/* </Paper> */}
 			</Grid>
 		);
 	}

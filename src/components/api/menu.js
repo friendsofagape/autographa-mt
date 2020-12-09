@@ -5,9 +5,15 @@ export const menus = [
       key: "dashboard",
       child: [
         {
+          name: 'My User Roles',
+          link: '/app/roleDetails',
+          roles: ['ad','sa', 'm'],
+          key: 'report'
+      },
+        {
           name: "My Projects",
           link: "/app/translations/projects",
-          roles: ["m", "ad", "sa"],
+          roles: ["m", "ad"],
           key: "my_projects",
         },
         {
@@ -19,7 +25,7 @@ export const menus = [
         {
           name: "Request Admin Permission",
           link: "/app/organisations/create",
-          roles: ["m"],
+          roles: ["m","ad"],
           key: "create_organisations",
         },
         {
@@ -31,7 +37,7 @@ export const menus = [
         {
           name: "Create/Assign Projects",
           link: "/app/projects",
-          roles: ["member", "ad", "sa"],
+          roles: ["member", "ad"],
           key: "projects",
         },
         {
@@ -46,13 +52,7 @@ export const menus = [
           link: '/app/report',
           roles: ['ad','sa'],
           key: 'report'
-      },
-      {
-        name: 'User Details',
-        link: '/app/roleDetails',
-        roles: ['ad','sa', 'm'],
-        key: 'report'
-    }
+      }
       ],
     },
     

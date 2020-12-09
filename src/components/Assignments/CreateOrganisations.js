@@ -4,24 +4,14 @@ import {
     TextField,
     Button,
     Paper,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Typography
 } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import ComponentHeading from '../ComponentHeading';
-import PopUpMessages from '../PopUpMessages';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import Container from '@material-ui/core/Container';
 import { createOrganisation } from '../../store/actions/organisationActions';
 
 
-var accessToken = localStorage.getItem('accessToken')
 
 const styles = theme => ({
     root:{
@@ -58,9 +48,7 @@ class CreateOrganisations extends Component {
         this.props.dispatch(createOrganisation(apiData, this.clearState));
     }
 
-    // handleOk = () => {
-    //     this.setState({ redirect: true })
-    // }
+
 
     handleClose = () => {
         this.setState({ verificationDialogOpen: false })
@@ -75,15 +63,6 @@ class CreateOrganisations extends Component {
          })
     }
 
-    // handleSend = () => {
-    //     this.createOrganisation()
-    // }
-
-
-    // closeSnackBar = (item) => {
-    //     this.setState(item)
-    // }
-
     canBeSubmitted() {
         const { organisationName, organisationAddress,  organisationEmail, organisationPhone } = this.state;
         return organisationName.toString().length > 0 && organisationAddress.toString().length > 0 && organisationEmail.toString().length > 0 && organisationPhone.toString().length > 0;
@@ -91,13 +70,10 @@ class CreateOrganisations extends Component {
 
 
     render() {
-        // const { popupdata } = this.state
-        const { createOrganisationsPane, classes } = this.props
+        const { classes } = this.props
         const isEnabled = this.canBeSubmitted();
         return (
             <Grid item xs={12}>
-                {/* <Header /> */}
-                {/* <PopUpMessages /> */}
                 <Container component="main" maxWidth="xs" className={classes.pageContainer}>
                 <Paper elevation='3' style={{padding:'8%'}}>
                     <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%"}}>
@@ -115,7 +91,6 @@ class CreateOrganisations extends Component {
                                     label="Organisation Name"
                                     name="organisationName"
                                     autoComplete="organisationName"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationName: e.target.value })}
                                 />
@@ -130,7 +105,6 @@ class CreateOrganisations extends Component {
                                     label="Address"
                                     name="organisationAddress"
                                     autoComplete="organisationAddress"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationAddress: e.target.value })}
                                 />
@@ -146,7 +120,6 @@ class CreateOrganisations extends Component {
                                     type="email"
                                     name="organisationEmail"
                                     autoComplete="organisationEmail"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationEmail: e.target.value })}
                                 />
@@ -161,7 +134,6 @@ class CreateOrganisations extends Component {
                                     label="Phone"
                                     name="organisationPhone"
                                     autoComplete="organisationPhone"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationPhone: e.target.value })}
                                 />
