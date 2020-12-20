@@ -67,12 +67,14 @@ class HomePage extends Component {
     translationNotes: "",
     displayTranslationWordSwitch: "none",
     tokenTranslation: "",
+    translatedList: [],
     senses: [],
     bkvalue:"",
     loading: false,
     checkBox:false,
     allTokenList: [],
-    untranslatedToken:[]
+    untranslatedToken:[],
+    translatedTokens:[]
   };
 
   updateState = (bk) => {
@@ -97,25 +99,25 @@ class HomePage extends Component {
               unList.push(i)
             }
           })
-
-          this.setState({untranslatedToken:unList, allTokenList:data})
+          let unListData = data.length-unList.length
+          this.setState({untranslatedToken:unList, allTokenList:data, translatedTokens:unListData})
+          console.log("pppppppppppppppppppppppp", unListData)
 
           }
     )
     .catch(error => this.setState({ error, isLoading: false }));
-  
-
-
-
-
     this.props.dispatch(
       fetchTokenList(
         bk,
         this.props.selectedProject.sourceId
       )
     );
-    
   };
+
+  handleToken = (tokenValue) => {
+    this.setState({translatedTokens: tokenValue});
+    console.log("HOMEPAGETOKEN",tokenValue)
+}
   
   // updateCheckBox = () => {
   //   this.setState({bkvalue:bk});
@@ -206,7 +208,6 @@ class HomePage extends Component {
     if(this.state.checkBox==false){
       const tokenarray =  this.state.allTokenList
       tokenarray.unshift(['token','translation','senses'])
-      // console.log('lllllllllllllllllllllllllll', tokenarray)
       var wb = XLSX.utils.book_new();
       wb.Props = {
         Title : "TokenList",
@@ -252,7 +253,6 @@ class HomePage extends Component {
       saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}),this.state.bkvalue+'.xlsx');
     }
   }
-          
 
   clickupload = (e) => {
     const stoploading = () => {
@@ -262,6 +262,7 @@ class HomePage extends Component {
     var proId = this.props.selectedProject.projectId;
     var files = e.target.files,
     f = files[0];
+    var that = this;
     var reader = new FileReader();
     reader.onload = function(e) {
       // var contents = e.target.result;
@@ -274,7 +275,6 @@ class HomePage extends Component {
         "projectId":proId,
         "tokenTranslations":tknlist
       }
-      // console.log("ttttttttttt", jsondata)
       var respdata = fetch(apiUrl + 'v1/autographamt/projects/bulktranslations',{
           method: 'POST',
           body: JSON.stringify(jsondata),
@@ -283,16 +283,14 @@ class HomePage extends Component {
           }
       })
       .then(response => {
-        console.log('kkkkkk', data)
         stoploading();
-        return response.json()
-      })
+        return response.json()  
+      })  
       .then(data => {
+        that.updateState(that.state.bkvalue)
         alert(data.message)
-        console.log('jjjjjjj', data)
       });
     };
-
     reader.onerror = function(e) {
       console.error("File could not be read! Code " + e.target.error.code);
     };
@@ -315,7 +313,7 @@ class HomePage extends Component {
     var projName = this.props.selectedProject.projectName
     // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
     var alltokenProgress = this.state.allTokenList.length
-    var completedTokenProgress = this.state.untranslatedToken.length
+    var completedTokenProgress = this.state.translatedList
     // console.log("pppppppppppppppppppppppppppppppppppppppppppppppppppppp", alltokenProgress, completedTokenProgress)
 
     return (
@@ -339,10 +337,10 @@ class HomePage extends Component {
 					      </Typography>
             </Grid>
             <Grid item sm={4} style={{textAlign:'right', paddingRight:'5px'}}>
-              <progress value={alltokenProgress-completedTokenProgress} max={alltokenProgress} />
+              <progress value={this.state.translatedTokens} max={alltokenProgress} />
             </Grid>
             <Grid item sm={2}>
-              {alltokenProgress-completedTokenProgress}/{alltokenProgress}
+              {this.state.translatedTokens}/{alltokenProgress}
             </Grid>
             {/* <Grid item sm={3} style={{textAlign:'right'}}>
             <Tooltip title="Download all source tokens for offline translation">
@@ -517,7 +515,7 @@ class HomePage extends Component {
                   {/* <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
 						        Update Selected Token
 					        </Typography> */}
-                  <UpdateTokens />
+                  <UpdateTokens updateState={this.state.bkvalue} tokenTranslated={this.handleToken}/>
                 </Paper>
               </Grid>
               

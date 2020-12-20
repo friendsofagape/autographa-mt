@@ -10,6 +10,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { displaySnackBar } from '../../store/actions/sourceActions';
 import { getTranslatedWords, updateTransaltion } from '../../store/actions/projectActions';
+import {
+    fetchTokenList,
+    setSelectedToken,
+  } from "../../store/actions/projectActions";
+  import swal from 'sweetalert';
 
 const accessToken = localStorage.getItem('accessToken')
 
@@ -54,10 +59,50 @@ class UpdateTokens extends Component {
         popupdata: {},
         senses: [],
         sense: '',
-        token: ''
+        token: '',
+        allTokenList: [],
+        untranslatedToken:[]
     }
 
+    componentDidMount() {
+        this.updateState()
+      }
 
+    updateState = (bk) => {
+        // this.setState({bkvalue:bk});
+        var proId = this.props.selectedProject.projectId;
+        var bookname = this.props.updateState;    
+        fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
+            method: 'GET',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            }
+        })
+        .then(response => response.json())
+        .then(data =>
+            {
+                // this.setState({allTokenList:data})
+                var unList = []
+                data.map(i=>{
+                    if(i[1]==null){
+                        unList.push(i)
+                    }
+                })
+                
+                this.setState({untranslatedToken:unList, allTokenList:data})
+                this.props.tokenTranslated(data.length-unList.length)
+                // console.log("pppppppppppppppppppppppp", data)
+                
+              }
+        )
+        .catch(error => this.setState({ error, isLoading: false }));
+        this.props.dispatch(
+          fetchTokenList(
+            bk,
+            this.props.selectedProject.sourceId
+          )
+        );
+    };
 
     // componentWillReceiveProps(nextProps) {
     //     const { token, project } = nextProps
@@ -96,6 +141,44 @@ class UpdateTokens extends Component {
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
     }
 
+    updateTransaltion = (apiData, clear) => async (dispatch, getState) => {
+        // dispatch(IsFetching(true));
+        try {
+            const update = await fetch(apiUrl + 'v1/autographamt/projects/translations', {
+                method: 'POST',
+                body: JSON.stringify(apiData),
+                headers: {
+                    Authorization: 'bearer ' + accessToken
+                }
+            })
+            const myJson = await update.json()
+            if (myJson.success) {
+                clear()
+                dispatch(getTranslatedWords(getState().project.selectedToken, getState().project.selectedProject.sourceId, getState().project.selectedProject.targetId))
+                swal({
+                    title: 'Token translation',
+                    text: myJson.message,
+                    icon: 'success'
+                });
+            } else {
+                swal({
+                    title: 'Token translation',
+                    text: myJson.message,
+                    icon: 'error'
+                });
+            }
+        }
+        catch (ex) {
+            swal({
+                title: 'Token translation',
+                text: 'Token translation failed, check your internet connection or contact admin',
+                icon: 'error'
+            });
+        }
+        // dispatch(setIsFetching(false));
+    }
+    
+
     updateTokenSense = () => {
         const { selectedProject, selectedToken, dispatch } = this.props;
         const { sense,translation } = this.state;
@@ -106,6 +189,8 @@ class UpdateTokens extends Component {
             senses: [sense]
         }
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
+        this.updateState()
+        // this.props.updateStateAgain()
     }
 
 
@@ -141,7 +226,7 @@ class UpdateTokens extends Component {
 
     render() {
         const { classes, selectedProject, selectedToken, translation, senses } = this.props
-        console.log('update', this.props)
+        console.log('update', this.props.updateState)
         // const { translation } = this.state
         var displayLanguage = ''
         if (selectedProject.projectName) {
@@ -154,7 +239,7 @@ class UpdateTokens extends Component {
                 </Grid> */}
                 {/* <PopUpMessages /> */}
 
-
+                 {/*{this.updateState()} */}
                 <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
                     Token Details
 				</Typography>
@@ -340,7 +425,8 @@ const mapStateToProps = (state) => {
         selectedProject: state.project.selectedProject,
         selectedToken: state.project.selectedToken,
         translation: state.project.translation,
-        senses: state.project.senses
+        senses: state.project.senses,
+        isFetching: state.project.isFetching,
     }
 }
 
