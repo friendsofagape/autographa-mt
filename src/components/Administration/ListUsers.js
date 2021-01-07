@@ -108,17 +108,18 @@ class ListUsers extends Component {
                 options: {
                     filter: false,
                     customBodyRender: (value, row) => {
-                        const { current_user } = this.props;
-                        return <FormControlLabel
-                        control={
-                            <Switch
-                                checked={value}
-                                onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
-                                disabled={current_user.role === 'm' ? true : false}
-                            />
-                        }
-                        label={value ? "Admin" : "Member"}
-                      />
+                        // const { current_user } = this.props;
+                        return <span>{value ? "Admin" : "Member"}</span>
+                    //     <FormControlLabel
+                    //     control={
+                    //         <Switch
+                    //             checked={value}
+                    //             onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
+                    //             disabled={current_user.role === 'm' ? true : false}
+                    //         />
+                    //     }
+                    //     label={value ? "Admin" : "Member"}
+                    //   />
                         
                         
                     }
