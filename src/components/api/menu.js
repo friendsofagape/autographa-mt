@@ -23,13 +23,13 @@ export const menus = [
           key: "sources",
         },
         {
-          name: "Request Admin Permission",
+          name: "Create Organisation",
           link: "/app/organisations/create",
           roles: ["m","ad"],
           key: "create_organisations",
         },
         {
-          name: "Verify Admin Request",
+          name: "Verify Organisation",
           link: "/app/organisations",
           roles: ["sa"],
           key: "organisations",
@@ -41,7 +41,7 @@ export const menus = [
           key: "projects",
         },
         {
-          name: "Change User Roles",
+          name: "Users list",
           link: "/app/users",
           roles: ["sa"],
           key: "users",
