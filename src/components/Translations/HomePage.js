@@ -82,7 +82,8 @@ class HomePage extends Component {
     // console.log("pppppppppppppppppppppppp", bk)
 
     var proId = this.props.selectedProject.projectId;
-    var bookname = bk;    
+    var bookname = bk;   
+    console.log(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'')
     fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
       method: 'GET',
       headers: {
@@ -101,9 +102,9 @@ class HomePage extends Component {
           })
           let unListData = data.length-unList.length
           this.setState({untranslatedToken:unList, allTokenList:data, translatedTokens:unListData})
-          console.log("pppppppppppppppppppppppp", unListData)
+          console.log("pppppppppppppppppppppppp",unListData )
 
-          }
+        }
     )
     .catch(error => this.setState({ error, isLoading: false }));
     this.props.dispatch(

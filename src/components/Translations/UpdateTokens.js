@@ -65,10 +65,10 @@ class UpdateTokens extends Component {
     }
 
     componentDidMount() {
-        this.updateState()
+        this.updateStage(this.props.updateState)
       }
 
-    updateState = (bk) => {
+    updateStage = (bk) => {
         // this.setState({bkvalue:bk});
         var proId = this.props.selectedProject.projectId;
         var bookname = this.props.updateState;    
@@ -82,6 +82,7 @@ class UpdateTokens extends Component {
         .then(data =>
             {
                 // this.setState({allTokenList:data})
+                console.log("pppppppppppppppppppppppp", data)
                 var unList = []
                 data.map(i=>{
                     if(i[1]==null){
@@ -91,7 +92,6 @@ class UpdateTokens extends Component {
                 
                 this.setState({untranslatedToken:unList, allTokenList:data})
                 this.props.tokenTranslated(data.length-unList.length)
-                // console.log("pppppppppppppppppppppppp", data)
                 
               }
         )
@@ -141,44 +141,6 @@ class UpdateTokens extends Component {
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
     }
 
-    updateTransaltion = (apiData, clear) => async (dispatch, getState) => {
-        // dispatch(IsFetching(true));
-        try {
-            const update = await fetch(apiUrl + 'v1/autographamt/projects/translations', {
-                method: 'POST',
-                body: JSON.stringify(apiData),
-                headers: {
-                    Authorization: 'bearer ' + accessToken
-                }
-            })
-            const myJson = await update.json()
-            if (myJson.success) {
-                clear()
-                dispatch(getTranslatedWords(getState().project.selectedToken, getState().project.selectedProject.sourceId, getState().project.selectedProject.targetId))
-                swal({
-                    title: 'Token translation',
-                    text: myJson.message,
-                    icon: 'success'
-                });
-            } else {
-                swal({
-                    title: 'Token translation',
-                    text: myJson.message,
-                    icon: 'error'
-                });
-            }
-        }
-        catch (ex) {
-            swal({
-                title: 'Token translation',
-                text: 'Token translation failed, check your internet connection or contact admin',
-                icon: 'error'
-            });
-        }
-        // dispatch(setIsFetching(false));
-    }
-    
-
     updateTokenSense = () => {
         const { selectedProject, selectedToken, dispatch } = this.props;
         const { sense,translation } = this.state;
@@ -189,7 +151,7 @@ class UpdateTokens extends Component {
             senses: [sense]
         }
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
-        this.updateState()
+        this.updateStage(this.props.updateState)
         // this.props.updateStateAgain()
     }
 

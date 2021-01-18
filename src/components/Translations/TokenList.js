@@ -44,6 +44,7 @@ class TokenList extends Component {
     if(this.props.checkvalue==false){
       const { tokenList, dispatch } = this.props;
       if (tokenList) {
+        console.log("TOKENLISTTTTTTTTT----",tokenList)
         return tokenList.map((item, index) => {
           return (
             <div key={item + index}>
@@ -66,6 +67,7 @@ class TokenList extends Component {
     }else{
       const { untoken, dispatch } = this.props;
       if (untoken) {
+        console.log("TOKENLISTTDDDDDD-----",untoken)
         return untoken.map((item, index) => {
           return (
             <div key={item + index}>
@@ -74,7 +76,7 @@ class TokenList extends Component {
                 name={item}
                 style={{fontSize:'14px', color:'#a3811c'}}
                 value={item}
-                onClick={() => dispatch(setSelectedToken(item))}
+                onClick={() => dispatch(setSelectedToken(item[0]))}
               >
                 {item}
               </ListItem>
