@@ -75,7 +75,8 @@ class HomePage extends Component {
     allTokenList: [],
     untranslatedToken:[],
     translatedTokens:[],
-    // tokenData: []
+    tokenData: [],
+    unToken: []
   };
 
   updateState = (bk) => {
@@ -96,14 +97,18 @@ class HomePage extends Component {
         {
           // this.setState({allTokenList:data})
           var unList = []
+          let unTokens = []
           data.map(i=>{
             if(i[1]==null){
               unList.push(i)
             }
           })
-          let unListData = data.length-unList.length
-          this.setState({untranslatedToken:unList, allTokenList:data, translatedTokens:unListData})
-          // console.log("pppppppppppppppppppppppp",unList )
+          unList.map(i=>{
+            unTokens.push(i[0])
+          })
+          let translatedToken = data.length-unList.length
+          this.setState({untranslatedToken:unList, allTokenList:data, translatedTokens:translatedToken, unToken:unTokens})
+          console.log("pppppppppppppppppppppppp",data )
 
         }
     )
@@ -121,10 +126,10 @@ class HomePage extends Component {
     console.log("HOMEPAGETOKEN",tokenValue)
 }
 
-// handleBook = (bookValue) => {
-//   this.setState({tokenData: bookValue});
-//   // console.log("pppppppppppppppppppppppp", bookValue)
-// }
+handleBook = (bookValue) => {
+  this.setState({tokenData: bookValue});
+  // console.log("pppppppppppppppppppppppp", bookValue)
+}
   // updateCheckBox = () => {
   //   this.setState({bkvalue:bk});
   //   // console.log("pppppppppppppppppppppppp", bk)
@@ -215,6 +220,7 @@ class HomePage extends Component {
       // this.updateState(this.state.bkvalue)
       const tokenarray =  this.state.allTokenList
       // this.state.tokenData
+      // this.state.allTokenList
       tokenarray.unshift(['token','translation','senses'])
       var wb = XLSX.utils.book_new();
       wb.Props = {
@@ -319,7 +325,7 @@ class HomePage extends Component {
     } = this.state;
     // console.log("homepagessssssssssss", this.props);
     var projName = this.props.selectedProject.projectName
-    // console.log("ppppppp000000000000000000", this.state.tokenData)
+    console.log("ppppppp000000000000000000", this.state.tokenData)
     // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
     var alltokenProgress = this.state.allTokenList.length
     var completedTokenProgress = this.state.translatedList
@@ -501,7 +507,7 @@ class HomePage extends Component {
 					      </Typography>
 				      </Grid>
                 <Paper elevation='1'>
-                  <TokenList checkvalue={this.state.checkBox} untoken={this.state.untranslatedToken} />
+                  <TokenList checkvalue={this.state.checkBox} untoken={this.state.unToken} />
                 </Paper>
               </Grid>
             </Grid>
@@ -525,7 +531,7 @@ class HomePage extends Component {
                   updateState={this.updateState}
                   bkvalue={this.state.bkvalue} 
                   tokenTranslated={this.handleToken} 
-                  // onSelectBook={this.handleBook}
+                  onSelectBook={this.handleBook}
                   />
                 </Paper>
               </Grid>
