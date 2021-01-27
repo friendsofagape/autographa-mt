@@ -1,16 +1,10 @@
 import React, { Component } from "react";
-import {
-  Grid,
-  Button,
-  Tooltip,
-  Typography,
-  createMuiTheme,
-} from "@material-ui/core";
+import { Grid, Button, Tooltip, Typography } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import UploadTexts from "./UploadTexts";
-import apiUrl from "./GlobalUrl";
+// import apiUrl from "./GlobalUrl";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CreateSources from "./CreateSources";
@@ -24,34 +18,13 @@ import MUIDataTable from "mui-datatables";
 import CircleLoader from "./loaders/CircleLoader";
 import moment from "moment";
 
-const getMuiTheme = () =>
-  createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {},
-        paper: {
-          boxShadow: "none",
-        },
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          "&:nth-child(odd)": {
-            backgroundColor: "#eaeaea",
-          },
-        },
-      },
-      MUIDataTableBodyCell: {},
-    },
-  });
-
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
     overflowY: "hidden",
     padding: theme.spacing(8),
-    paddingLeft:'15%',
-    paddingRight:'15%'
-
+    paddingLeft: "15%",
+    paddingRight: "15%",
   },
   versionDisplay: {
     maxHeight: "80vh",
@@ -73,7 +46,6 @@ const styles = (theme) => ({
 
 class ViewSources extends Component {
   state = {
-    biblesDetails: [],
     dialogOpen: false,
     sourceId: "",
     decoded: {},
@@ -116,32 +88,21 @@ class ViewSources extends Component {
           filter: false,
           sort: false,
           customBodyRender: (value) => {
-            return moment(value).format('D/M/Y');
+            return moment(value).format("D/M/Y");
           },
         },
       },
     ],
   };
 
-
   closeDialog = () => {
     this.setState({ dialogOpen: false });
   };
 
-  
-  async getBiblesData() {
-    const data = await fetch(apiUrl + "v1/bibles", {
-      method: "GET",
-    });
-    const biblesDetails = await data.json();
-    this.setState({ biblesDetails });
-  }
-
   componentDidMount() {
-    this.getBiblesData();
     var { dispatch, current_user } = this.props;
     dispatch(fetchBibleLanguages());
-    if (current_user.role == "sa" ) {
+    if (current_user.role == "sa") {
       let { columns } = this.state;
       columns = [
         ...columns,
@@ -188,9 +149,7 @@ class ViewSources extends Component {
         },
       ];
       this.setState({ columns });
-    }
-
-    else {
+    } else {
       let { columns } = this.state;
       columns = [
         ...columns,
@@ -214,7 +173,7 @@ class ViewSources extends Component {
               );
             },
           },
-        }
+        },
       ];
       this.setState({ columns });
     }
@@ -226,40 +185,113 @@ class ViewSources extends Component {
     });
   };
 
-  displayOldBooks = () => {                                                                                     //function for sorting old testment books
+  displayOldBooks = () => {
+    //function for sorting old testment books
     const { sourceBooks } = this.props;
-    const booksOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa", 
-    "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
-    "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
-    "zep", "hag", "zec", "mal"]
-    var totalBooks = [].concat.apply([], sourceBooks)                                                            //merging the arrays 
+    const booksOldTestments = [
+      "gen",
+      "exo",
+      "lev",
+      "num",
+      "deu",
+      "jos",
+      "jdg",
+      "rut",
+      "1sa",
+      "2sa",
+      "1ki",
+      "2ki",
+      "1ch",
+      "2ch",
+      "ezr",
+      "neh",
+      "est",
+      "job",
+      "psa",
+      "pro",
+      "ecc",
+      "sng",
+      "isa",
+      "jer",
+      "lam",
+      "ezk",
+      "dan",
+      "hos",
+      "jol",
+      "amo",
+      "oba",
+      "jon",
+      "mic",
+      "nam",
+      "hab",
+      "zep",
+      "hag",
+      "zec",
+      "mal",
+    ];
+    var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
     let oldTestments = [];
-    booksOldTestments.map((book)=>{                                                                              //map function for pushing the old testment books in order
-    return totalBooks.includes(book)? oldTestments.push(book): null
-    })
-    return oldTestments.map((book,i) => {                                                                        //displaying the old testment books on UI
+    booksOldTestments.map((book) => {
+      //map function for pushing the old testment books in order
+      return totalBooks.includes(book) ? oldTestments.push(book) : null;
+    });
+    return oldTestments.map((book, i) => {
+      //displaying the old testment books on UI
       return (
         <Grid item xs={2} key={i}>
-          <Typography style={{fontSize:'80%'}} >{book.toUpperCase()}</Typography>
+          <Typography style={{ fontSize: "80%" }}>
+            {book.toUpperCase()}
+          </Typography>
         </Grid>
       );
     });
   };
 
-  displayNewBooks = () => {                                                                                      //function for sorting new testment books
+  displayNewBooks = () => {
+    //function for sorting new testment books
     const { sourceBooks } = this.props;
-    const booksNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
-    "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
-    "2jn", "3jn", "jud", "rev"]
-    var totalBooks = [].concat.apply([], sourceBooks)                                                             //merging the arrays 
+    const booksNewTestments = [
+      "mat",
+      "mrk",
+      "luk",
+      "jhn",
+      "act",
+      "rom",
+      "1co",
+      "2co",
+      "gal",
+      "eph",
+      "php",
+      "col",
+      "1th",
+      "2th",
+      "1ti",
+      "2ti",
+      "tit",
+      "phm",
+      "heb",
+      "jas",
+      "1pe",
+      "2pe",
+      "1jn",
+      "2jn",
+      "3jn",
+      "jud",
+      "rev",
+    ];
+    var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
     let newTestments = [];
-    booksNewTestments.map((book)=>{                                                                               //map function for pushing the new testment books in order
-    return totalBooks.includes(book)? newTestments.push(book): null
-    })
-    return newTestments.map((book,i) => {                                                                         //displaying the new testment books on UI
+    booksNewTestments.map((book) => {
+      //map function for pushing the new testment books in order
+      return totalBooks.includes(book) ? newTestments.push(book) : null;
+    });
+    return newTestments.map((book, i) => {
+      //displaying the new testment books on UI
       return (
         <Grid item xs={2} key={i}>
-          <Typography style={{fontSize:'80%'}} >{book.toUpperCase()}</Typography>
+          <Typography style={{ fontSize: "80%" }}>
+            {book.toUpperCase()}
+          </Typography>
         </Grid>
       );
     });
@@ -294,8 +326,6 @@ class ViewSources extends Component {
           version.sourceId,
         ]);
       });
-
-    
     });
     const options = {
       selectableRows: false,
@@ -303,18 +333,18 @@ class ViewSources extends Component {
       print: false,
       filter: false,
       viewColumns: false,
-      pagination:false,
+      pagination: false,
       // onRowClick: rowData => this.setState({redirect: rowData[0]})
     };
     return (
       <div className={classes.root}>
         {isFetching && <CircleLoader />}
-          <MUIDataTable
-            title={<h4>SOURCES</h4>}
-            data={data}
-            columns={columns}
-            options={options}
-          />
+        <MUIDataTable
+          title={<h4>SOURCES</h4>}
+          data={data}
+          columns={columns}
+          options={options}
+        />
         {createSourceDialog && (
           <CreateSources
             open={createSourceDialog}
@@ -324,14 +354,14 @@ class ViewSources extends Component {
         )}
         {current_user.role == "sa" && (
           <Tooltip title="Click to add new source">
-          <Fab
-            aria-label={"add"}
-            className={classes.fab}
-            color={"primary"}
-            onClick={() => this.setState({ createSourceDialog: true })}
-          >
-            <AddIcon />
-          </Fab>
+            <Fab
+              aria-label={"add"}
+              className={classes.fab}
+              color={"primary"}
+              onClick={() => this.setState({ createSourceDialog: true })}
+            >
+              <AddIcon />
+            </Fab>
           </Tooltip>
         )}
         {this.state.listBooks && (
