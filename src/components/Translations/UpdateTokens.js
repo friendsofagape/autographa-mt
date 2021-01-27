@@ -14,7 +14,8 @@ import {
     fetchTokenList,
     setSelectedToken,
   } from "../../store/actions/projectActions";
-  import swal from 'sweetalert';
+import swal from 'sweetalert';
+import Parent from '../Translations/HomePage';
 
 const accessToken = localStorage.getItem('accessToken')
 
@@ -64,46 +65,6 @@ class UpdateTokens extends Component {
         untranslatedToken:[]
     }
 
-    componentDidMount() {
-        this.updateStage(this.props.updateState)
-      }
-
-    updateStage = (bk) => {
-        // this.setState({bkvalue:bk});
-        var proId = this.props.selectedProject.projectId;
-        var bookname = this.props.updateState;    
-        fetch(apiUrl + 'v1/tokentranslationlist/'+proId+'/'+bookname+'', {
-            method: 'GET',
-            headers: {
-                Authorization: 'bearer ' + accessToken
-            }
-        })
-        .then(response => response.json())
-        .then(data =>
-            {
-                // this.setState({allTokenList:data})
-                console.log("pppppppppppppppppppppppp", data)
-                var unList = []
-                data.map(i=>{
-                    if(i[1]==null){
-                        unList.push(i)
-                    }
-                })
-                
-                this.setState({untranslatedToken:unList, allTokenList:data})
-                this.props.tokenTranslated(data.length-unList.length)
-                
-              }
-        )
-        .catch(error => this.setState({ error, isLoading: false }));
-        this.props.dispatch(
-          fetchTokenList(
-            bk,
-            this.props.selectedProject.sourceId
-          )
-        );
-    };
-
     // componentWillReceiveProps(nextProps) {
     //     const { token, project } = nextProps
     //     if (token) {
@@ -151,8 +112,7 @@ class UpdateTokens extends Component {
             senses: [sense]
         }
         dispatch(updateTransaltion(apiData, this.clearTransaltionState))
-        this.updateStage(this.props.updateState)
-        // this.props.updateStateAgain()
+        this.props.updateState(this.props.bkvalue);
     }
 
 
@@ -188,7 +148,7 @@ class UpdateTokens extends Component {
 
     render() {
         const { classes, selectedProject, selectedToken, translation, senses } = this.props
-        console.log('update', this.props.updateState)
+        console.log('update', this.props.bkvalue)
         // const { translation } = this.state
         var displayLanguage = ''
         if (selectedProject.projectName) {
@@ -196,12 +156,6 @@ class UpdateTokens extends Component {
         }
         return (
             <Grid item xs={12} >
-                {/* <Grid item xs={12}>
-                    <ComponentHeading data={{ classes: classes, text: `${displayLanguage.toUpperCase()} Project`, styleColor: "#2a2a2fbd" }} />
-                </Grid> */}
-                {/* <PopUpMessages /> */}
-
-                 {/*{this.updateState()} */}
                 <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
                     Token Details
 				</Typography>
@@ -243,21 +197,6 @@ class UpdateTokens extends Component {
                 </Grid> 
                 </Grid>
                 </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <Divider />
                 <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'2%',paddingTop:'1%'}}>
 						        Update Selected Token
@@ -323,6 +262,7 @@ class UpdateTokens extends Component {
                         // style={{ marginLeft: '30%', marginTop: '3%' }}
                         // style={{ margin: 'auto' }}
                         onClick={this.updateTokenSense}>Save</Button>
+                        
                 </Grid>
                
                {/* <Divider /> */}
@@ -371,13 +311,6 @@ class UpdateTokens extends Component {
                 </Grid> */}
 
             </Grid>
-               
-               
-               
-               
-
-
-            
         )
     }
 }

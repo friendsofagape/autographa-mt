@@ -74,7 +74,8 @@ class HomePage extends Component {
     checkBox:false,
     allTokenList: [],
     untranslatedToken:[],
-    translatedTokens:[]
+    translatedTokens:[],
+    // tokenData: []
   };
 
   updateState = (bk) => {
@@ -102,7 +103,7 @@ class HomePage extends Component {
           })
           let unListData = data.length-unList.length
           this.setState({untranslatedToken:unList, allTokenList:data, translatedTokens:unListData})
-          console.log("pppppppppppppppppppppppp",unListData )
+          // console.log("pppppppppppppppppppppppp",unList )
 
         }
     )
@@ -119,7 +120,11 @@ class HomePage extends Component {
     this.setState({translatedTokens: tokenValue});
     console.log("HOMEPAGETOKEN",tokenValue)
 }
-  
+
+// handleBook = (bookValue) => {
+//   this.setState({tokenData: bookValue});
+//   // console.log("pppppppppppppppppppppppp", bookValue)
+// }
   // updateCheckBox = () => {
   //   this.setState({bkvalue:bk});
   //   // console.log("pppppppppppppppppppppppp", bk)
@@ -207,7 +212,9 @@ class HomePage extends Component {
   clickdownload = () => {
       //  full token translations
     if(this.state.checkBox==false){
+      // this.updateState(this.state.bkvalue)
       const tokenarray =  this.state.allTokenList
+      // this.state.tokenData
       tokenarray.unshift(['token','translation','senses'])
       var wb = XLSX.utils.book_new();
       wb.Props = {
@@ -312,6 +319,7 @@ class HomePage extends Component {
     } = this.state;
     // console.log("homepagessssssssssss", this.props);
     var projName = this.props.selectedProject.projectName
+    // console.log("ppppppp000000000000000000", this.state.tokenData)
     // console.log("saaaaaaaaaaaaaaaa",projName.split('|'))
     var alltokenProgress = this.state.allTokenList.length
     var completedTokenProgress = this.state.translatedList
@@ -513,10 +521,12 @@ class HomePage extends Component {
               
               <Grid item sm={12} style={{paddingLeft:'0%',paddingRight:'0%',paddingTop:'2%',paddingBottom:'2%'}}>
                 <Paper elevation='1'>
-                  {/* <Typography component="h4" variant="h7" style={{textAlign:"left" ,paddingLeft:"3%", paddingBottom:'1%',paddingTop:'1%'}}>
-						        Update Selected Token
-					        </Typography> */}
-                  <UpdateTokens updateState={this.state.bkvalue} tokenTranslated={this.handleToken}/>
+                  <UpdateTokens 
+                  updateState={this.updateState}
+                  bkvalue={this.state.bkvalue} 
+                  tokenTranslated={this.handleToken} 
+                  // onSelectBook={this.handleBook}
+                  />
                 </Paper>
               </Grid>
               
