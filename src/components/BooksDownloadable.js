@@ -41,7 +41,7 @@ class BooksDownloadable extends Component {
         // console.log("---------------------------",this.state.targetBooks.length)
     }
 
-    getOldBooksCheckbox = () => {                                                                                     //function for old testment books
+    getOldBooksCheckbox = () => {                                                                                     //function for old testament books
         const { targetBooks, targetBooksChecked } = this.state
         const { project } = this.props
         const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", 
@@ -55,8 +55,8 @@ class BooksDownloadable extends Component {
             })
         }
         if (oldTestment.length == 0){
-            return (<React.Fragment key={oldTestment}>No Books Assigned in old Testment</React.Fragment>)                                //checking if books prensent or not if any of the old testment books are not available
-        }                                                                                                              //then print NO BOOKS ASSIGNED IN OLD TESTMENT
+            return (<React.Fragment key={oldTestment}>No Books Assigned in old Testament</React.Fragment>)                                //checking if books prensent or not if any of the old testament books are not available
+        }                                                                                                              //then print NO BOOKS ASSIGNED IN OLD TESTAMENT
         if (oldTestment) {                                                                                                            
             return oldTestment.map((book, index) => {                                                                  //map function for printing books in UI
                 return (
@@ -77,7 +77,7 @@ class BooksDownloadable extends Component {
         }
     }
 
-    getNewBooksCheckbox = () => {                                                                                        //function for new testment books
+    getNewBooksCheckbox = () => {                                                                                        //function for new testament books
         const { targetBooks, targetBooksChecked } = this.state
         const { project } = this.props
         const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom",
@@ -90,8 +90,8 @@ class BooksDownloadable extends Component {
             })
         }
         if (newTestments.length == 0){                                                                                   
-        return (<React.Fragment key={newTestments}>No Books Assigned in New Testment</React.Fragment>)                                      //checking if books prensent or not if any of the new testment books are not available
-        }                                                                                                                //then print NO BOOKS ASSIGNED IN NEW TESTMENT
+        return (<React.Fragment key={newTestments}>No Books Assigned in New Testament</React.Fragment>)                                      //checking if books prensent or not if any of the new testament books are not available
+        }                                                                                                                //then print NO BOOKS ASSIGNED IN NEW TESTAMENT
         if (newTestments) {                                                                                              
             return newTestments.map((book, index) => {                                                                    //map function for printing books in UI
                 // console.log("BOOKSDOWNLODABLE===",book)
@@ -150,9 +150,9 @@ class BooksDownloadable extends Component {
                 }
                 <ComponentHeading data={{ classes: classes, text: "Select Books", styleColor: '#2a2a2fbd' }} />
                 <DialogContent style={{maxHeight:'400px'}}>
-                <h4>OLD TESTMENT</h4>
+                <h4>OLD TESTAMENT</h4>
                 {this.getOldBooksCheckbox()}
-                <h4>NEW TESTMENT</h4>
+                <h4>NEW TESTAMENT</h4>
                  {this.getNewBooksCheckbox()}
                 </DialogContent>
                 <DialogActions>

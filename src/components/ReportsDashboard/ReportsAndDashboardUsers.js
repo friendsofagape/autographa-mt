@@ -176,7 +176,7 @@ export default function UsersReports(props) {
     
   };
 
-   const displayOldBooks = () => {                                   //Function for old testment books along with the assigned users
+   const displayOldBooks = () => {                                   //Function for old testament books along with the assigned users
       //This function is for the datas of assigned users
       const bookWiseDatas = bookList.bookWiseData;
       const combineDict = {}
@@ -229,7 +229,7 @@ export default function UsersReports(props) {
       }
     };
 
-    const displayNewBooks = () => {                                      //Function for new testment books along with the assigned users
+    const displayNewBooks = () => {                                      //Function for new testament books along with the assigned users
       const bookWiseDatas = bookList.bookWiseData;
       const combineDict = {}
       assignedUsers.map((data)=>{
@@ -350,9 +350,9 @@ export default function UsersReports(props) {
               <div>
               <Table>
              		<TableHead>
-                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;OLD TESTMENT</span>      
+                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;OLD TESTAMENT</span>      
              			<TableRow>
-             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testment table*/}
+             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testament table*/}
              				<TableCell align="center"><h4>USER NAME</h4></TableCell>
              				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
              				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
@@ -365,9 +365,9 @@ export default function UsersReports(props) {
               <Table>
              		<TableHead>
                 <h4></h4>
-                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;NEW TESTMENT</span> 
+                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;NEW TESTAMENT</span> 
              			<TableRow>
-             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testment table*/}
+             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testament table*/}
              				<TableCell align="center"><h4>USER NAME</h4></TableCell>
              				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
              				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>

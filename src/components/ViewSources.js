@@ -186,7 +186,7 @@ class ViewSources extends Component {
   };
 
   displayOldBooks = () => {
-    //function for sorting old testment books
+    //function for sorting old testament books
     const { sourceBooks } = this.props;
     const booksOldTestments = [
       "gen",
@@ -232,11 +232,11 @@ class ViewSources extends Component {
     var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
     let oldTestments = [];
     booksOldTestments.map((book) => {
-      //map function for pushing the old testment books in order
+      //map function for pushing the old testament books in order
       return totalBooks.includes(book) ? oldTestments.push(book) : null;
     });
     return oldTestments.map((book, i) => {
-      //displaying the old testment books on UI
+      //displaying the old testament books on UI
       return (
         <Grid item xs={2} key={i}>
           <Typography style={{ fontSize: "80%" }}>
@@ -248,7 +248,7 @@ class ViewSources extends Component {
   };
 
   displayNewBooks = () => {
-    //function for sorting new testment books
+    //function for sorting new testament books
     const { sourceBooks } = this.props;
     const booksNewTestments = [
       "mat",
@@ -282,11 +282,11 @@ class ViewSources extends Component {
     var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
     let newTestments = [];
     booksNewTestments.map((book) => {
-      //map function for pushing the new testment books in order
+      //map function for pushing the new testament books in order
       return totalBooks.includes(book) ? newTestments.push(book) : null;
     });
     return newTestments.map((book, i) => {
-      //displaying the new testment books on UI
+      //displaying the new testament books on UI
       return (
         <Grid item xs={2} key={i}>
           <Typography style={{ fontSize: "80%" }}>
@@ -368,11 +368,11 @@ class ViewSources extends Component {
           <Dialog open={this.state.listBooks}>
             {isFetching && <CircleLoader />}
             <DialogContent>
-              <h4>OLD TESTMENT</h4>
+              <h4>OLD TESTAMENT</h4>
               <Grid container item className={this.props.classes.bookCard}>
                 {this.displayOldBooks()}
               </Grid>
-              <h4>NEW TESTMENT</h4>
+              <h4>NEW TESTAMENT</h4>
               <Grid container item className={this.props.classes.bookCard}>
                 {this.displayNewBooks()}
               </Grid>
