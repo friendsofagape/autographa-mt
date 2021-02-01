@@ -151,12 +151,12 @@ const useStyles = makeStyles((theme) =>
 
       >
       <DataTable
-        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>OLD TESTMENT</span>}
+        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>OLD TESTAMENT</span>}
         columns={columns}
         data={oldTestmentBooks}             
       />
       <DataTable
-        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+        title={<span style={{fontSize:'80%', fontWeight:'bold'}}>NEW TESTAMENT</span>}
         columns={columns}
         data={newTestmentBooks}             
       /> 

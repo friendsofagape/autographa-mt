@@ -189,14 +189,14 @@ export default function SimplePopover(props) {
               <div style={{ height: 400, width: '100%' }}>
               {oldTestmentBooks != null && (
                 <DataTable
-                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTAMENT</span>}
                   columns={columns}
                   data={oldTestmentBooks}
                 />
                 )}
               {newTestmentBooks != null && (
                 <DataTable
-                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTAMENT</span>}
                   columns={columns}
                   data={newTestmentBooks}
                 />

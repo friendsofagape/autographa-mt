@@ -222,7 +222,7 @@ class AssignUser extends Component {
     this.setState({ availableBooksData });
   };
 
-  displayOldBooks = () => {                                                     //Function for sorting Old Testment Books
+  displayOldBooks = () => {                                                     //Function for sorting Old Testament Books
     const { availableBooksData } = this.state;
     const { assignedUsers } = this.props;
     let assignedUsersBooks = [];                                                 
@@ -260,7 +260,7 @@ class AssignUser extends Component {
     });
   };
 
-  displayNewBooks = () => {                                                     //Function for sorting New Testment Books
+  displayNewBooks = () => {                                                     //Function for sorting New Testament Books
     const { availableBooksData } = this.state;
     const { assignedUsers } = this.props;
     let assignedUsersBooks = [];                                                 
