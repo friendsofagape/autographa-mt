@@ -4,9 +4,11 @@ import PopUpMessages from '../PopUpMessages'
 import CircleLoader from '../loaders/CircleLoader';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { fetchUsers, updateAdminStatus } from '../../store/actions/userActions';
+import { fetchUsers, updateAdminStatus, deleteUserAccess } from '../../store/actions/userActions';
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
+import { createMuiTheme, Button, Tooltip } from '@material-ui/core';
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
 // const getMuiTheme = () => createMuiTheme({
 //     overrides: {
@@ -124,7 +126,23 @@ class ListUsers extends Component {
                         
                     }
                 }
-            }
+            },
+            {
+                name: <h4>Remove User</h4>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value) => {
+                        return <Button 
+                        // variant="contained" 
+                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
+                        size="small"
+                        onClick={() => this.handleDelete(value)}>
+                        <DeleteOutlinedIcon />
+                        </Button>
+                    }
+                }
+            },
+
         ]
     }
 
@@ -142,6 +160,14 @@ class ListUsers extends Component {
         dispatch(updateAdminStatus(apiData));
     }
 
+    handleDelete = (userEmail) => {
+        console.log("LISTUSERSSSSSS>>>>>>>",userEmail)
+        const { dispatch } = this.props;
+        const apiData = {
+          userEmail: userEmail,
+        };
+        dispatch(deleteUserAccess(apiData));
+      };
 
     closeSnackBar = (item) => {
         this.setState(item)
@@ -153,7 +179,7 @@ class ListUsers extends Component {
         const data =  Object.values(users)
         const sortedData = [] 
         data.map(user => {
-            if (user.roleId != 3) {
+            if (user.roleId != 3 & user.active === true) {
                 sortedData.push(user)
             }    
         });
@@ -163,7 +189,8 @@ class ListUsers extends Component {
                 user.firstName + " " + user.lastName,
                 user.emailId,
                 user.verified,
-                user.roleId > 1
+                user.roleId > 1,
+                user.emailId
             ]
         })
                 

@@ -163,6 +163,47 @@ export const deleteUser = (apiData) => async dispatch => {
     }
 }
 
+export const deleteUserAccess = (apiData) => async dispatch => {
+    dispatch(setIsFetching(true))
+    try {
+        // console.log("USERACTIONS$$$$$$$",apiData)
+        const data = await fetch(apiUrl + 'v1/autographamt/user/delete', {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            },
+            body: JSON.stringify(apiData)
+        })
+        const response = await data.json()
+        // console.log("USERACTIONSSSSSS%",response)
+        dispatch(setIsFetching(false))
+        if (response.success) {
+            swal({
+                title: 'Removed user',
+                text: 'User successfully removed',
+                icon: 'success'
+            })
+            dispatch(fetchUsers());
+
+        } else {
+            swal({
+                title: 'User cannot be removed' ,
+                text: response.message,
+                icon: 'error'
+            })
+
+        }
+    }
+    catch (e) {
+
+        swal({
+            title: 'User assignment',
+            text: 'Unable to remove user, check your internet connection or contact admin',
+            icon: 'error'
+        })
+    }
+}
+
 export const getUserBooks = (userId, projectId) => async dispatch =>{
     try {
         dispatch(setIsFetching(true))
