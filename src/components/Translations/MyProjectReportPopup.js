@@ -76,11 +76,11 @@ export default function SimplePopover(props) {
             "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
             "2jn", "3jn", "jud", "rev"]
             let oldTestments = [];
-            bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testment books in order
+            bibleBookOldTestments.map((book)=>{                                                                          //map function to push old testament books in order
             return props.projectBooks.includes(book)? oldTestments.push(book): null
             })
             let newTestments = [];
-            bibleBookNewTestments.map((book)=>{                                                                          //map function to push new testment books in order
+            bibleBookNewTestments.map((book)=>{                                                                          //map function to push new testament books in order
             return props.projectBooks.includes(book)? newTestments.push(book): null
             })
             let oldBooks = []
@@ -189,14 +189,14 @@ export default function SimplePopover(props) {
               <div style={{ height: 400, width: '100%' }}>
               {oldTestmentBooks != null && (
                 <DataTable
-                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTMENT</span>}
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>OLD TESTAMENT</span>}
                   columns={columns}
                   data={oldTestmentBooks}
                 />
                 )}
               {newTestmentBooks != null && (
                 <DataTable
-                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTMENT</span>}
+                  title={<span style={{fontSize:'70%', fontWeight:'bold'}}>NEW TESTAMENT</span>}
                   columns={columns}
                   data={newTestmentBooks}
                 />

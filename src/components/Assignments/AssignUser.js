@@ -230,7 +230,7 @@ class AssignUser extends Component {
     this.setState({ availableBooksData });
   };
 
-  displayOldBooks = () => {                                                     //Function for sorting Old Testment Books
+  displayOldBooks = () => {                                                     //Function for sorting Old Testament Books
     const { availableBooksData } = this.state;
     const { assignedUsers } = this.props;
     let assignedUsersBooks = [];                                                 
@@ -268,7 +268,7 @@ class AssignUser extends Component {
     });
   };
 
-  displayNewBooks = () => {                                                     //Function for sorting New Testment Books
+  displayNewBooks = () => {                                                     //Function for sorting New Testament Books
     const { availableBooksData } = this.state;
     const { assignedUsers } = this.props;
     let assignedUsersBooks = [];                                                 
@@ -410,7 +410,7 @@ class AssignUser extends Component {
               <TableRow>
                 <TableCell align="right"><h3 style={{fontWeight:'bold'}}>User Name</h3></TableCell>
                 <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Email Id</h3></TableCell>
-                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Books Assinged</h3></TableCell>
+                <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Books Assigned</h3></TableCell>
                 <TableCell align="right"><h3 style={{fontWeight:'bold'}}>Remove User</h3></TableCell>
               </TableRow>
             </TableHead>
@@ -422,11 +422,11 @@ class AssignUser extends Component {
         <Dialog open={listBooks}>
           {isFetching && <CircleLoader />}
           <DialogContent>
-            <h4>OLD TESTMENT</h4>
+            <h4>OLD TESTAMENT</h4>
             <Grid container item spacing={1} className={classes.bookCard}>
               {this.displayOldBooks()}
             </Grid>
-            <h4>NEW TESTMENT</h4>
+            <h4>NEW TESTAMENT</h4>
             <Grid container item spacing={1} className={classes.bookCard}>
               {this.displayNewBooks()}
             </Grid>

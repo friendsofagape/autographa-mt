@@ -57,8 +57,6 @@ export const fetchAllLanguages = () => async dispatch => {
 export const fetchSourceBooks = (sourceId) => async dispatch => {
     dispatch(setIsFetching(true))
     try {
-        // const { sourceId } = this.state
-        console.log(sourceId)
         const data = await fetch(apiUrl + 'v1/sources/books/' + sourceId, {
             method: 'GET',
             headers: {
@@ -66,7 +64,6 @@ export const fetchSourceBooks = (sourceId) => async dispatch => {
             }
         })
         const response = await data.json()
-        console.log(response)
         if ("success" in response) {
             swal({
                 title: 'Fetch books',
@@ -147,22 +144,11 @@ export const uploadBibleTexts = (apiData, book) => async dispatch => {
             body: JSON.stringify(apiData)
         })
         const myJson = await postVersions.json()
-        // this.setState({ message: myJson.message })
-        // if (myJson.success) {
-        //     return true
-        // } else {
-        //     return false
-
-        // }
         
         if (!myJson.success) {
             dispatch(setUploadError(book))
+            window.alert(myJson.message)
         }
-        // this.props.displaySnackBar({
-        //     snackBarMessage: myJson.message,
-        //     snackBarOpen: true,
-        //     snackBarVariant: (myJson.success) ? "success" : "error"
-        // })
     }
     catch (ex) {
         swal({
@@ -170,12 +156,6 @@ export const uploadBibleTexts = (apiData, book) => async dispatch => {
             text: 'Unable to upload bible, check your internet connection or contact admin',
             icon: 'error'
         })
-        // this.setState({ variant: "error", snackBarOpen: true, message: "Upload Process Failed", snackColor: '#d32f2f' })
-        // this.props.displaySnackBar({
-        //     snackBarMessage: "Upload Process Failed",
-        //     snackBarOpen: true,
-        //     snackBarVariant: "error"
-        // })
     }
     dispatch(setCompletedUpload(true))
     dispatch(setIsFetching(false))
