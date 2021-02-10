@@ -113,8 +113,15 @@ class CreateProject extends Component {
 
 	displayOrganisations = () => {
 		const { organisations } = this.props;
-		if (organisations.length > 0) {
-			return organisations.map((item) => {
+		console.log("CREATEPROJECTTTTTTTT***********",organisations)
+		const sortedData = [] 
+        organisations.map(organisation => {
+            if (organisation.active === true) {
+                sortedData.push(organisation)
+            }    
+        });
+		if (sortedData.length > 0) {
+			return sortedData.map((item) => {
 				return (
 					<MenuItem key={item.organisationId} value={item.organisationId}>
 						{item.organisationName}
