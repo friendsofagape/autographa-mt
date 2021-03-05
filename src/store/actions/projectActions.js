@@ -88,6 +88,47 @@ export const createProject = (apiData, close, clearState) => async dispatch => {
     }
 }
 
+export const deleteProject = (apiData) => async dispatch => {
+    dispatch(setIsFetching(true))
+    try {
+        // console.log("USERACTIONS$$$$$$$",apiData)
+        const data = await fetch(apiUrl + 'v1/autographamt/project/delete', {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            },
+            body: JSON.stringify(apiData)
+        })
+        const response = await data.json()
+        // console.log("USERACTIONSSSSSS%",response)
+        dispatch(setIsFetching(false))
+        if (response.success) {
+            swal({
+                title: 'Removed Project',
+                text: 'User successfully removed',
+                icon: 'success'
+            })
+            dispatch(fetchProjects());
+
+        } else {
+            swal({
+                title: 'Project cannot be removed' ,
+                text: response.message,
+                icon: 'error'
+            })
+
+        }
+    }
+    catch (e) {
+
+        swal({
+            title: 'Project assignment',
+            text: 'Unable to remove Project, check your internet connection or contact admin',
+            icon: 'error'
+        })
+    }
+}
+
 export const fetchUserProjects = () => async dispatch => {
     try {
         dispatch(setIsFetching(true))

@@ -7,7 +7,7 @@ import apiUrl from '../GlobalUrl';
 import { Card } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
 import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
-import { fetchProjects } from '../../store/actions/projectActions';
+import { fetchProjects, deleteProject } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
 import PopUpMessages from '../PopUpMessages';
@@ -17,6 +17,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateProject from './CreateProject';
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
+import { Button } from '@material-ui/core';
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { withRouter } from 'react-router-dom';
 
 const accessToken = localStorage.getItem('accessToken')
@@ -120,6 +122,21 @@ class ListProjects extends Component {
                         return <Link to={`/app/projects/${value}`}>Assign users</Link>
                     }
                 }
+            },
+            {
+                name: <h4>Remove Project</h4>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value) => {
+                        return <Button 
+                        // variant="contained" 
+                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
+                        size="small"
+                        onClick={() => this.handleDelete(value)}>
+                        <DeleteOutlinedIcon />
+                        </Button>
+                    }
+                }
             }
         ]
     }
@@ -133,11 +150,27 @@ class ListProjects extends Component {
         this.setState({ open: false })
     }
 
+    handleDelete = (projectId) => {
+        // console.log("LISTUSERSSSSSS>>>>>>>",projectId)
+        const { dispatch } = this.props;
+        const apiData = {
+          projectId: projectId,
+        };
+        dispatch(deleteProject(apiData));
+      };
+
     render() {
         const { classes, projects, isFetching, current_user } = this.props;
         // console.log("current_user",current_user)
         const { columns, open } = this.state;
-        const data = projects.map(project => {
+        console.log("LISTPROJECTSSSSSSS>>>>>>>",projects)
+        const sortedData = [] 
+        projects.map(project => {
+            if (project.active === true) {
+                sortedData.push(project)
+            }    
+        });
+        const data = sortedData.map(project => {
             return [
                 project.projectId,
                 project.projectName.split('|')[0],
@@ -145,6 +178,7 @@ class ListProjects extends Component {
                 project.organisationName,
                 project.version.name,
                 project.projectId,
+                project.projectId
             ]
         });
         const options = {

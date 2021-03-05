@@ -102,7 +102,13 @@ class ReportsDashboard extends Component {
   render() {
     const { classes, projects, isFetching } = this.props;
     const { columns } = this.state;
-    const data = projects.map((project) => {
+    const sortedData = [] 
+        projects.map(project => {
+            if (project.active === true) {
+                sortedData.push(project)
+            }    
+        });
+    const data = sortedData.map((project) => {
       return [
         project.projectId,
         project.projectName.split("|")[0],
