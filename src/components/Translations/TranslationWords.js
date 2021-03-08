@@ -1,12 +1,6 @@
 import React, { Component } from 'react'
-import { Grid } from '@material-ui/core';
-import ComponentHeading from '../ComponentHeading';
-import { ListItem } from '@material-ui/core';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import { Grid,Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
 import apiUrl from '../GlobalUrl'
 import { connect } from 'react-redux'
@@ -17,23 +11,10 @@ const styles = theme => ({
         flexGrow: 1,
       },
       tokenList: {
-        // textAlign: 'center',
-        // color: theme.palette.text.secondary,
         height: '30vh',
         overflowX: 'hidden',
         overflowY: 'auto',
-        // backgroundColor: '#fff',
-      },
-      containerGrid: {
-        // width: '97%',
-        // marginLeft: '2%',
-        // marginRight: '2%',
-        // border: '1px solid #3e51b5',
-        // border: '1px solid "#2a2a2fbd"',
-        // boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-        // height: '320px',
-        // backgroundColor: '#fff',
-      },
+      }
 });
 
 
@@ -41,31 +22,46 @@ const styles = theme => ({
 class TranslationWords extends Component {
     state = {
         translationWords: '',
-        currentToken:''
+        currentToken:'',
+        tokenSelected:''
     }
 
-    async getTranslationWords(sourceId, token) {
-        const data = await fetch(apiUrl + 'v1/translationshelps/words/' + sourceId + '/' + token, {
-            method: 'GET'
-        })
-        const translationWords = await data.json()
-        if (translationWords) {
-            this.setState({ translationWords: translationWords, currentToken: this.props.token })
+
+    // check previous value
+    componentWillReceiveProps(nextProps) {
+		if(this.props.tokenSelected != nextProps.tokenSelected){
+			this.setState({
+        	        tokenSelected:'',			
+					translationWords:''
+        	    })
+			}
+
+	}
+
+    // fetch token details from database
+    async getTranslationWords() {
+
+        if(this.props.tokenSelected !=''){
+            if(this.state.tokenSelected !== this.props.tokenSelected){
+
+                const { bkvalue, tokenSelected } = this.props;
+
+                const data = await fetch(apiUrl + 'v1/translationshelps/words/' + this.props.selectedProject.sourceId + '/' + tokenSelected, {
+                    method: 'GET'
+                });
+                const translationWords = await data.json()
+                this.setState({ translationWords: translationWords, currentToken: tokenSelected, tokenSelected: tokenSelected })
+            }
         }
     }
 
-    componentDidUpdate(prevProps){
-        const { selectedProject, selectedToken } = this.props
-        // const { currentToken } = this.state
-        if(prevProps.selectedToken !== selectedToken){
-            this.getTranslationWords(selectedProject.sourceId, selectedToken)
-        }
-    }
 
+    // display details 
     displayTranslationWords() {
-        const { classes } = this.props
         const { translationWords } = this.state
-        console.log("wdccccccccccccccccccccc",translationWords)
+        if(translationWords.success == false){
+            return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >{translationWords.message}</p>
+        }
         if (translationWords.definition) {
             if (translationWords.strongs){
                 var tW = translationWords.strongs
@@ -100,15 +96,13 @@ class TranslationWords extends Component {
                     </Grid>
                 </Grid>
                 )
-        } else {
-            return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No details available for the selected token</p>
-        }
+        } 
+        
     }
 
     render() {
-        const { classes } = this.props
         return (
-            <Grid item xs={12} className={classes.containerGrid}>
+            <Grid item xs={12}>
                 <Grid item sm={12} >
 					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
                    		Dictionary
@@ -116,6 +110,17 @@ class TranslationWords extends Component {
 				</Grid>
                 <Grid item sm={12} style={{height: '120px'}}>
                     <Grid item sm={12} style={{height: "96%",overflowX: "hidden", overflowY: "auto"}}>
+                        
+                        {!this.state.translationWords &&
+                            <Grid style={{paddingTop:'11%', paddingLeft:'38%'}}>
+							<Button size={'small'} 
+							color={'primary'} 
+							variant="contained" 
+							disabled={!this.props.tokenSelected}
+							onClick={()=>{this.getTranslationWords()}}>
+								<span style={{fontSize:'68%'}}>Load</span>
+							</Button>
+						</Grid>}
                         {this.displayTranslationWords()}
                     </Grid>
                 </Grid>
@@ -131,7 +136,6 @@ class TranslationWords extends Component {
 }
 
 const mapStateToProps = (state) => ({
-        selectedToken: state.project.selectedToken,
         selectedProject: state.project.selectedProject
 })
 

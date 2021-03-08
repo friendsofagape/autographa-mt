@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Grid } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import { ListItem, Typography} from '@material-ui/core';
 import { Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import apiUrl from '../GlobalUrl';
 import { connect } from 'react-redux';
-import { fetchConcordances, setReference } from '../../store/actions/projectActions';
+import swal from 'sweetalert';
+
+
 
 const styles = (theme) => ({
 	root: {
@@ -26,105 +28,114 @@ const styles = (theme) => ({
 });
 
 class Concordance extends Component {
+	
 	state = {
 		concordance: '',
-		currentToken: '',
+		tokenSelected:'',
 	};
 
-	lengthCheck(item) {
-		var num = item.toString();
-		if (num.length === 1) {
-			return '0' + num;
-		} else {
-			return num;
-		}
+
+	componentWillReceiveProps(nextProps) {
+		if(this.props.tokenSelected != nextProps.tokenSelected){
+			this.setState({
+        	        tokenSelected:'',			
+					concordance:''
+        	    })
+			}
+
 	}
 
-	async getVerseText(token, sourceId, book) {
-		if (book) {
-			const data = await fetch(apiUrl + 'v1/concordances/' + sourceId + '/' + book + '/' + token, {
-				method: 'GET',
-			});
-			const concordance = await data.json();
-			await this.setState({ concordance: concordance });
-		}
-	}
-
-	componentDidUpdate(prevProps) {
-		const { selectedToken, selectedProject, selectedBook, dispatch } = this.props;
-		if (prevProps.selectedToken !== selectedToken) {
-			dispatch(fetchConcordances(selectedToken, selectedProject.sourceId, selectedBook));
-		}
-	}
+	// Fetching data from db
+	async  getConcordance(){
+		if(this.props.tokenSelected !=''){
+		if(this.state.tokenSelected !== this.props.tokenSelected){
+			const  sourceId  = this.props.selectedProject.sourceId;
+			const book  = this.props.bkvalue;
+			const token  = this.props.tokenSelected
 
 
-	storeBCV = (book, chapter, verse) => {
-		this.props.dispatch(
-			setReference({
-				reference: book + this.lengthCheck(chapter) + this.lengthCheck(verse),
-				verseNum: {
-					book: book,
-					chapter: this.lengthCheck(chapter),
-					verse: this.lengthCheck(verse),
-				},
+			try {
+				const response = await fetch(apiUrl + 'v1/concordances/' + sourceId + '/' + book + '/' + token, {
+					method: 'GET'
+				});
+				const json = await response.json();
+				this.setState({concordance:json})
+			}
+			catch (ex) {
+				swal({
+					title: 'Token translation',
+					text: 'Token translation failed, check your internet connection or contact admin',
+					icon: 'error'
+				});
+			}
+		
+			this.setState({
+				tokenSelected:this.props.tokenSelected
 			})
-		);
-	};
+		}}
+        
+        
+    }
 
+	// display concordance in list view
 	displayConcordance(value, token) {
-		if (!value) {
-			return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >Select token to load data</p>;
-		}else if(value.length >0){
-			return value.map((item, index) => {
-				const bcv = item.book + item.chapterNumber + item.verseNumber;
-				const { book, chapterNumber, verseNumber, verse, bookCode } = item;
-				return (
-					<div key={bcv + 'p' + index} style={{paddingTop:"0%"}}>
-						<ListItem
-							button
-							value={bcv}
-							onClick={() => this.storeBCV(bookCode, chapterNumber, verseNumber)}
-						>
-							<p style={{margin:"0%", fontSize:"75%"}}>
-								{book.toUpperCase()} {chapterNumber}:{verseNumber}&nbsp;
-								{verse.split(' ').map((span, index) => {
-									if (span.includes(token.split(' ')[0])) {
-										return (
-											<span
-												key={bcv + span + index}
-												className={this.props.classes.highlightToken}
-											>
-												{token}&nbsp;
-											</span>
-										);
-									} else {
-										return <span key={bcv + span + index}  > {span}&nbsp; </span>;
-									}
-								})}
-							</p>
-						</ListItem>
-						<Divider />
-					</div>
-				);
-			});
+		if (value) {
+			if(value.length >0){
+				return value.map((item, index) => {
+					const bcv = item.book + item.chapterNumber + item.verseNumber;
+					const { book, chapterNumber, verseNumber, verse, bookCode } = item;
+					return (
+						<div key={bcv + 'p' + index} style={{paddingTop:"0%"}}>
+							<ListItem>
+								<p style={{margin:"0%", fontSize:"75%"}}>
+									{book.toUpperCase()} {chapterNumber}:{verseNumber}&nbsp;
+									{verse.split(' ').map((span, index) => {
+										if (span.includes(token.split(' ')[0])) {
+											return (
+												<span
+													key={bcv + span + index}
+													className={this.props.classes.highlightToken}
+												>
+													{token}&nbsp;
+												</span>
+											);
+										} else {
+											return <span key={bcv + span + index}  > {span}&nbsp; </span>;
+										}
+									})}
+								</p>
+							</ListItem>
+							<Divider />
+						</div>
+					);
+				});
+			}
 		} 
-		else {
-			return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No data available</p>;
-		}
 	}
+
 	render() {
-		const { classes } = this.props;
-		const { selectedBook, selectedToken, concordance } = this.props;
 		return (
 			<Grid container sm={12}>
 				<Grid item sm={12} >
 					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
-                   		Book Concordance
+                   		{this.props.bkvalue.toUpperCase()} Concordance
 					</Typography>
 				</Grid>
+
 				<Grid item sm={12} style={{height: '100px'}}>
 					<Grid item sm={12} style={{height: "100%",overflowX: "hidden", overflowY: "auto"}}>
-						{this.displayConcordance(concordance[selectedBook.toLowerCase()], selectedToken)}
+						{!this.state.concordance &&
+						<Grid style={{paddingTop:'11%', paddingLeft:'38%'}}>
+							<Button size={'small'} 
+							color={'primary'} 
+							variant="contained" 
+							disabled={!this.props.tokenSelected}
+							onClick={()=>{this.getConcordance()}}>
+								<span style={{fontSize:'68%'}}>Load</span>
+							</Button>
+						</Grid>
+						}
+						{this.displayConcordance(this.state.concordance[this.props.bkvalue.toLowerCase()], this.props.tokenSelected)}
 					</Grid>
 				</Grid>
 
@@ -133,7 +144,7 @@ class Concordance extends Component {
 				</Typography>
 				<Grid item sm={12} style={{height: '100px'}}>
 					<Grid item sm={12} style={{height: "100%",overflowX: "hidden", overflowY: "auto"}}>
-						{this.displayConcordance(concordance.all, selectedToken)}
+						{this.displayConcordance(this.state.concordance.all, this.props.tokenSelected)}
 					</Grid>
 				</Grid>
 				
@@ -145,9 +156,7 @@ class Concordance extends Component {
 const mapStateToProps = (state) => {
 	return {
 		selectedProject: state.project.selectedProject,
-		selectedToken: state.project.selectedToken,
 		selectedBook: state.project.selectedBook,
-		concordance: state.project.concordance,
 	};
 };
 
