@@ -108,7 +108,7 @@ class UpdateTokens extends Component {
       projectId: selectedProject.projectId,
       token: updateToken,
       translation: updateTranslation,
-      senses: [addSense],
+      senses: [addSense]
     };
     this.saveTokenDetails(apiData);
   };
@@ -243,7 +243,7 @@ class UpdateTokens extends Component {
                 </Typography>
               </Grid>
               <Grid item sm={7} style={{ paddingLeft: "4%", paddingTop: "3%" }}>
-                {sense && sense.join(", ")}
+                {sense && sense.filter(item=>item).join(", ")}
               </Grid>
             </Grid>
           </Grid>
