@@ -4,17 +4,19 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { fetchOrganisations, updateOrganisationVerifiedStatus } from '../../store/actions/organisationActions';
 import CircleLoader from '../loaders/CircleLoader';
-
+import { Button } from '@material-ui/core';
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
+import {  deleteOrginisation } from '../../store/actions/organisationActions';
 
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
         paddingTop:'3%',
-        paddingLeft:'10%',
-        paddingRight:'10%',
+        paddingLeft:'5%',
+        paddingRight:'5%',
         paddingBottom:'3%'
     },
     cursorPointer: {
@@ -97,6 +99,21 @@ class ListOrganisations extends Component {
                     sort: false,
                     display: false
                 }
+            },
+            {
+                name: <h4>Remove Organisation</h4>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value) => {
+                        return <Button 
+                        // variant="contained" 
+                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
+                        size="small"
+                        onClick={() => this.handleDelete(value)}>
+                        <DeleteOutlinedIcon />
+                        </Button>
+                    }
+                }
             }
         ]
     }
@@ -119,10 +136,28 @@ class ListOrganisations extends Component {
         this.setState({open: false})
     }
 
+    handleDelete = (organisationId) => {
+        console.log("LISTORGANISATIONSSSSSS>>>>>>>",organisationId)
+        const { dispatch } = this.props;
+        const apiData = {
+            organisationId: organisationId,
+        };
+        dispatch(deleteOrginisation(apiData));
+      };
+
+
     render() {
         const {  classes, organisations, isFetching } = this.props;
         const { columns, open } = this.state;
-        const data = organisations.map(organisation => {
+        // console.log("LISTTTTTTTTTTTTTTORGANISATION",organisations)
+        const data =  Object.values(organisations)
+        const sortedData = [] 
+        data.map(organisation => {
+            if (organisation.active === true) {
+                sortedData.push(organisation)
+            }    
+        });
+        const filteredData = sortedData.map(organisation => {
             return [
                 organisation.organisationId,
                 organisation.organisationName,
@@ -131,6 +166,7 @@ class ListOrganisations extends Component {
                 organisation.organisationPhone,
                 organisation.verified,
                 organisation.userId,
+                organisation.organisationId
             ]
         });
         const options = {
@@ -145,7 +181,7 @@ class ListOrganisations extends Component {
                 { isFetching && <CircleLoader />}
                 <MUIDataTable 
                     title={<h4>ORGANISATION LIST</h4>} 
-                    data={data} 
+                    data={filteredData} 
                     columns={columns} 
                     options={options} 
                 />
