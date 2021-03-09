@@ -69,7 +69,7 @@ class HomePage extends Component {
           })
 
           let translatedTokenCount = data.length-unTokenArray.length
-          this.setState({untranslatedToken:excelUnTokens, allTokenList:data, translatedTokensCount:translatedTokenCount, untoken:unTokenArray, allList:allTokenArray ,loading:false})
+          this.setState({untranslatedToken:excelUnTokens.sort(), allTokenList:data.sort(), translatedTokensCount:translatedTokenCount, untoken:unTokenArray.sort(), allList:allTokenArray.sort() ,loading:false})
         }
     )
     .catch(error => this.setState({ error, isLoading: false }));

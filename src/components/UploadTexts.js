@@ -161,9 +161,10 @@ class UploadTexts extends Component {
               />
               <label htmlFor="raised-button-file">
                 <Button
+                  size="small"
                   disabled={this.state.progress}
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   component="span"
                 >
                   <AddIcon /> add files
@@ -174,7 +175,8 @@ class UploadTexts extends Component {
               <Button
                 disabled={this.state.progress}
                 variant="contained"
-                color="inherit"
+                color="primary"
+                size="small"
                 onClick={this.handleSubmit}
               >
                 Upload

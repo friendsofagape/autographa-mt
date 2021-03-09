@@ -44,7 +44,7 @@ class TranslationWords extends Component {
         if(this.props.tokenSelected !=''){
             if(this.state.tokenSelected !== this.props.tokenSelected){
 
-                const { bkvalue, tokenSelected } = this.props;
+                const { tokenSelected } = this.props;
 
                 const data = await fetch(apiUrl + 'v1/translationshelps/words/' + this.props.selectedProject.sourceId + '/' + tokenSelected, {
                     method: 'GET'
@@ -60,7 +60,7 @@ class TranslationWords extends Component {
     displayTranslationWords() {
         const { translationWords } = this.state
         if(translationWords.success == false){
-            return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >{translationWords.message}</p>
+            return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No data available</p>
         }
         if (translationWords.definition) {
             if (translationWords.strongs){
