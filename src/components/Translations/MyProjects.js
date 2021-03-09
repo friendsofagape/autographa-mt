@@ -202,8 +202,13 @@ class MyProjects extends Component {
         const { classes, userProjects, isFetching } = this.props;
 
         const { columns } = this.state;
-
-        const data = userProjects.map(project => {
+        const sortedData = [] 
+        userProjects.map(project => {
+            if (project.active === true) {
+                sortedData.push(project)
+            }    
+        });
+        const data = sortedData.map(project => {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 

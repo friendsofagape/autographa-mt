@@ -15,8 +15,8 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         paddingTop:'3%',
-        paddingLeft:'10%',
-        paddingRight:'10%',
+        paddingLeft:'5%',
+        paddingRight:'5%',
         paddingBottom:'3%'
     },
     cursorPointer: {
@@ -149,7 +149,7 @@ class ListOrganisations extends Component {
     render() {
         const {  classes, organisations, isFetching } = this.props;
         const { columns, open } = this.state;
-        console.log("LISTTTTTTTTTTTTTTORGANISATION",organisations)
+        // console.log("LISTTTTTTTTTTTTTTORGANISATION",organisations)
         const data =  Object.values(organisations)
         const sortedData = [] 
         data.map(organisation => {
