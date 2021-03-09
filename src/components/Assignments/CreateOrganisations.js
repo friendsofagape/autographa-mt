@@ -10,6 +10,8 @@ import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
 import Container from '@material-ui/core/Container';
 import { createOrganisation } from '../../store/actions/organisationActions';
+import CircleLoader from "../loaders/CircleLoader";
+
 
 
 
@@ -28,6 +30,9 @@ class CreateOrganisations extends Component {
         organisationAddress: '',
         organisationEmail: '',
         organisationPhone: '',
+        phError:false,
+        phMessage:'',
+        isloading:false
     }
 
     
@@ -36,9 +41,25 @@ class CreateOrganisations extends Component {
         this.setState(item)
     }
 
+    clearState = () => {
+        this.setState({
+            organisationName: '',
+            organisationAddress: '',
+            organisationEmail: '',
+            organisationPhone: '',
+            isloading:false
+         })
+    }
+
     handleSubmit = (e) => {
+        this.setState({phError:false,phMessage:''})
         e.preventDefault();
         const {organisationName, organisationAddress, organisationEmail, organisationPhone} = this.state
+        if(isNaN(organisationPhone)){
+            this.setState({phError:true, phMessage:'Invalid phone number. Use only digits'})
+        }else
+        {
+        this.setState({isloading:true})
         const apiData = {
             organisationName: organisationName,
             organisationAddress: organisationAddress,
@@ -46,6 +67,8 @@ class CreateOrganisations extends Component {
             organisationPhone: organisationPhone,
         }
         this.props.dispatch(createOrganisation(apiData, this.clearState));
+        // this.clearState();
+        }
     }
 
 
@@ -54,14 +77,7 @@ class CreateOrganisations extends Component {
         this.setState({ verificationDialogOpen: false })
     }
 
-    clearState = () => {
-        this.setState({
-            organisationName: '',
-            organisationAddress: '',
-            organisationEmail: '',
-            organisationPhone: '',
-         })
-    }
+    
 
     canBeSubmitted() {
         const { organisationName, organisationAddress,  organisationEmail, organisationPhone } = this.state;
@@ -74,6 +90,7 @@ class CreateOrganisations extends Component {
         const isEnabled = this.canBeSubmitted();
         return (
             <Grid item xs={12}>
+                {this.state.isloading && <CircleLoader />}
                 <Container component="main" maxWidth="xs" className={classes.pageContainer}>
                 <Paper elevation='3' style={{padding:'8%'}}>
                     <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%"}}>
@@ -84,6 +101,7 @@ class CreateOrganisations extends Component {
                             <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationName}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -98,6 +116,7 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationAddress}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -112,6 +131,7 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationEmail}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -127,6 +147,9 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    error={this.state.phError}
+                                    helperText={this.state.phMessage}
+                                    value={this.state.organisationPhone}
                                     margin="normal"
                                     required
                                     fullWidth
