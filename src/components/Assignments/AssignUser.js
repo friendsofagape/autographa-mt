@@ -113,14 +113,12 @@ class AssignUser extends Component {
 
   getUserNames = () => {
     const { users } = this.props;
-    console.log("ASSIGNUSERSSSSS______",users)
     const sortedUsers = [] 
         users.map(user => {
             if (user.active === true) {
                 sortedUsers.push(user)
             }    
         });
-    console.log("ASSIGNUSERSSSSS______",sortedUsers)
     return sortedUsers.map((user) => {
       return (
         <TableRow

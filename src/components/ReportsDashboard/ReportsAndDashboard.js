@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import CircleLoader from "../loaders/CircleLoader";
 import { connect } from "react-redux";
 import MUIDataTable from "mui-datatables";
 import { fetchProjects } from "../../store/actions/projectActions";
-import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import compose from "recompose/compose";
 import { withRouter } from "react-router-dom";
 import AssignedUsersReports from './ReportsAndDashboardUsers'
@@ -130,14 +127,12 @@ class ReportsDashboard extends Component {
     return (
       <div className={classes.root}>
         {isFetching && <CircleLoader />}
-        {/* <MuiThemeProvider theme={getMuiTheme()}> */}
           <MUIDataTable
             title={<h4>REPORTS DASHBOARD</h4>}
             data={data} //MUIDataTable for datas on the page
             columns={columns}
             options={options}
           />
-        {/* </MuiThemeProvider> */}
       </div>
     );
   }
@@ -146,7 +141,6 @@ class ReportsDashboard extends Component {
 const mapStateToProps = (state) => ({
   projects: state.project.projects,
   isFetching: state.project.isFetching,
-  // current_user: state.auth.current_user
   userProjects: state.project.userProjects,
 });
 

@@ -7,34 +7,13 @@ import { connect } from 'react-redux';
 import { fetchUsers, updateAdminStatus, deleteUserAccess } from '../../store/actions/userActions';
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
-import { createMuiTheme, Button, Tooltip } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
-// const getMuiTheme = () => createMuiTheme({
-//     overrides: {
-//       MUIDataTable: {
-//         root: {
-//         },
-//         paper: {
-//           boxShadow: "none",
-//         }
-//       },
-//       MUIDataTableBodyRow: {
-//         root: {
-//           '&:nth-child(odd)': { 
-//             backgroundColor: '#eaeaea'
-//           }
-//         }
-//       },
-//       MUIDataTableBodyCell: {
-//       }
-//     }
-//   })
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: '16px'
         paddingTop: '2%',
         paddingLeft:'8%',
         paddingRight:'8%'
@@ -110,20 +89,7 @@ class ListUsers extends Component {
                 options: {
                     filter: false,
                     customBodyRender: (value, row) => {
-                        // const { current_user } = this.props;
                         return <span>{value ? "Admin" : "Member"}</span>
-                    //     <FormControlLabel
-                    //     control={
-                    //         <Switch
-                    //             checked={value}
-                    //             onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
-                    //             disabled={current_user.role === 'm' ? true : false}
-                    //         />
-                    //     }
-                    //     label={value ? "Admin" : "Member"}
-                    //   />
-                        
-                        
                     }
                 }
             },
@@ -133,8 +99,6 @@ class ListUsers extends Component {
                     filter: false,
                     customBodyRender: (value) => {
                         return <Button 
-                        // variant="contained" 
-                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
                         size="small"
                         onClick={() => this.handleDelete(value)}>
                         <DeleteOutlinedIcon />
@@ -161,7 +125,6 @@ class ListUsers extends Component {
     }
 
     handleDelete = (userEmail) => {
-        console.log("LISTUSERSSSSSS>>>>>>>",userEmail)
         const { dispatch } = this.props;
         const apiData = {
           userEmail: userEmail,

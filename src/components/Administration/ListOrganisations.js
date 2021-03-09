@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux';
 import { fetchOrganisations, updateOrganisationVerifiedStatus } from '../../store/actions/organisationActions';
@@ -83,7 +82,6 @@ class ListOrganisations extends Component {
                 name: <h4>Verified</h4>,
                 options: {
                     filter: false,
-                    // sort: false,
                     customBodyRender: (value, row) => {
                         return <Switch
                                 checked={value}
@@ -106,8 +104,6 @@ class ListOrganisations extends Component {
                     filter: false,
                     customBodyRender: (value) => {
                         return <Button 
-                        // variant="contained" 
-                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
                         size="small"
                         onClick={() => this.handleDelete(value)}>
                         <DeleteOutlinedIcon />
@@ -137,7 +133,6 @@ class ListOrganisations extends Component {
     }
 
     handleDelete = (organisationId) => {
-        console.log("LISTORGANISATIONSSSSSS>>>>>>>",organisationId)
         const { dispatch } = this.props;
         const apiData = {
             organisationId: organisationId,
@@ -148,8 +143,7 @@ class ListOrganisations extends Component {
 
     render() {
         const {  classes, organisations, isFetching } = this.props;
-        const { columns, open } = this.state;
-        // console.log("LISTTTTTTTTTTTTTTORGANISATION",organisations)
+        const { columns } = this.state;
         const data =  Object.values(organisations)
         const sortedData = [] 
         data.map(organisation => {
