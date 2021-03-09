@@ -109,8 +109,10 @@ class Concordance extends Component {
 						</div>
 					);
 				});
+			}else{
+				return <span style={{margin:"15%", fontSize:"75%", color:'red'}}>No data available</span>
 			}
-		} 
+		}
 	}
 
 	render() {
