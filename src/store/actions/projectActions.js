@@ -237,7 +237,7 @@ export const getTranslatedText = (projectId, bookList, projectName) => async dis
     }
     dispatch(setIsFetching(false))
 }
-export const updateTransaltion = (apiData, clear) => async (dispatch, getState) => {
+export const updateTransaltion = (apiData) => async (dispatch) => {
     dispatch(setIsFetching(true));
     try {
         const update = await fetch(apiUrl + 'v1/autographamt/projects/translations', {
@@ -249,8 +249,8 @@ export const updateTransaltion = (apiData, clear) => async (dispatch, getState) 
         })
         const myJson = await update.json()
         if (myJson.success) {
-            clear()
-            dispatch(getTranslatedWords(getState().project.selectedToken, getState().project.selectedProject.sourceId, getState().project.selectedProject.targetId))
+            // clear()
+            // dispatch(getTranslatedWords(getState().project.selectedToken, getState().project.selectedProject.sourceId, getState().project.selectedProject.targetId))
             swal({
                 title: 'Token translation',
                 text: myJson.message,

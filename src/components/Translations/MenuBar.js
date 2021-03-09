@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { FormControl, Grid, MenuItem, Select, InputLabel } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { setSelectedBook, fetchUserProjects } from '../../store/actions/projectActions';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
-// import CircleLoader from '../loaders/CircleLoader';
 
 const styles = theme => ({
     selectionGrid: {
@@ -27,6 +25,7 @@ class MenuBar extends Component {
         selectbook:''
     }
     
+    // sort the books in bible order
     displayBooks() {
         const { userProjects, location } = this.props
         const books = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa", 
@@ -58,13 +57,10 @@ class MenuBar extends Component {
             selectbook:e.target.value
         })
         this.props.updateState(e.target.value);
-        const { dispatch } = this.props
-        dispatch(setSelectedBook(e.target.value))
     }
 
     render() {
         const { classes } = this.props
-        console.log('Menu Bar', this.props)
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">Select Book</InputLabel>
@@ -85,7 +81,6 @@ class MenuBar extends Component {
 const mapStateToProps = (state) => {
     return {
         userProjects: state.project.userProjects,
-        selectedBook: state.project.selectedBook
     }
 }
 

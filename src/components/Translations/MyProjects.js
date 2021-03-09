@@ -90,7 +90,6 @@ class MyProjects extends Component {
                             return <Tooltip title="Book is not assigned yet">
                             <span>
                                 <Button size="small" variant="outlined" disabled style={{fontSize:'80%'}} >
-                                    {/* {valueBooks.length} */}
                                     View
                                 </Button>
                             </span>
@@ -226,8 +225,6 @@ class MyProjects extends Component {
             filter: false,
             viewColumns: false,
             pagination:false,
-            // responsive: "scroll"
-            // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
         const { redirect, project, booksPane } = this.state;
         if(redirect) {

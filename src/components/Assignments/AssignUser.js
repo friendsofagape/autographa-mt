@@ -92,6 +92,7 @@ class AssignUser extends Component {
     const apiData = {
       projectId: projectId,
       userId: userId,
+      action:"add_user",
       books: [],
     };
     dispatch(assignUserToProject(apiData, this.closeUserListing));
@@ -127,15 +128,11 @@ class AssignUser extends Component {
           onClick={() => this.selectUser(user.userId)}
         >
           <TableCell  align="center" style={{ padding:"0px" }}>
-            {/* <ListItem > */}
               {user.firstName + " " + user.lastName}
-            {/* </ListItem> */}
           </TableCell>
           
           <TableCell align="center" style={{ padding:"0px"}}>
-            {/* <ListItem > */}
               {user.emailId}
-            {/* </ListItem> */}
           </TableCell>
           {user.roleId == "3" ? (
             <TableCell style={{ padding:"0px"}}>
@@ -317,6 +314,8 @@ class AssignUser extends Component {
       projectId: projectId,
       userId: userId,
       books: checkedBooks,
+      action:"assign"
+
     };
     dispatch(assignUserToProject(apiData, this.closeBookListing));
   };
@@ -326,9 +325,7 @@ class AssignUser extends Component {
     const { userListing, listBooks } = this.state;
     return (
       <div className={classes.root}>
-        {/* <Grid item xs={8} className={classes.statisticsPane}> */}
           <StatisticsSummary projectId={location.pathname.split("/").pop()} />
-        {/* </Grid> */}
         <Button
           onClick={() => this.addUser()}
           variant="contained"
