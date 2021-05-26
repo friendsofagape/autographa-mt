@@ -294,7 +294,7 @@ export default function SimplePopover(props) {
                 &nbsp;&nbsp;&nbsp;
                 {unTokenisedOldBooks !== 0
                   ? unTokenisedOldBooks + " " + "Untokenised Books"
-                  : ""}
+                  : "BOOKS TO BE TOKENISED"}
                 {newTestmentBooks != null && (
                   <DataTable
                     title={

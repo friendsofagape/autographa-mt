@@ -272,7 +272,7 @@ export default function AvailableSourceReport(props) {
           &nbsp;&nbsp;&nbsp;&nbsp;
           {unTokenisedOldBooks !== 0
             ? unTokenisedOldBooks + " " + "Untokenised Books"
-            : ""}
+            : "BOOKS TO BE TOKENISED"}
           <DataTable
             title={
               <span style={{ fontSize: "80%", fontWeight: "bold" }}>
