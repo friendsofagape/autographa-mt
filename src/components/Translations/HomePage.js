@@ -69,7 +69,7 @@ class HomePage extends Component {
           })
 
           let translatedTokenCount = data.length-unTokenArray.length
-          this.setState({untranslatedToken:excelUnTokens, allTokenList:data, translatedTokensCount:translatedTokenCount, untoken:unTokenArray, allList:allTokenArray ,loading:false})
+          this.setState({untranslatedToken:excelUnTokens.sort(), allTokenList:data.sort(), translatedTokensCount:translatedTokenCount, untoken:unTokenArray.sort(), allList:allTokenArray.sort() ,loading:false})
         }
     )
     .catch(error => this.setState({ error, isLoading: false }));
@@ -216,16 +216,16 @@ class HomePage extends Component {
           <MenuBar updateState={this.updateState} />
 				</Grid>
 
-        <Grid item sm={4} style={{textAlign:'center'}}>
-          <Typography component="h2" variant="h7">
+        <Grid item sm={4} style={{textAlign:'center', paddingTop:'10px'}}>
+          <Typography component="h3" variant="h9">
             {this.props.selectedProject.projectName && this.props.selectedProject.projectName.split('|')[0].toUpperCase()}
           </Typography>
         </Grid>
 
         { this.state.bkvalue &&
           <Grid item container sm={5} style={{marginTop:'1%'}}>
-            <Grid item sm={6}>
-              <Typography component="h4" variant="h7" style={{textAlign:"right" ,paddingRight:"10px"}}>
+            <Grid item sm={4}>
+              <Typography component="h5" variant="h9" style={{textAlign:"right" ,paddingRight:"10px"}}>
                   Translation Progress
               </Typography>
             </Grid>
@@ -233,7 +233,13 @@ class HomePage extends Component {
               <progress value={this.state.translatedTokensCount} max={alltokenProgress} />
             </Grid>
             <Grid item sm={2}>
-              {this.state.translatedTokensCount}/{alltokenProgress}
+              <span style={{fontSize:'78%'}}>{this.state.translatedTokensCount}/{alltokenProgress}</span>
+            </Grid>
+            <Grid item sm={2}>
+              {/* <span style={{fontSize:'78%'}}>{this.state.translatedTokensCount}/{alltokenProgress}</span> */}
+              <Tooltip title="Click here to reload tokens">
+                <CachedIcon fontSize='default' color='secondary' onClick={()=>{this.updateState(this.state.bkvalue)}} />
+              </Tooltip>
             </Grid>
           </Grid>
         }

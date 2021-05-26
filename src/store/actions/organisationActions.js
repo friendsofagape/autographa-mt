@@ -46,7 +46,6 @@ export const updateOrganisationVerifiedStatus = (data) => async dispatch => {
             }
         })
         const response = await update.json();
-        console.log('response', response)
         if (response.success) {
             dispatch(fetchOrganisations());
             swal({
@@ -112,7 +111,6 @@ export const createOrganisation = (apiData, clear) => async dispatch => {
 export const deleteOrginisation = (apiData) => async dispatch => {
     dispatch(setIsFetching(true))
     try {
-        console.log("ORGANISATIONACTIONS$$$$$$$",apiData)
         const data = await fetch(apiUrl + 'v1/autographamt/organisation/delete', {
             method: 'DELETE',
             headers: {
@@ -121,7 +119,6 @@ export const deleteOrginisation = (apiData) => async dispatch => {
             body: JSON.stringify(apiData)
         })
         const response = await data.json()
-        console.log("ORGANISATIONACTIONS%%%%%%%",response)
         dispatch(setIsFetching(false))
         if (response.success) {
             swal({

@@ -114,6 +114,9 @@ class ViewSources extends Component {
             customBodyRender: (value) => {
               return (
                 <Button
+                  size="small"
+                  color={'primary'} 
+                  variant="contained"
                   onClick={() =>
                     this.setState(
                       { listBooks: true },
@@ -121,7 +124,7 @@ class ViewSources extends Component {
                     )
                   }
                 >
-                  View
+                <span style={{fontSize:'70%'}}>View</span>
                 </Button>
               );
             },
@@ -136,12 +139,13 @@ class ViewSources extends Component {
               return (
                 <Button
                   size="small"
+                  color={'primary'} 
                   variant="contained"
                   onClick={() =>
                     this.setState({ dialogOpen: true, sourceId: value })
                   }
                 >
-                  Upload
+                <span style={{fontSize:'70%'}}>Upload</span>
                 </Button>
               );
             },
@@ -161,14 +165,17 @@ class ViewSources extends Component {
             customBodyRender: (value) => {
               return (
                 <Button
-                  onClick={() =>
-                    this.setState(
-                      { listBooks: true },
-                      this.handleBookSelect(value)
-                    )
-                  }
+                size={'small'} 
+							  color={'primary'} 
+							  variant="contained"
+                onClick={() =>
+                  this.setState(
+                    { listBooks: true },
+                    this.handleBookSelect(value)
+                  )
+                }
                 >
-                  View
+                <span style={{fontSize:'70%'}}>View</span>
                 </Button>
               );
             },

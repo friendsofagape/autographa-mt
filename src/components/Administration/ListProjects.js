@@ -1,48 +1,20 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
 import { fetchProjects, deleteProject } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
-import PopUpMessages from '../PopUpMessages';
 import MUIDataTable from "mui-datatables";
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import CreateProject from './CreateProject';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { Button } from '@material-ui/core';
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { withRouter } from 'react-router-dom';
 
-const accessToken = localStorage.getItem('accessToken')
 
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-        MUIDataTable: {
-            root: {
-            },
-            paper: {
-                boxShadow: "none",
-            }
-        },
-        MUIDataTableBodyRow: {
-            root: {
-                '&:nth-child(odd)': {
-                    backgroundColor: '#eaeaea'
-                }
-            }
-        },
-        MUIDataTableBodyCell: {
-        }
-    }
-})
+
 
 const styles = theme => ({
     root: {
@@ -50,8 +22,6 @@ const styles = theme => ({
         padding: theme.spacing(2),
         paddingRight:'10%',
         paddingLeft:'10%'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
     },
     cursorPointer: {
         cursor: 'pointer',
@@ -75,7 +45,6 @@ const styles = theme => ({
 
 class ListProjects extends Component {
     state = {
-        // redirect: null,
         open: false,
         columns: [
             {
@@ -129,8 +98,6 @@ class ListProjects extends Component {
                     filter: false,
                     customBodyRender: (value) => {
                         return <Button 
-                        // variant="contained" 
-                        // style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
                         size="small"
                         onClick={() => this.handleDelete(value)}>
                         <DeleteOutlinedIcon />
@@ -151,7 +118,6 @@ class ListProjects extends Component {
     }
 
     handleDelete = (projectId) => {
-        // console.log("LISTUSERSSSSSS>>>>>>>",projectId)
         const { dispatch } = this.props;
         const apiData = {
           projectId: projectId,
@@ -161,9 +127,7 @@ class ListProjects extends Component {
 
     render() {
         const { classes, projects, isFetching, current_user } = this.props;
-        // console.log("current_user",current_user)
         const { columns, open } = this.state;
-        console.log("LISTPROJECTSSSSSSS>>>>>>>",projects)
         const sortedData = [] 
         projects.map(project => {
             if (project.active === true) {
@@ -188,13 +152,7 @@ class ListProjects extends Component {
             filter: false,
             viewColumns: false,
             pagination:false,
-            // onRowClick: rowData => this.setState({ redirect: rowData[0] })
         };
-        // console.log('list projects', this.props)
-        const { redirect } = this.state;
-        // if (redirect) {
-        //     return <Redirect to={`/app/projects/${redirect}`} />
-        // }
         return (
             <div className={classes.root}>
                 {isFetching && <CircleLoader />}
@@ -227,7 +185,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 
-// export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ListProjects));
 export default compose(
     withStyles(styles),
     connect(mapStateToProps, mapDispatchToProps)

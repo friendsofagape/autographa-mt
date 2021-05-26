@@ -41,7 +41,7 @@ export const menus = [
           key: "projects",
         },
         {
-          name: "Users list",
+          name: "Users List",
           link: "/app/users",
           roles: ["sa"],
           key: "users",

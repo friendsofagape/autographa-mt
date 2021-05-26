@@ -105,7 +105,6 @@ export const assignUserToProject = (apiData, close) => async dispatch => {
             body: JSON.stringify(apiData)
         })
         const myJson = await data.json()
-        console.log('>>>>>>>>>Assigning', myJson)
         // dispatch(setIsFetching(false))
         if(myJson.success){
             dispatch(getAssignedUsers(apiData.projectId));
