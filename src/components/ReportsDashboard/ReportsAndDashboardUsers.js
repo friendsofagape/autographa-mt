@@ -93,7 +93,6 @@ export default function UsersReports(props) {
   const [bookList, setBookList] = React.useState({});
   const [bookNTlist, setbookNTlist] = React.useState(null);
 
-
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
   const [loading, setLoading] = React.useState(false);
@@ -125,7 +124,6 @@ export default function UsersReports(props) {
       apiUrl + "v1/autographamt/statistics/projects/" + projectId
     );
     const response = await data.json();
-    // console.log('111111', response);
     if (data.status != 200) {
       swal({
         title: "Statistics",
@@ -146,7 +144,6 @@ export default function UsersReports(props) {
       }
     );
     const response1 = await data1.json();
-    // console.log("44444", response1);
     if (data1.status != 200) {
       swal({
         title: "Statistics",
@@ -162,10 +159,8 @@ export default function UsersReports(props) {
 
   const handleClickOpen = (scrollType) => () => {
     const projectIdCheck = props.value.split("/")[0];
-    // console.log("nnnnnnn",(proId) ,(projectIdCheck))
 
     if (proId != projectIdCheck) {
-      // console.log("dddd")
       setLoading(true);
       setOpen(true);
       setScroll(scrollType);
@@ -173,139 +168,214 @@ export default function UsersReports(props) {
     } else {
       setOpen(true);
     }
-    
   };
 
-   const displayOldBooks = () => {                                   //Function for old testament books along with the assigned users
-      //This function is for the datas of assigned users
-      const bookWiseDatas = bookList.bookWiseData;
-      const combineDict = {}
-      assignedUsers.map((data)=>{
-        const { books } = data;
-        const { userName, email } = data.user;
-        books.map((bk)=>{
-          const checkBook = bookWiseDatas[bk]
-          if (checkBook){
-            const addData = checkBook
-            addData.userName = userName
-            addData.email = email
-            combineDict[bk] = addData
-          }
-        })
-      })
-      
-      const book_keys = Object.keys(combineDict)
-      const bibleBookOldTestments = ["gen", "exo", "lev", "num", "deu", "jos", "jdg", "rut", "1sa", "2sa",                      
-          "1ki", "2ki", "1ch", "2ch", "ezr", "neh", "est", "job", "psa", "pro", "ecc", "sng", 
-          "isa", "jer", "lam", "ezk", "dan", "hos", "jol", "amo", "oba", "jon", "mic", "nam", "hab",
-          "zep", "hag", "zec", "mal"]
-
-      const sortOT = []
-      bibleBookOldTestments.map((book)=>{
-        if(book_keys.includes(book)){
-          sortOT.push(combineDict[book])
+  const displayOldBooks = () => {
+    //Function for old testament books along with the assigned users
+    //This function is for the datas of assigned users
+    const bookWiseDatas = bookList.bookWiseData;
+    const combineDict = {};
+    assignedUsers.map((data) => {
+      const { books } = data;
+      const { userName, email } = data.user;
+      books.map((bk) => {
+        const checkBook = bookWiseDatas[bk];
+        if (checkBook) {
+          const addData = checkBook;
+          addData.userName = userName;
+          addData.email = email;
+          combineDict[bk] = addData;
         }
-      })
-      if (sortOT.length !=0){
-        return sortOT.map((bkdetails,i)=>{
-          return (
-            <TableRow key={i}>
-              <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
-              <TableCell align="center">{bkdetails.userName}</TableCell>
-              <TableCell align="center">{bkdetails.email}</TableCell>
-              <TableCell align="center" key={i}>
-                <LinearProgressWithLabel
-                  value={bkdetails.allTokensCount}
-                  translatedValue={bkdetails.translatedTokensCount}
-                  completedValue={bkdetails.completed}
-                />
-              </TableCell>
-              <TableCell align="center">{bkdetails.completed}%</TableCell>
-            </TableRow>
-          );
-        })
-      }else{
-        return <span style={{color:'red'}}>No book assigned</span>
+      });
+    });
+
+    const book_keys = Object.keys(combineDict);
+    const bibleBookOldTestments = [
+      "gen",
+      "exo",
+      "lev",
+      "num",
+      "deu",
+      "jos",
+      "jdg",
+      "rut",
+      "1sa",
+      "2sa",
+      "1ki",
+      "2ki",
+      "1ch",
+      "2ch",
+      "ezr",
+      "neh",
+      "est",
+      "job",
+      "psa",
+      "pro",
+      "ecc",
+      "sng",
+      "isa",
+      "jer",
+      "lam",
+      "ezk",
+      "dan",
+      "hos",
+      "jol",
+      "amo",
+      "oba",
+      "jon",
+      "mic",
+      "nam",
+      "hab",
+      "zep",
+      "hag",
+      "zec",
+      "mal",
+    ];
+
+    const sortOT = [];
+    bibleBookOldTestments.map((book) => {
+      if (book_keys.includes(book)) {
+        sortOT.push(combineDict[book]);
       }
-    };
+    });
+    if (sortOT.length != 0) {
+      return sortOT.map((bkdetails, i) => {
+        return (
+          <TableRow key={i}>
+            <TableCell align="left">
+              {bkdetails.bookName.toUpperCase()}
+            </TableCell>
+            <TableCell align="center">{bkdetails.userName}</TableCell>
+            <TableCell align="center">{bkdetails.email}</TableCell>
+            <TableCell align="center" key={i}>
+              <LinearProgressWithLabel
+                value={bkdetails.allTokensCount}
+                translatedValue={bkdetails.translatedTokensCount}
+                completedValue={bkdetails.completed}
+              />
+            </TableCell>
+            <TableCell align="center">{bkdetails.completed}%</TableCell>
+          </TableRow>
+        );
+      });
+    } else {
+      return <span style={{ color: "red" }}>No book assigned</span>;
+    }
+  };
 
-    const displayNewBooks = () => {                                      //Function for new testament books along with the assigned users
-      const bookWiseDatas = bookList.bookWiseData;
-      const combineDict = {}
-      assignedUsers.map((data)=>{
-        const { books } = data;
-        const { userName, email } = data.user;
-        books.map((bk)=>{
-          const checkBook = bookWiseDatas[bk]
-          if (checkBook){
-            const addData = checkBook
-            addData.userName = userName
-            addData.email = email
-            combineDict[bk] = addData
-          }
-        })
-      })
-      const book_keys = Object.keys(combineDict)
-      const bibleBookNewTestments = ["mat", "mrk", "luk", "jhn", "act", "rom", "1co", "2co", "gal",
-            "eph", "php", "col", "1th", "2th", "1ti", "2ti", "tit", "phm", "heb", "jas", "1pe", "2pe", "1jn", 
-            "2jn", "3jn", "jud", "rev"]
-
-      const sortNT = [];
-
-      bibleBookNewTestments.map((book)=>{
-        if(book_keys.includes(book)){
-          sortNT.push(combineDict[book])
+  const displayNewBooks = () => {
+    //Function for new testament books along with the assigned users
+    const bookWiseDatas = bookList.bookWiseData;
+    const combineDict = {};
+    assignedUsers.map((data) => {
+      const { books } = data;
+      const { userName, email } = data.user;
+      books.map((bk) => {
+        const checkBook = bookWiseDatas[bk];
+        if (checkBook) {
+          const addData = checkBook;
+          addData.userName = userName;
+          addData.email = email;
+          combineDict[bk] = addData;
         }
-      })
+      });
+    });
+    const book_keys = Object.keys(combineDict);
+    const bibleBookNewTestments = [
+      "mat",
+      "mrk",
+      "luk",
+      "jhn",
+      "act",
+      "rom",
+      "1co",
+      "2co",
+      "gal",
+      "eph",
+      "php",
+      "col",
+      "1th",
+      "2th",
+      "1ti",
+      "2ti",
+      "tit",
+      "phm",
+      "heb",
+      "jas",
+      "1pe",
+      "2pe",
+      "1jn",
+      "2jn",
+      "3jn",
+      "jud",
+      "rev",
+    ];
 
-      if (sortNT !=0){
-        return sortNT.map((bkdetails,i)=>{
-          return (
-            <TableRow key={i}>
-              <TableCell align="left">{bkdetails.bookName.toUpperCase()}</TableCell>
-              <TableCell align="center">{bkdetails.userName}</TableCell>
-              <TableCell align="center">{bkdetails.email}</TableCell>
-              <TableCell align="center" key={i}>
-                <LinearProgressWithLabel
-                  value={bkdetails.allTokensCount}
-                  translatedValue={bkdetails.translatedTokensCount}
-                  completedValue={bkdetails.completed}
-                />
-              </TableCell>
-              <TableCell align="center">{bkdetails.completed}%</TableCell>
-            </TableRow>
-          );
-        })
-      }else{
-        return <span style={{color:'red'}}>No book assigned</span>
+    const sortNT = [];
+
+    bibleBookNewTestments.map((book) => {
+      if (book_keys.includes(book)) {
+        sortNT.push(combineDict[book]);
       }
-    };
+    });
 
-    
-  const displayAssignedUsersNumber = () => {                       //for the headings in the POPUP
+    if (sortNT != 0) {
+      return sortNT.map((bkdetails, i) => {
+        return (
+          <TableRow key={i}>
+            <TableCell align="left">
+              {bkdetails.bookName.toUpperCase()}
+            </TableCell>
+            <TableCell align="center">{bkdetails.userName}</TableCell>
+            <TableCell align="center">{bkdetails.email}</TableCell>
+            <TableCell align="center" key={i}>
+              <LinearProgressWithLabel
+                value={bkdetails.allTokensCount}
+                translatedValue={bkdetails.translatedTokensCount}
+                completedValue={bkdetails.completed}
+              />
+            </TableCell>
+            <TableCell align="center">{bkdetails.completed}%</TableCell>
+          </TableRow>
+        );
+      });
+    } else {
+      return <span style={{ color: "red" }}>No book assigned</span>;
+    }
+  };
+
+  const displayAssignedUsersNumber = () => {
+    //for the headings in the POPUP
     const bookWiseDatas = bookList.bookWiseData;
     let bookData = [];
-   if (assignedUsers.length > 0) {
-    let booksNumber = assignedUsers.map((user, i) => {
-      let { books } = user;
-      books = books.filter(item => item);                          //Filtering the empty string and saving the assigned users books length
-      return books.length;
-    });
-    for (var i in bookWiseDatas){                                   
-      bookData.push(bookWiseDatas[i])                               //converting object to array
+    if (assignedUsers.length > 0) {
+      let booksNumber = assignedUsers.map((user, i) => {
+        let { books } = user;
+        books = books.filter((item) => item); //Filtering the empty string and saving the assigned users books length
+        return books.length;
+      });
+      for (var i in bookWiseDatas) {
+        bookData.push(bookWiseDatas[i]); //converting object to array
+      }
+      let assignedUsersSum = 0;
+      const reducer = (a, c) => a + c;
+      assignedUsersSum = booksNumber.reduce(reducer, 0); //total of assigned books to the users
+      return (
+        <React.Fragment>
+          <span style={{ fontSize: "80%", fontWeight: "bold" }}>
+            &nbsp;Assigned Books- ({assignedUsersSum})
+          </span>
+          <span
+            style={{ fontSize: "80%", fontWeight: "bold", paddingLeft: "5%" }}
+          >
+            &nbsp;Unassigned Books- ({bookData.length - assignedUsersSum})
+          </span>
+        </React.Fragment>
+      );
     }
-    console.log("REPORTS AND DASHBOARD*****",bookData.length)
-    let assignedUsersSum = 0;
-    const reducer = (a, c) => a + c;
-    assignedUsersSum = booksNumber.reduce(reducer, 0);              //total of assigned books to the users
-    return (<React.Fragment>
-      <span style={{fontSize:'80%', fontWeight:'bold'}}>&nbsp;Assigned Books- ({assignedUsersSum})</span>
-      <span style={{fontSize:'80%', fontWeight:'bold', paddingLeft:"5%"}}>&nbsp;Unassigned Books- ({bookData.length-assignedUsersSum})</span>
-    </React.Fragment>)
-    }
-  }
-  
-    let projectName = props.value.split("/")[1].toUpperCase();
+  };
+
+  let projectName = props.value.split("/")[1].toUpperCase();
 
   return (
     <div>
@@ -324,66 +394,96 @@ export default function UsersReports(props) {
         scroll={scroll}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
-        fullWidth={true} 
-        maxWidth = {'md'}
+        fullWidth={true}
+        maxWidth={"md"}
       >
         <DialogTitle id="scroll-dialog-title">
-          
           <Grid container>
-            <Grid item sm={6} style={{fontSize:'80%', fontWeight:'bold'}}>
-              {projectName = props.value.split("/")[1].toUpperCase()}
+            <Grid item sm={6} style={{ fontSize: "80%", fontWeight: "bold" }}>
+              {(projectName = props.value.split("/")[1].toUpperCase())}
             </Grid>
-            <Grid item sm={6} style={{fontSize:'80%', fontWeight:"bold", textAlign:"right"}}>
-            {displayAssignedUsersNumber()}
+            <Grid
+              item
+              sm={6}
+              style={{
+                fontSize: "80%",
+                fontWeight: "bold",
+                textAlign: "right",
+              }}
+            >
+              {displayAssignedUsersNumber()}
             </Grid>
           </Grid>
         </DialogTitle>
 
-        <DialogContent dividers={scroll === "paper"} >
+        <DialogContent dividers={scroll === "paper"}>
           <DialogContentText
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            {loading ? <CircleLoader /> : ( 
-             assignedUsers.length > 0 ? (
+            {loading ? (
+              <CircleLoader />
+            ) : assignedUsers.length > 0 ? (
               <div>
-              <Table>
-             		<TableHead>
-                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;OLD TESTAMENT</span>      
-             			<TableRow>
-             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testament table*/}
-             				<TableCell align="center"><h4>USER NAME</h4></TableCell>
-             				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
-             				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
-             				<TableCell align="center"><h4>DRAFT READY</h4></TableCell>
-             			</TableRow>
-             		</TableHead>
-             	<TableBody >{displayOldBooks()}</TableBody>
-             	</Table>
-           
-              <Table>
-             		<TableHead>
-                <h4></h4>
-                <span style={{fontSize:'100%', fontWeight:'bold'}}>&nbsp;&nbsp;&nbsp;NEW TESTAMENT</span> 
-             			<TableRow>
-             				<TableCell align="left"><h4>BOOK NAME</h4></TableCell>{/*Heading for the old testament table*/}
-             				<TableCell align="center"><h4>USER NAME</h4></TableCell>
-             				<TableCell align="center"><h4>EMAIL ID</h4></TableCell>
-             				<TableCell align="left"><h4>TRANSLATION PROGRESS</h4></TableCell>
-             				<TableCell align="center"><h4>DRAFT READY</h4></TableCell>
-             			</TableRow>
-             		</TableHead>
-             	<TableBody >{displayNewBooks()}</TableBody>
-             	</Table>
-            </div>
-             ) : (
-               <div> Books are not assigned to Users</div>
-             )
+                <Table>
+                  <TableHead>
+                    <span style={{ fontSize: "100%", fontWeight: "bold" }}>
+                      &nbsp;&nbsp;&nbsp;OLD TESTAMENT
+                    </span>
+                    <TableRow>
+                      <TableCell align="left">
+                        <h4>BOOK NAME</h4>
+                      </TableCell>
+                      {/*Heading for the old testament table*/}
+                      <TableCell align="center">
+                        <h4>USER NAME</h4>
+                      </TableCell>
+                      <TableCell align="center">
+                        <h4>EMAIL ID</h4>
+                      </TableCell>
+                      <TableCell align="left">
+                        <h4>TRANSLATION PROGRESS</h4>
+                      </TableCell>
+                      <TableCell align="center">
+                        <h4>DRAFT READY</h4>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{displayOldBooks()}</TableBody>
+                </Table>
 
-            )
-            }
-            
+                <Table>
+                  <TableHead>
+                    <h4></h4>
+                    <span style={{ fontSize: "100%", fontWeight: "bold" }}>
+                      &nbsp;&nbsp;&nbsp;NEW TESTAMENT
+                    </span>
+                    <TableRow>
+                      <TableCell align="left">
+                        <h4>BOOK NAME</h4>
+                      </TableCell>
+                      {/*Heading for the old testament table*/}
+                      <TableCell align="center">
+                        <h4>USER NAME</h4>
+                      </TableCell>
+                      <TableCell align="center">
+                        <h4>EMAIL ID</h4>
+                      </TableCell>
+                      <TableCell align="left">
+                        <h4>TRANSLATION PROGRESS</h4>
+                      </TableCell>
+                      <TableCell align="center">
+                        <h4>DRAFT READY</h4>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{displayNewBooks()}</TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div> Books are not assigned to Users</div>
+            )}
           </DialogContentText>
         </DialogContent>
 
