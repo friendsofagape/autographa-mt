@@ -316,7 +316,7 @@ export default function UsersReports(props) {
 					<span style={{ fontSize: "80%", fontWeight: "bold" }}>
 						&nbsp;Assigned Books- ({assignedUsersSum})
 					</span>
-					<span
+					{/* <span
 						style={{
 							fontSize: "80%",
 							fontWeight: "bold",
@@ -325,7 +325,7 @@ export default function UsersReports(props) {
 					>
 						&nbsp;Unassigned Books- (
 						{bookData.length - assignedUsersSum})
-					</span>
+					</span> */}
 				</React.Fragment>
 			);
 		}
