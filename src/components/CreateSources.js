@@ -44,7 +44,7 @@ const styles = (theme) => ({
 	selectMenu: {
 		width: 220,
 		margin: 10,
-		zIndex: 99999,
+		zIndex: 99,
 	},
 	formControl: {
 		margin: theme.spacing(1),
