@@ -131,9 +131,9 @@ class UploadSource extends Component {
 		var apiData = {
 			languageCode: this.state.languageCode,
 			contentType: this.state.contentType,
-			versionContentCode: this.state.versionContentCode,
-			versionContentDescription: this.state.versionContentDescription,
-			year: this.state.year,
+			versionContentCode: this.state.versionContentCode.split(' ').join(""),
+			versionContentDescription: this.state.versionContentDescription.split(' ').join(""),
+			year: this.state.year.split(' ').join(""),
 			revision: this.state.revision,
 			license: this.state.license,
 		};
@@ -143,15 +143,12 @@ class UploadSource extends Component {
 
 	canBeSubmitted() {
         const { languageCode, languageName,  versionContentCode, versionContentDescription, year, revision, license } = this.state;
-        console.log('jjjjjjjjjjjjjjjjjjjjjj', languageCode, languageName,  versionContentCode, versionContentDescription, year, revision, license)
-        // console.log("eeeeeeeeeeeeeeeeeeeeeeeeeee", this.state)
         return languageCode.length > 0 && languageName.length > 0 && versionContentCode.length > 0 && versionContentDescription.length > 0 && year.toString().length > 0 && revision.toString().length > 0 && license.toString().length > 0;
 	}
 
 	render() {
 		const { classes, open, close } = this.props;
         const isEnabled = this.canBeSubmitted();
-        // console.log("tttttttttttttttttttttttttt", isEnabled)
 
 		var languageData = [];
 		if (this.state.languageDetails != null) {

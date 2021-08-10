@@ -83,7 +83,6 @@ class CreateProject extends Component {
 		if (bibleLanguages.length > 0) {
 			return bibleLanguages.map((lang) => {
 				const langObj = lang.languageVersions[0];
-				const landId = langObj.language.id;
 				return (
 					<MenuItem key={langObj.language.id} value={lang.languageVersions}>
 						{langObj.language.name}
@@ -93,7 +92,6 @@ class CreateProject extends Component {
 		} else {
 			return <MenuItem>No languages</MenuItem>;
 		}
-		// const { }
 	};
 
 	displayVersions = () => {
@@ -113,8 +111,14 @@ class CreateProject extends Component {
 
 	displayOrganisations = () => {
 		const { organisations } = this.props;
-		if (organisations.length > 0) {
-			return organisations.map((item) => {
+		const sortedData = [] 
+        organisations.map(organisation => {
+            if (organisation.active === true) {
+                sortedData.push(organisation)
+            }    
+        });
+		if (sortedData.length > 0) {
+			return sortedData.map((item) => {
 				return (
 					<MenuItem key={item.organisationId} value={item.organisationId}>
 						{item.organisationName}
@@ -140,7 +144,6 @@ class CreateProject extends Component {
 
     canBeSubmitted() {
         const { sourceId, targetId, target, organisationId } = this.state;
-        // console.log(sourceId, targetId, target, organisationId)
         return sourceId.toString().length > 0 && targetId.toString().length > 0 && target.toString().length > 0 && organisationId.toString().length > 0;
 	}
 
@@ -190,18 +193,11 @@ class CreateProject extends Component {
 									value={source}
 									variant={'outlined'}
 									onChange={(e) => this.setState({ source: e.target.value })}
-									// onChange={(e) => this.setState({
-									//     language: e.target.value,
-									//     version: '',
-									//     targetLanguage: ''
-									// })
-									// }
 								>
 									{this.displayLanguage()}
 								</Select>
 							</FormControl>
 						</Grid>
-						{/* <Grid item xs={6}> */}
 						<Grid item xs={6}>
 							<FormControl className={classes.formControl}>
 								<InputLabel className={classes.label} htmlFor="select-version">
@@ -220,9 +216,7 @@ class CreateProject extends Component {
 								</Select>
 							</FormControl>
 						</Grid>
-						{/* </Grid> */}
 						<Grid item xs={6}>
-							{/* <FormControl className={classes.formControl}> */}
 							<InputLabel className={classes.label} htmlFor="select-target">
 								Target
 							</InputLabel>
@@ -237,7 +231,6 @@ class CreateProject extends Component {
 								}
 								value={targetId}
 							/>
-							{/* </FormControl> */}
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl className={classes.formControl} style={{ paddingTop: '16px' }}>
@@ -273,7 +266,6 @@ class CreateProject extends Component {
 }
 
 const mapStateToProps = (state) => ({
-	projects: state.project.projects,
 	isFetching: state.project.isFetching,
 	bibleLanguages: state.sources.bibleLanguages,
 	allLanguages: state.sources.allLanguages,

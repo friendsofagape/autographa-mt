@@ -4,24 +4,16 @@ import {
     TextField,
     Button,
     Paper,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Typography
 } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import ComponentHeading from '../ComponentHeading';
-import PopUpMessages from '../PopUpMessages';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import Container from '@material-ui/core/Container';
 import { createOrganisation } from '../../store/actions/organisationActions';
+import CircleLoader from "../loaders/CircleLoader";
 
 
-var accessToken = localStorage.getItem('accessToken')
+
 
 const styles = theme => ({
     root:{
@@ -38,6 +30,9 @@ class CreateOrganisations extends Component {
         organisationAddress: '',
         organisationEmail: '',
         organisationPhone: '',
+        phError:false,
+        phMessage:'',
+        isloading:false
     }
 
     
@@ -46,9 +41,25 @@ class CreateOrganisations extends Component {
         this.setState(item)
     }
 
+    clearState = () => {
+        this.setState({
+            organisationName: '',
+            organisationAddress: '',
+            organisationEmail: '',
+            organisationPhone: '',
+            isloading:false
+         })
+    }
+
     handleSubmit = (e) => {
+        this.setState({phError:false,phMessage:''})
         e.preventDefault();
         const {organisationName, organisationAddress, organisationEmail, organisationPhone} = this.state
+        if(isNaN(organisationPhone)){
+            this.setState({phError:true, phMessage:'Invalid phone number. Use only digits'})
+        }else
+        {
+        this.setState({isloading:true})
         const apiData = {
             organisationName: organisationName,
             organisationAddress: organisationAddress,
@@ -56,33 +67,17 @@ class CreateOrganisations extends Component {
             organisationPhone: organisationPhone,
         }
         this.props.dispatch(createOrganisation(apiData, this.clearState));
+        // this.clearState();
+        }
     }
 
-    // handleOk = () => {
-    //     this.setState({ redirect: true })
-    // }
+
 
     handleClose = () => {
         this.setState({ verificationDialogOpen: false })
     }
 
-    clearState = () => {
-        this.setState({
-            organisationName: '',
-            organisationAddress: '',
-            organisationEmail: '',
-            organisationPhone: '',
-         })
-    }
-
-    // handleSend = () => {
-    //     this.createOrganisation()
-    // }
-
-
-    // closeSnackBar = (item) => {
-    //     this.setState(item)
-    // }
+    
 
     canBeSubmitted() {
         const { organisationName, organisationAddress,  organisationEmail, organisationPhone } = this.state;
@@ -91,13 +86,11 @@ class CreateOrganisations extends Component {
 
 
     render() {
-        // const { popupdata } = this.state
-        const { createOrganisationsPane, classes } = this.props
+        const { classes } = this.props
         const isEnabled = this.canBeSubmitted();
         return (
             <Grid item xs={12}>
-                {/* <Header /> */}
-                {/* <PopUpMessages /> */}
+                {this.state.isloading && <CircleLoader />}
                 <Container component="main" maxWidth="xs" className={classes.pageContainer}>
                 <Paper elevation='3' style={{padding:'8%'}}>
                     <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%"}}>
@@ -108,6 +101,7 @@ class CreateOrganisations extends Component {
                             <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationName}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -115,7 +109,6 @@ class CreateOrganisations extends Component {
                                     label="Organisation Name"
                                     name="organisationName"
                                     autoComplete="organisationName"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationName: e.target.value })}
                                 />
@@ -123,6 +116,7 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationAddress}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -130,7 +124,6 @@ class CreateOrganisations extends Component {
                                     label="Address"
                                     name="organisationAddress"
                                     autoComplete="organisationAddress"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationAddress: e.target.value })}
                                 />
@@ -138,6 +131,7 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    value={this.state.organisationEmail}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -146,7 +140,6 @@ class CreateOrganisations extends Component {
                                     type="email"
                                     name="organisationEmail"
                                     autoComplete="organisationEmail"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationEmail: e.target.value })}
                                 />
@@ -154,6 +147,9 @@ class CreateOrganisations extends Component {
                                 <Grid item sm={12}>
                                 <TextField
                                     variant="outlined"
+                                    error={this.state.phError}
+                                    helperText={this.state.phMessage}
+                                    value={this.state.organisationPhone}
                                     margin="normal"
                                     required
                                     fullWidth
@@ -161,7 +157,6 @@ class CreateOrganisations extends Component {
                                     label="Phone"
                                     name="organisationPhone"
                                     autoComplete="organisationPhone"
-                                    // autoFocus
                                     size="small"
                                 onChange={(e) => this.setState({ organisationPhone: e.target.value })}
                                 />

@@ -1,59 +1,22 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, CardContent, Paper, createMuiTheme, MuiThemeProvider, Button, Tooltip } from '@material-ui/core';
-import apiUrl from '../GlobalUrl';
-import { Card } from '@material-ui/core';
-import { CardHeader } from '@material-ui/core';
-import { displaySnackBar, selectProject } from '../../store/actions/sourceActions'
+import { Button, Tooltip } from '@material-ui/core';
 import { fetchUserProjects } from '../../store/actions/projectActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { connect } from 'react-redux'
-import PopUpMessages from '../PopUpMessages';
-import MUIDataTable from "mui-datatables";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-// import CreateProject from './CreateProject';
+import MUIDataTable from "mui-datatables";                                                                                                                                                                                                                                                    
 import { Redirect, Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 import BooksDownloadable from '../BooksDownloadable';
-import purple from '@material-ui/core/colors/purple';
 import swal from 'sweetalert';
-import color from '@material-ui/core/colors/amber';
-import MyProjectFunction from './MyProjectFunction';
-
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
+import MyProjectReportPopup from './MyProjectReportPopup';
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(8),
         paddingLeft:'5%',
         paddingRight:'5%'
-
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -85,50 +48,64 @@ class MyProjects extends Component {
         booksPane: false,
         project: {},
         columns: [
+            
             {
                 name: 'id',
                 options: {    
                     display: false,
-                    filter: false
+                    filter: false,
                 }
             },
             {
-                name: <th>Project Name</th>,
+                name: <h4>Project Name</h4>,
                 options: {
                     filter: false,
                     sort: false,
                 }
             },
             {
-                name: <th>Organisation</th>,
+                name: <h4>Organisation</h4>,
                 options: {
                     filter: false,
                     sort: false,
                 }
             },
             {
-                name: <th>Source Details</th>,
+                name: <h4>Source Details</h4>,
                 options: {
                     filter: false,
                     sort: false
                 }
             },
             {
-                name: <th>Books Assigned</th>,
+                name: <h4>Books Assigned</h4>,
                 options: {
                     filter: false,
                     sort: false,
-                    customBodyRender: (value) => {                                                                                                                                                  //added
-                        return <div><MyProjectFunction books={value} /></div>                    
-                        
-                        }
+                    customBodyRender: (value) => {    
+                        let valueBooks = value.split('/')[1].split(',')                       
+                        let valueId = value.split('/')[0]
+                        valueBooks = valueBooks.filter(function(entry) { return entry.trim() != ''; });                                  
+                        if (valueBooks.length == 0){
+                            return <Tooltip title="Book is not assigned yet">
+                            <span>
+                                <Button size="small" variant="outlined" disabled style={{fontSize:'80%'}} >
+                                    View
+                                </Button>
+                            </span>
+                            </Tooltip>
+                            }
+                            else{
+                        return <div><MyProjectReportPopup projectBooks = {valueBooks} projectWiseId= {valueId} bookCount= {valueBooks.length} /></div>                    
+                    }
+                    }
                 }
             },
 
 
 
             {
-                name: <th></th>,
+                name: <h4></h4>,
                 options: {
                     filter: false,
                     sort:false,
@@ -158,7 +135,7 @@ class MyProjects extends Component {
             },
 
             {
-                name: <th></th>,
+                name: <h4></h4>,
                 options: {
                     filter: false,
                     sort:false,
@@ -167,13 +144,15 @@ class MyProjects extends Component {
                         var valuesTran = value.split('/')[0]
                         if (valuesbook == 0){
                         return <Tooltip title="Book is not assigned yet">
-                        <Button 
-                            variant="outlined" 
-                            disabled 
-                            size="small"
-                            style={{fontSize:'80%'}}>
-                                Open Project
-                        </Button>
+                        <span>
+                            <Button 
+                                variant="outlined" 
+                                disabled 
+                                size="small"
+                                style={{fontSize:'80%'}}>
+                                    Open Project
+                            </Button>
+                        </span>
                       </Tooltip>
                         }
                         else{
@@ -182,7 +161,7 @@ class MyProjects extends Component {
                                 style={{ backgroundColor: "#21b6ae",fontSize:'80%'}} 
                                 size="small">
                                     <Link 
-                                    style={{"color":"black", "text-decoration": "none"}}
+                                    style={{color:"black", textDecoration: "none"}}
                                     to={`/app/translations/projects/${valuesTran}`}>
                                     Open Project</Link>
                                 </Button>
@@ -190,16 +169,11 @@ class MyProjects extends Component {
                     },
                 }
             }
-            
-            
-            
-            
         ]
     }
 
     handleDownload = (projectId) => {
         var project = this.props.userProjects.filter(item => item.projectId == projectId)
-        // console.log(">>>>>>>>>>>>>>>>>>>>>>>",typeof(projectId) )
         if(project.length > 0){
             this.setState({
                 project: project[0],
@@ -215,7 +189,6 @@ class MyProjects extends Component {
     }
 
     updateState = (data) => {
-        // console.log('???????????????????????????????', data)
         this.setState(data);
     }
 
@@ -223,19 +196,24 @@ class MyProjects extends Component {
         const { dispatch } = this.props;
         dispatch(fetchUserProjects());
     }
+    
     render () {
         const { classes, userProjects, isFetching } = this.props;
-        const { columns, open } = this.state;
-        const data = userProjects.map(project => {
+
+        const { columns } = this.state;
+        const sortedData = [] 
+        userProjects.map(project => {
+            if (project.active === true) {
+                sortedData.push(project)
+            }    
+        });
+        const data = sortedData.map(project => {
             return [
                 project.projectId, 
                 project.projectName.split('|')[0], 
-                // project.projectName.split('|')[1], 
                 project.organisationName, 
                 project.projectName.split('-')[0]+' - '+ project.version.code + ' - ' + project.version.revision, 
-                // project.version.name,
-                // project.books.length,
-                project.books,
+                project.projectId+'/'+project.books,
                 project.projectId+'/'+project.books.length, 
                 project.projectId+'/'+project.books.length, 
             ]
@@ -247,10 +225,7 @@ class MyProjects extends Component {
             filter: false,
             viewColumns: false,
             pagination:false,
-            // responsive: "scroll"
-            // onRowClick: rowData => this.setState({redirect: rowData[0]})
         };
-        console.log('my projects', this.props)
         const { redirect, project, booksPane } = this.state;
         if(redirect) {
             return <Redirect to={`/app/translations/projects/${redirect}`} />
@@ -258,15 +233,13 @@ class MyProjects extends Component {
         return (
             <div className={classes.root}>
                 { isFetching && <CircleLoader />}
-                {/* <MuiThemeProvider theme={getMuiTheme()}> */}
-                    <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
+                <BooksDownloadable isFetching={isFetching} updateState={this.updateState} project={project} booksPane={booksPane} />
                 <MUIDataTable 
-                    title={<th>MY PROJECTS</th>}
+                    title={<h4>MY PROJECTS</h4>}
                     data={data} 
                     columns={columns} 
                     options={options} 
                 />
-                {/* </MuiThemeProvider> */}
             </div>
         )
     }

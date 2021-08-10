@@ -1,53 +1,22 @@
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import { Checkbox, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import ComponentHeading from '../ComponentHeading';
 import { withStyles } from '@material-ui/styles';
-import apiUrl from '../GlobalUrl';
-import PopUpMessages from '../PopUpMessages';
 import { connect } from 'react-redux';
 import { fetchOrganisations, updateOrganisationVerifiedStatus } from '../../store/actions/organisationActions';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import CircleLoader from '../loaders/CircleLoader';
-import CreateOrganisation from './CreateOrganisation';
-
+import { Button } from '@material-ui/core';
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
+import {  deleteOrginisation } from '../../store/actions/organisationActions';
 
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: theme.spacing(2),
-        padding: '16px'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
+        paddingTop:'3%',
+        paddingLeft:'5%',
+        paddingRight:'5%',
+        paddingBottom:'3%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -69,7 +38,6 @@ const styles = theme => ({
     }
 });
 
-const accessToken = localStorage.getItem('accessToken')
 
 class ListOrganisations extends Component {
     state = {
@@ -83,31 +51,35 @@ class ListOrganisations extends Component {
                 }
             },
             {
-                name: 'Organisation Name',
+                name: <h4>Organisation Name</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Email',
+                name: <h4>Email</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Address',
+                name: <h4>Address</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Phone',
+                name: <h4>Phone</h4>,
                 options: {
-                    filter: true
+                    filter: false,
+                    sort: false
                 }
             },
             {
-                name: 'Verified',
+                name: <h4>Verified</h4>,
                 options: {
                     filter: false,
                     customBodyRender: (value, row) => {
@@ -119,10 +91,24 @@ class ListOrganisations extends Component {
                 }
             },
             {
-                name: 'Admin Id',
+                name: <h4>Admin Id</h4>,
                 options: {
-                    filter: true,
+                    filter: false,
+                    sort: false,
                     display: false
+                }
+            },
+            {
+                name: <h4>Remove Organisation</h4>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value) => {
+                        return <Button 
+                        size="small"
+                        onClick={() => this.handleDelete(value)}>
+                        <DeleteOutlinedIcon />
+                        </Button>
+                    }
                 }
             }
         ]
@@ -146,10 +132,26 @@ class ListOrganisations extends Component {
         this.setState({open: false})
     }
 
+    handleDelete = (organisationId) => {
+        const { dispatch } = this.props;
+        const apiData = {
+            organisationId: organisationId,
+        };
+        dispatch(deleteOrginisation(apiData));
+      };
+
+
     render() {
         const {  classes, organisations, isFetching } = this.props;
-        const { columns, open } = this.state;
-        const data = organisations.map(organisation => {
+        const { columns } = this.state;
+        const data =  Object.values(organisations)
+        const sortedData = [] 
+        data.map(organisation => {
+            if (organisation.active === true) {
+                sortedData.push(organisation)
+            }    
+        });
+        const filteredData = sortedData.map(organisation => {
             return [
                 organisation.organisationId,
                 organisation.organisationName,
@@ -158,27 +160,25 @@ class ListOrganisations extends Component {
                 organisation.organisationPhone,
                 organisation.verified,
                 organisation.userId,
+                organisation.organisationId
             ]
         });
         const options = {
-            selectableRows: false,
+            selectableRows: false,download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false
           };
         return (
             <div className={classes.root}>
-                {/* <PopUpMessages /> */}
                 { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
                 <MUIDataTable 
-                    title={"Organisations List"} 
-                    data={data} 
+                    title={<h4>ORGANISATION LIST</h4>} 
+                    data={filteredData} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
-                {/* <CreateOrganisation open={open} close={this.handleClose} /> */}
-                {/* <Fab aria-label={'add'} className={classes.fab} color={'primary'} onClick={() => this.setState({open: true})}>
-                    <AddIcon />
-                </Fab> */}
             </div>
         )
     }

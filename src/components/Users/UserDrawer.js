@@ -17,8 +17,9 @@ export default class UserDrawer extends Component {
 
     handleOrganisations(){
         const { updateState } =  this.props
+
         updateState({
-            createOrganisationsPane: true
+         createOrganisationsPane: true,
         })
     }
 

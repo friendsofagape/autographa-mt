@@ -46,7 +46,6 @@ export const updateOrganisationVerifiedStatus = (data) => async dispatch => {
             }
         })
         const response = await update.json();
-        console.log('response', response)
         if (response.success) {
             dispatch(fetchOrganisations());
             swal({
@@ -108,6 +107,46 @@ export const createOrganisation = (apiData, clear) => async dispatch => {
     }
     dispatch(setIsFetching(false));
 }
+
+export const deleteOrginisation = (apiData) => async dispatch => {
+    dispatch(setIsFetching(true))
+    try {
+        const data = await fetch(apiUrl + 'v1/autographamt/organisation/delete', {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'bearer ' + accessToken
+            },
+            body: JSON.stringify(apiData)
+        })
+        const response = await data.json()
+        dispatch(setIsFetching(false))
+        if (response.success) {
+            swal({
+                title: 'Removed Organisation',
+                text: 'Organisation successfully removed',
+                icon: 'success'
+            })
+            dispatch(fetchOrganisations());
+
+        } else {
+            swal({
+                title: 'Organisation cannot be removed' ,
+                text: response.message,
+                icon: 'error'
+            })
+
+        }
+    }
+    catch (e) {
+
+        swal({
+            title: 'Organisation assignment',
+            text: 'Unable to remove user, check your internet connection or contact admin',
+            icon: 'error'
+        })
+    }
+}
+
 
 export const setOrganisations = (organisations) => ({
     type: SET_ORGANISATIONS,

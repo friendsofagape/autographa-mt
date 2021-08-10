@@ -1,56 +1,22 @@
 import React, { Component } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
-import { Checkbox, Paper, createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ComponentHeading from '../ComponentHeading';
-import apiUrl from '../GlobalUrl'
 import PopUpMessages from '../PopUpMessages'
-import { displaySnackBar } from '../../store/actions/sourceActions';
 import CircleLoader from '../loaders/CircleLoader';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-
-
-import { fetchUsers, updateAdminStatus } from '../../store/actions/userActions';
-
-
+import { fetchUsers, updateAdminStatus, deleteUserAccess } from '../../store/actions/userActions';
 import { Switch } from '@material-ui/core';
 import MUIDataTable from "mui-datatables";
+import { Button } from '@material-ui/core';
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 
-const accessToken = localStorage.getItem('accessToken')
-
-const getMuiTheme = () => createMuiTheme({
-    overrides: {
-      MUIDataTable: {
-        root: {
-        },
-        paper: {
-          boxShadow: "none",
-        }
-      },
-      MUIDataTableBodyRow: {
-        root: {
-          '&:nth-child(odd)': { 
-            backgroundColor: '#eaeaea'
-          }
-        }
-      },
-      MUIDataTableBodyCell: {
-      }
-    }
-  })
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        // padding: theme.spacing(2),
-        padding: '16px'
-        // backgroundColor: '#ededf4',
-        // minHeight: '100%'
+        paddingTop: '2%',
+        paddingLeft:'8%',
+        paddingRight:'8%'
     },
     cursorPointer: {
       cursor: 'pointer',
@@ -85,29 +51,30 @@ class ListUsers extends Component {
                 }
             },
             {
-                name: 'Name',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Email',
-                options: {
-                    filter: true
-                }
-            },
-            {
-                name: 'Verified',
+                name: <h4>Name</h4>,
                 options: {
                     filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Email</h4>,
+                options: {
+                    filter: false,
+                    sort: false
+                }
+            },
+            {
+                name: <h4>Verified</h4>,
+                options: {
+                    filter: false,
+                    sort: false,
                     customBodyRender: (value, row) => {
-                        // console.log(rowIndex)
                         return <FormControlLabel
                         control={
                             <Switch
                             checked={value}
                             disabled
-                            // onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
                         />
                         }
                         label={value ? "Verified" : "Unverified"}
@@ -118,26 +85,28 @@ class ListUsers extends Component {
                 }
             },
             {
-                name: 'Admin',
+                name: <h4>Admin</h4>,
                 options: {
                     filter: false,
                     customBodyRender: (value, row) => {
-                        const { current_user } = this.props;
-                        return <FormControlLabel
-                        control={
-                            <Switch
-                                checked={value}
-                                onChange={() => this.changeAdminStatus(row.rowData[0], !value)}
-                                disabled={current_user.role === 'm' ? true : false}
-                            />
-                        }
-                        label={value ? "Admin" : "Member"}
-                      />
-                        
-                        
+                        return <span>{value ? "Admin" : "Member"}</span>
                     }
                 }
-            }
+            },
+            {
+                name: <h4>Remove User</h4>,
+                options: {
+                    filter: false,
+                    customBodyRender: (value) => {
+                        return <Button 
+                        size="small"
+                        onClick={() => this.handleDelete(value)}>
+                        <DeleteOutlinedIcon />
+                        </Button>
+                    }
+                }
+            },
+
         ]
     }
 
@@ -155,13 +124,13 @@ class ListUsers extends Component {
         dispatch(updateAdminStatus(apiData));
     }
 
-    handleChange = (userId) => {
-        const { userStatus } = this.state
-        const admin = !userStatus[userId]["admin"]
-        this.userAdminAssignment(admin, userId)
-        userStatus[userId]["admin"] = admin
-        this.setState({ userId, admin: !admin })
-    }
+    handleDelete = (userEmail) => {
+        const { dispatch } = this.props;
+        const apiData = {
+          userEmail: userEmail,
+        };
+        dispatch(deleteUserAccess(apiData));
+      };
 
     closeSnackBar = (item) => {
         this.setState(item)
@@ -170,30 +139,42 @@ class ListUsers extends Component {
     render() {
         const {  classes, users, isFetching } = this.props;
         const { columns } = this.state;
-        const data = users.map(user => {
+        const data =  Object.values(users)
+        const sortedData = [] 
+        data.map(user => {
+            if (user.roleId != 3 & user.active === true) {
+                sortedData.push(user)
+            }    
+        });
+        const filteredData = sortedData.map(user=>{
             return [
                 user.userId,
                 user.firstName + " " + user.lastName,
                 user.emailId,
                 user.verified,
-                user.roleId > 1
+                user.roleId > 1,
+                user.emailId
             ]
-        });
+        })
+                
         const options = {
             selectableRows: false,
+            download: false,
+            print: false,
+            filter: false,
+            viewColumns: false,
+            pagination:false
           };
         return (
             <div className={classes.root}>
                 <PopUpMessages />
                 { isFetching && <CircleLoader />}
-                <MuiThemeProvider theme={getMuiTheme()}>
                 <MUIDataTable 
-                    title={"Users List"} 
-                    data={data} 
+                    title={<h4>USERS LIST</h4>} 
+                    data={filteredData} 
                     columns={columns} 
                     options={options} 
                 />
-                </MuiThemeProvider>
             </div>
         )
     }

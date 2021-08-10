@@ -1,19 +1,10 @@
 import React, { Component } from "react";
-import { Grid, ListItem, Divider, Button, Alert } from "@material-ui/core";
-// import ComponentHeading from "../ComponentHeading";
-// import apiUrl from "../GlobalUrl";
+import { Grid, ListItem, Divider} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-// import { selectToken, selectedBooks } from "../../store/actions/sourceActions";
-import {
-  fetchTokenList,
-  setSelectedToken,
-} from "../../store/actions/projectActions";
-// import { saveAs } from 'file-saver';
-// import XLSX from 'xlsx';
-// const accessToken = localStorage.getItem('accessToken');
+import apiUrl from "../GlobalUrl";
+import swal from 'sweetalert';
 
-// import ReactToExcel from "react-html-table-to-excel";
 
 
 const styles = (theme) => ({
@@ -24,40 +15,101 @@ const styles = (theme) => ({
     height: "100%",
     overflowX: "hidden",
     overflowY: "auto",
-    backgroundColor: "#fff",
+    backgroundColor: "#ededed",
   },
   containerGrid: {
-    backgroundColor: "#fff",
-    height: "405px",
+    backgroundColor: "#ededed",
+    height: "330px",
   },
 });
 
 class TokenList extends Component {
   state = {
-    tokenList: [],
+    loading:'',
+    selectToken:'',
+    bk:''
   };
 
-  getTokens() {
-    const { tokenList, dispatch } = this.props;
-    if (tokenList) {
-      return tokenList.map((item, index) => {
-        return (
-          <div key={item + index}>
-            <ListItem
-              button
-              name={item}
-              value={item}
-              onClick={() => dispatch(setSelectedToken(item))}
-            >
-              {item}
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      });
-    } else {
-      return <ListItem>Select Target Language to display tokens</ListItem>;
+  // fetch tokens from database
+  gettokenDetails(item){
+    if(this.state.selectToken!=item){
+      const { sourceId, targetId} =this.props.selectedProject;
+      
+      fetch(apiUrl + '/v1/translations/' + sourceId + '/' + targetId + '/' + item, {
+        method: 'GET' })
+        .then(response => response.json())
+        .then(data =>
+          {
+            this.setState({selectToken:item}) 
+            if(data.success==false){
+              const emptyData = {
+                translation: '',
+                senses: ''
+              }
+              this.props.tokenUpdateState(emptyData,this.state.selectToken);
+            }
+            else{
+              this.props.tokenUpdateState(data,this.state.selectToken);
+            }
+          }
+      ).catch( error => {
+        swal({
+        title: 'Translation fetch error',
+        text: 'Failed to fetch token translation, check your internet connection or contact admin',
+        icon: 'error'
+        });
+      })
+    };
+    
+  }
+  
+  // display token in list view and get details on onclick function
+  getTokens(){
+    const { untoken, allList, checkvalue } = this.props;
+    if(checkvalue==false){
+      if (allList) {
+        return allList.map((item, index) => {
+          return (
+            <div key={item + index}>
+              <ListItem
+                button
+                name={item}
+                style={{fontSize:'14px'}}
+                value={item}
+                onClick={() => this.gettokenDetails(item)}
+              >
+                {item}
+              </ListItem>
+              <Divider />
+            </div>
+          );
+        });
+      } else {
+        return <ListItem>Select Target Language to display tokens</ListItem>;
+      }
+    }else{
+      if (untoken) {
+        return untoken.map((item, index) => {
+          return (
+            <div key={item + index}>
+              <ListItem
+                button
+                name={item}
+                style={{fontSize:'14px', color:'#a3811c'}}
+                value={item}
+                onClick={() => this.gettokenDetails(item)}
+              >
+                {item}
+              </ListItem>
+              <Divider />
+            </div>
+          );
+        });
+      } else {
+        return <ListItem>Select Target Language to display tokens</ListItem>;
+      }
     }
+    
   }
 
 
@@ -67,7 +119,7 @@ class TokenList extends Component {
     return (
         <Grid item xs={12} className={classes.containerGrid}>
           <Grid item xs={12} className={classes.tokenList}>
-            {this.getTokens()}
+          {this.getTokens()} 
           </Grid>
         </Grid>
     );
@@ -75,11 +127,6 @@ class TokenList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  projects: state.project.projects,
-  isFetching: state.project.isFetching,
-  userProjects: state.project.userProjects,
-  selectedBook: state.project.selectedBook,
-  tokenList: state.project.tokenList,
   selectedProject: state.project.selectedProject,
 });
 
