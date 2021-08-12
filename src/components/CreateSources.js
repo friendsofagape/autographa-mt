@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
 	Grid,
 	TextField,
@@ -12,38 +12,39 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogTitle,
-} from '@material-ui/core';
-import ComponentHeading from './ComponentHeading';
-import apiUrl from './GlobalUrl';
-import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-import { displaySnackBar, createSource } from '../store/actions/sourceActions';
-import PopUpMessages from './PopUpMessages';
-import { uploadDialog } from '../store/actions/dialogActions';
+} from "@material-ui/core";
+import ComponentHeading from "./ComponentHeading";
+import apiUrl from "./GlobalUrl";
+import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { displaySnackBar, createSource } from "../store/actions/sourceActions";
+import PopUpMessages from "./PopUpMessages";
+import { uploadDialog } from "../store/actions/dialogActions";
 
-import VirtualizedSelect from 'react-virtualized-select';
-import 'react-virtualized-select/styles.css';
-import 'react-virtualized/styles.css';
+import VirtualizedSelect from "react-virtualized-select";
+import "react-virtualized-select/styles.css";
+import "react-virtualized/styles.css";
 
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
 	},
 	cursorPointer: {
-		cursor: 'pointer',
+		cursor: "pointer",
 	},
 	uploadPane: {
-		marginTop: '4%',
+		marginTop: "4%",
 	},
 	textField: {
 		margin: 10,
 	},
 	resize: {
-		fontSize: '20px',
+		fontSize: "20px",
 	},
 	selectMenu: {
 		width: 220,
 		margin: 10,
+		zIndex: 99,
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -60,34 +61,34 @@ class UploadSource extends Component {
 	state = {
 		versionDetails: [],
 		languageDetails: [],
-		versionContentCode: '',
-		versionContentDescription: '',
-		contentType: '',
-		year: '',
-		license: 'CC BY SA',
-		revision: '',
-		languageid: '',
-		contentid: '',
-		languageName: '',
+		versionContentCode: "",
+		versionContentDescription: "",
+		contentType: "",
+		year: "",
+		license: "CC BY SA",
+		revision: "",
+		languageid: "",
+		contentid: "",
+		languageName: "",
 		fileContent: [],
 		parsedUsfm: [],
-		languageCode: '',
+		languageCode: "",
 		loading: false,
-		display: 'none',
+		display: "none",
 		counter: 0,
 	};
 
 	async getVersionData() {
-		const data = await fetch(apiUrl + 'v1/bibles', {
-			method: 'GET',
+		const data = await fetch(apiUrl + "v1/bibles", {
+			method: "GET",
 		});
 		const versionDetails = await data.json();
 		this.setState({ versionDetails });
 	}
 
 	async getLanguagesData() {
-		const data = await fetch(apiUrl + 'v1/languages', {
-			method: 'GET',
+		const data = await fetch(apiUrl + "v1/languages", {
+			method: "GET",
 		});
 		const languageDetails = await data.json();
 		this.setState({ languageDetails });
@@ -123,7 +124,10 @@ class UploadSource extends Component {
 		const value = this.state.contentDetails.filter((item) => {
 			return item.contentType === e.target.value;
 		});
-		this.setState({ contentid: value[0].contentId, contentType: e.target.value });
+		this.setState({
+			contentid: value[0].contentId,
+			contentType: e.target.value,
+		});
 	};
 
 	handleSubmit = (e) => {
@@ -131,9 +135,13 @@ class UploadSource extends Component {
 		var apiData = {
 			languageCode: this.state.languageCode,
 			contentType: this.state.contentType,
-			versionContentCode: this.state.versionContentCode.split(' ').join(""),
-			versionContentDescription: this.state.versionContentDescription.split(' ').join(""),
-			year: this.state.year.split(' ').join(""),
+			versionContentCode: this.state.versionContentCode
+				.split(" ")
+				.join(""),
+			versionContentDescription: this.state.versionContentDescription
+				.split(" ")
+				.join(""),
+			year: this.state.year.split(" ").join(""),
 			revision: this.state.revision,
 			license: this.state.license,
 		};
@@ -142,13 +150,29 @@ class UploadSource extends Component {
 	};
 
 	canBeSubmitted() {
-        const { languageCode, languageName,  versionContentCode, versionContentDescription, year, revision, license } = this.state;
-        return languageCode.length > 0 && languageName.length > 0 && versionContentCode.length > 0 && versionContentDescription.length > 0 && year.toString().length > 0 && revision.toString().length > 0 && license.toString().length > 0;
+		const {
+			languageCode,
+			languageName,
+			versionContentCode,
+			versionContentDescription,
+			year,
+			revision,
+			license,
+		} = this.state;
+		return (
+			languageCode.length > 0 &&
+			languageName.length > 0 &&
+			versionContentCode.length > 0 &&
+			versionContentDescription.length > 0 &&
+			year.toString().length > 0 &&
+			revision.toString().length > 0 &&
+			license.toString().length > 0
+		);
 	}
 
 	render() {
 		const { classes, open, close } = this.props;
-        const isEnabled = this.canBeSubmitted();
+		const isEnabled = this.canBeSubmitted();
 
 		var languageData = [];
 		if (this.state.languageDetails != null) {
@@ -164,25 +188,42 @@ class UploadSource extends Component {
 		return (
 			<Dialog open={open} aria-labelledby="form-dialog-title">
 				{/* <PopUpMessages /> */}
-				<ComponentHeading data={{ classes, text: 'Create Source', styleColor: '#2a2a2fbd' }} />
+				<ComponentHeading
+					data={{
+						classes,
+						text: "Create Source",
+						styleColor: "#2a2a2fbd",
+					}}
+				/>
 				{/* <form className={classes.form} onSubmit={this.handleSubmit}> */}
 				<DialogTitle id="form-dialog-title"> </DialogTitle>
 				<DialogContent>
-					<DialogContentText>Enter details to create source</DialogContentText>
+					<DialogContentText>
+						Enter details to create source
+					</DialogContentText>
 					<Grid container spacing={1} item xs={12}>
 						<Grid item xs={6}>
-							<InputLabel htmlFor="select-revision">Revision</InputLabel>
-							<FormControl variant="outlined" className={classes.formControl}>
+							<InputLabel htmlFor="select-revision">
+								Revision
+							</InputLabel>
+							<FormControl
+								variant="outlined"
+								className={classes.formControl}
+							>
 								<Select
 									// native
 									value={this.state.revision}
 									// variant="outlined"
-									onChange={(e) => this.setState({ revision: e.target.value })}
+									onChange={(e) =>
+										this.setState({
+											revision: e.target.value,
+										})
+									}
 									// variant="outlined"
 									// margin="dense"
 									inputProps={{
-										name: 'revision',
-										id: 'select-revision',
+										name: "revision",
+										id: "select-revision",
 									}}
 									// className={classes.selectMenu}
 								>
@@ -205,7 +246,9 @@ class UploadSource extends Component {
 							</FormControl>
 						</Grid>
 						<Grid item xs={6}>
-							<InputLabel htmlFor="select-language">Language</InputLabel>
+							<InputLabel htmlFor="select-language">
+								Language
+							</InputLabel>
 							<VirtualizedSelect
 								className={classes.selectMenu}
 								options={languageData}
@@ -222,7 +265,12 @@ class UploadSource extends Component {
 						</Grid>
 						<Grid item xs={6}>
 							<TextField
-								onChange={(e) => this.setState({ versionContentDescription: e.target.value })}
+								onChange={(e) =>
+									this.setState({
+										versionContentDescription:
+											e.target.value,
+									})
+								}
 								id="version-content-description"
 								label="Version Name"
 								className={classes.textField}
@@ -239,7 +287,11 @@ class UploadSource extends Component {
 						</Grid>
 						<Grid item xs={6}>
 							<TextField
-								onChange={(e) => this.setState({ versionContentCode: e.target.value })}
+								onChange={(e) =>
+									this.setState({
+										versionContentCode: e.target.value,
+									})
+								}
 								id="version-code"
 								label="Version Abbreviation"
 								className={classes.textField}
@@ -249,7 +301,9 @@ class UploadSource extends Component {
 						</Grid>
 						<Grid item xs={6}>
 							<TextField
-								onChange={(e) => this.setState({ year: e.target.value })}
+								onChange={(e) =>
+									this.setState({ year: e.target.value })
+								}
 								id="year"
 								label="Year"
 								className={classes.textField}
@@ -259,7 +313,9 @@ class UploadSource extends Component {
 						</Grid>
 						<Grid item xs={6}>
 							<TextField
-								onChange={(e) => this.setState({ license: e.target.value })}
+								onChange={(e) =>
+									this.setState({ license: e.target.value })
+								}
 								id="licence"
 								label="License"
 								className={classes.textField}
@@ -275,7 +331,7 @@ class UploadSource extends Component {
 						variant="contained"
 						size="small"
 						color="secondary"
-						onClick={() => close('createSourceDialog')}
+						onClick={() => close("createSourceDialog")}
 					>
 						Close
 					</Button>
@@ -306,4 +362,7 @@ const mapDispatchToProps = (dispatch) => ({
 	dispatch,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UploadSource));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withStyles(styles)(UploadSource));
