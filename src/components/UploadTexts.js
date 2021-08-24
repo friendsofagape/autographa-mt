@@ -76,33 +76,26 @@ class UploadTexts extends Component {
 				parsedUsfmText: item,
 			};
 			await dispatch(
-				uploadBibleTexts(apiData, parsedUsfm[0].metadata.id.book)
+				uploadBibleTexts(apiData, parsedUsfm[0].book.bookCode)
 			);
 		});
 	}
-
-	handleFileRead = (e) => {
-		const { fileContent, parsedUsfm } = this.state;
-		const content = this.fileReader.result;
-		var jsonOutput = grammar.parse(content);
-		fileContent.push(content);
-		parsedUsfm.push(jsonOutput);
-	};
 
 	async handleFileChosen(file) {
 		let fileReader = await new FileReader();
 		fileReader.onloadend = (e) => {
 			const { fileContent, parsedUsfm, errorFiles } = this.state;
 			const content = fileReader.result;
-			var jsonOutput = grammar.parseUSFM(content);
-			if (jsonOutput.ERROR) {
-				errorFiles.push(file.name);
-				window.alert("Parsing Error in " + file.name + " File");
-				this.setState({ errorFiles, progress: false });
-			} else {
+			const myUsfmParser = new grammar.USFMParser(content);
+			try {
+				var jsonOutput = myUsfmParser.toJSON();
 				fileContent.push(content);
 				parsedUsfm.push(jsonOutput);
 				this.setState({ fileContent, parsedUsfm, progress: false });
+			} catch (error) {
+				errorFiles.push(file.name);
+				window.alert("Parsing Error in " + file.name + " File");
+				this.setState({ errorFiles, progress: false });
 			}
 		};
 		await fileReader.readAsText(file);
