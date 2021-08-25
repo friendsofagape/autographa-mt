@@ -15,6 +15,7 @@ import {
 	uploadBibleTexts,
 	setCompletedUpload,
 	setUploadError,
+	clearUploadError,
 } from "../store/actions/sourceActions";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
@@ -39,25 +40,31 @@ class UploadTexts extends Component {
 	};
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.completedUpload !== this.props.completedUpload) {
-			const { completedUpload, uploadErrorBooks, dispatch } = this.props;
+		const { completedUpload, uploadErrorBooks, dispatch } = this.props;
+		if (
+			prevProps.uploadErrorBooks.length !==
+				this.props.uploadErrorBooks.length ||
+			prevProps.completedUpload !== this.props.completedUpload
+		) {
 			if (completedUpload) {
 				if (uploadErrorBooks.length > 0) {
 					swal({
 						title: "Upload Bible",
-						text: `${uploadErrorBooks.length} books failed to upload`,
+						text: `Some books failed to upload :-\n${uploadErrorBooks.join(
+							", "
+						)}`,
 						icon: "warning",
 					}).then((msg) => {
-						dispatch(setUploadError([]));
+						dispatch(clearUploadError());
 						this.props.close();
 					});
-				} else {
+				} else if (prevProps.uploadErrorBooks.length === 0) {
 					swal({
 						title: "Upload Bible",
 						text: `All books uploaded successfully`,
 						icon: "success",
 					}).then((msg) => {
-						dispatch(setUploadError([]));
+						dispatch(clearUploadError());
 						this.props.close();
 					});
 				}
@@ -76,7 +83,7 @@ class UploadTexts extends Component {
 				parsedUsfmText: item,
 			};
 			await dispatch(
-				uploadBibleTexts(apiData, parsedUsfm[0].book.bookCode)
+				uploadBibleTexts(apiData, parsedUsfm[index].book.bookCode)
 			);
 		});
 	}
@@ -103,6 +110,7 @@ class UploadTexts extends Component {
 
 	addFiles = (e) => {
 		e.preventDefault();
+		const { dispatch } = this.props;
 		const filesObj = e.target.files;
 		const filesKeys = Object.keys(filesObj);
 		this.setState({
