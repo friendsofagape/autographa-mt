@@ -320,18 +320,14 @@ class AssignUser extends Component {
 		const { userId, availableBooksData } = this.state;
 		const { dispatch, location, assignedUsers } = this.props;
 		const projectId = location.pathname.split("/").pop();
-		console.log(assignedUsers, "users");
 		let assignedUsersBooks = [];
 		for (var i in assignedUsers) {
 			//Listing the books of users
 			if (assignedUsers[i].user.userId === this.state.userId) {
-				console.log(assignedUsers[i], "state", this.state.userId);
-
 				//Checking if not current user then push the books
 				assignedUsersBooks = assignedUsers[i].books;
 			}
 		}
-		console.log(assignedUsersBooks, "assigned books");
 		const checkedBooks = Object.keys(availableBooksData).filter(
 			(book) => availableBooksData[book]["assigned"] === true
 		);
