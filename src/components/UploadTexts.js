@@ -14,7 +14,6 @@ import ComponentHeading from "./ComponentHeading";
 import {
 	uploadBibleTexts,
 	setCompletedUpload,
-	setUploadError,
 	clearUploadError,
 } from "../store/actions/sourceActions";
 import { connect } from "react-redux";
