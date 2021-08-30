@@ -49,7 +49,9 @@ class UploadTexts extends Component {
 				if (uploadErrorBooks.length > 0) {
 					swal({
 						title: "Upload Bible",
-						text: `Some books failed to upload :-\n${uploadErrorBooks.join(
+						text: `${
+							uploadErrorBooks.length
+						} book(s) failed to upload :-\n${uploadErrorBooks.join(
 							", "
 						)}`,
 						icon: "warning",
