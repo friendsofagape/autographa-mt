@@ -32,6 +32,7 @@ import {
 	bibleBookNewTestments,
 	bibleBookOldTestments,
 } from "../Common/BibleOldNewTestment";
+import swal from "sweetalert";
 
 const styles = (theme) => ({
 	root: {
@@ -317,18 +318,37 @@ class AssignUser extends Component {
 
 	assignBooksToUser = () => {
 		const { userId, availableBooksData } = this.state;
-		const { dispatch, location } = this.props;
+		const { dispatch, location, assignedUsers } = this.props;
 		const projectId = location.pathname.split("/").pop();
+		let assignedUsersBooks = [];
+		for (var i in assignedUsers) {
+			//Listing the books of users
+			if (assignedUsers[i].user.userId === this.state.userId) {
+				//Checking if not current user then push the books
+				assignedUsersBooks = assignedUsers[i].books;
+			}
+		}
 		const checkedBooks = Object.keys(availableBooksData).filter(
 			(book) => availableBooksData[book]["assigned"] === true
 		);
-		const apiData = {
-			projectId: projectId,
-			userId: userId,
-			books: checkedBooks,
-			action: "assign",
-		};
-		dispatch(assignUserToProject(apiData, this.closeBookListing));
+		if (
+			assignedUsersBooks.sort().toString() ===
+			checkedBooks.sort().toString()
+		) {
+			swal({
+				title: "Book assignment",
+				text: "No change in assigned books",
+				icon: "warning",
+			});
+		} else {
+			const apiData = {
+				projectId: projectId,
+				userId: userId,
+				books: checkedBooks,
+				action: "assign",
+			};
+			dispatch(assignUserToProject(apiData, this.closeBookListing));
+		}
 	};
 
 	render() {
