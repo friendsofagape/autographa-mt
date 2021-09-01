@@ -90,7 +90,7 @@ class CreateOrganisations extends Component {
 	}
 
 	render() {
-		const { classes, open, close } = this.props;
+		const { classes, open, close, isFetching } = this.props;
 		const isEnabled = this.canBeSubmitted();
 		return (
 			<div className={classes.root}>
@@ -101,6 +101,8 @@ class CreateOrganisations extends Component {
 					fullWidth={true}
 					maxWidth={"sm"}
 				>
+					{isFetching && <CircleLoader />}
+
 					<DialogTitle id="customized-dialog-title" onClose={close}>
 						<Typography variant="h6">
 							Create organisation
@@ -109,7 +111,7 @@ class CreateOrganisations extends Component {
 					<DialogContent dividers className={classes.dailog}>
 						<form
 							className={classes.form}
-							onSubmit={this.handleLoginSubmit}
+							onSubmit={this.handleSubmit}
 						>
 							<Grid container spacing={2}>
 								<Grid item xs={10}>
@@ -226,11 +228,16 @@ class CreateOrganisations extends Component {
 	}
 }
 
+const mapStateToProps = (state) => ({
+	organisations: state.organisation.organisations,
+	isFetching: state.organisation.isFetching,
+});
+
 const mapDispatchToProps = (dispatch) => ({
 	dispatch,
 });
 
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(withStyles(styles)(CreateOrganisations));

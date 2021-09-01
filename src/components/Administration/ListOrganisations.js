@@ -176,8 +176,8 @@ class ListOrganisations extends Component {
 			selectableRows: false,
 			download: false,
 			print: false,
-			filter: true,
-			viewColumns: true,
+			filter: false,
+			viewColumns: false,
 			pagination: false,
 		};
 		return (
