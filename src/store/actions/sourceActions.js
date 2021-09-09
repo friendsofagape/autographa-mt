@@ -139,9 +139,7 @@ export const uploadBibleTexts = (apiData, book) => async (dispatch) => {
 		});
 		const myJson = await postVersions.json();
 
-		if (!myJson.success) {
-			dispatch(setUploadError(book + " - " + myJson.message));
-		}
+		dispatch(setUploadError(book + "-" + myJson.message));
 	} catch (ex) {
 		swal({
 			title: "Upload Bible",

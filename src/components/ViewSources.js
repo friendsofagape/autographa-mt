@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import { Grid, Button, Tooltip, Typography } from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
+import { Button, Tooltip } from "@material-ui/core";
 import UploadTexts from "./UploadTexts";
-// import apiUrl from "./GlobalUrl";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import CreateSources from "./CreateSources";
@@ -17,10 +13,6 @@ import AddIcon from "@material-ui/icons/Add";
 import MUIDataTable from "mui-datatables";
 import CircleLoader from "./loaders/CircleLoader";
 import moment from "moment";
-import {
-	bibleBookNewTestments,
-	bibleBookOldTestments,
-} from "../components/Common/BibleOldNewTestment";
 
 const styles = (theme) => ({
 	root: {
@@ -29,17 +21,6 @@ const styles = (theme) => ({
 		padding: theme.spacing(8),
 		paddingLeft: "15%",
 		paddingRight: "15%",
-	},
-	versionDisplay: {
-		maxHeight: "80vh",
-		overflow: "auto",
-	},
-	cursorPointer: {
-		margin: 10,
-		cursor: "pointer",
-	},
-	bookCard: {
-		width: "400px",
 	},
 	fab: {
 		position: "fixed",
@@ -56,7 +37,6 @@ class ViewSources extends Component {
 		accessToken: "",
 		availableBooksData: [],
 		createSourceDialog: false,
-		listBooks: false,
 		columns: [
 			{
 				name: "id",
@@ -104,156 +84,46 @@ class ViewSources extends Component {
 	};
 
 	componentDidMount() {
-		var { dispatch, current_user } = this.props;
+		var { dispatch } = this.props;
 		dispatch(fetchBibleLanguages());
-		if (current_user.role == "sa") {
-			let { columns } = this.state;
-			columns = [
-				...columns,
-				{
-					name: <h4>Books</h4>,
-					options: {
-						filter: false,
-						sort: false,
-						customBodyRender: (value) => {
-							return (
-								<Button
-									size="small"
-									color={"primary"}
-									variant="contained"
-									onClick={() =>
-										this.setState(
-											{ listBooks: true },
-											this.handleBookSelect(value)
-										)
-									}
-								>
-									<span style={{ fontSize: "70%" }}>
-										View
-									</span>
-								</Button>
-							);
-						},
-					},
-				},
-				{
-					name: <h4>Upload</h4>,
-					options: {
-						filter: false,
-						sort: false,
-						customBodyRender: (value) => {
-							return (
-								<Button
-									size="small"
-									color={"primary"}
-									variant="contained"
-									onClick={() =>
-										this.setState({
+		let { columns } = this.state;
+		columns = [
+			...columns,
+			{
+				name: <h4>Books</h4>,
+				options: {
+					filter: false,
+					sort: false,
+					customBodyRender: (value) => {
+						return (
+							<Button
+								size="small"
+								color={"primary"}
+								variant="contained"
+								onClick={() =>
+									this.setState(
+										{
 											dialogOpen: true,
 											sourceId: value,
-										})
-									}
-								>
-									<span style={{ fontSize: "70%" }}>
-										Upload
-									</span>
-								</Button>
-							);
-						},
+										},
+										this.handleBookSelect(value)
+									)
+								}
+							>
+								<span style={{ fontSize: "70%" }}>Books</span>
+							</Button>
+						);
 					},
 				},
-			];
-			this.setState({ columns });
-		} else {
-			let { columns } = this.state;
-			columns = [
-				...columns,
-				{
-					name: <h4>Books</h4>,
-					options: {
-						filter: false,
-						sort: false,
-						customBodyRender: (value) => {
-							return (
-								<Button
-									size={"small"}
-									color={"primary"}
-									variant="contained"
-									onClick={() =>
-										this.setState(
-											{ listBooks: true },
-											this.handleBookSelect(value)
-										)
-									}
-								>
-									<span style={{ fontSize: "70%" }}>
-										View
-									</span>
-								</Button>
-							);
-						},
-					},
-				},
-			];
-			this.setState({ columns });
-		}
+			},
+		];
+		this.setState({ columns });
 	}
 
 	handleClose = (value) => {
 		this.setState({
 			[value]: false,
 		});
-	};
-
-	displayOldBooks = () => {
-		//function for sorting old testament books
-		const { sourceBooks } = this.props;
-
-		var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
-		let oldTestments = [];
-		bibleBookOldTestments.map((book) => {
-			//map function for pushing the old testament books in order
-			return totalBooks.includes(book) ? oldTestments.push(book) : null;
-		});
-		return oldTestments.map((book, i) => {
-			//displaying the old testament books on UI
-			return (
-				<Grid item xs={2} key={i}>
-					<Typography style={{ fontSize: "80%" }}>
-						{book.toUpperCase()}
-					</Typography>
-				</Grid>
-			);
-		});
-	};
-
-	displayNewBooks = () => {
-		//function for sorting new testament books
-		const { sourceBooks } = this.props;
-		var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
-		let newTestments = [];
-		bibleBookNewTestments.map((book) => {
-			//map function for pushing the new testament books in order
-			return totalBooks.includes(book) ? newTestments.push(book) : null;
-		});
-		return newTestments.map((book, i) => {
-			//displaying the new testament books on UI
-			return (
-				<Grid item xs={2} key={i}>
-					<Typography style={{ fontSize: "80%" }}>
-						{book.toUpperCase()}
-					</Typography>
-				</Grid>
-			);
-		});
-	};
-
-	closeBookListing = () => {
-		this.setState({ userId: "", projectId: "", listBooks: false });
-	};
-
-	handleSelect = (sourceId) => (e) => {
-		this.setState({ dialogOpen: true, sourceId });
 	};
 
 	handleBookSelect = (sourceId) => (e) => {
@@ -264,7 +134,7 @@ class ViewSources extends Component {
 	render() {
 		const { classes, bibleLanguages, isFetching, current_user } =
 			this.props;
-		const { columns, open, createSourceDialog } = this.state;
+		const { columns, createSourceDialog } = this.state;
 		var data = [];
 		bibleLanguages.map((bible) => {
 			bible["languageVersions"].map((version) => {
@@ -302,9 +172,10 @@ class ViewSources extends Component {
 						open={createSourceDialog}
 						close={this.handleClose}
 						isFetching={isFetching}
+						data={data}
 					/>
 				)}
-				{current_user.role == "sa" && (
+				{current_user.role === "sa" && (
 					<Tooltip title="Click to add new source">
 						<Fab
 							aria-label={"add"}
@@ -318,43 +189,12 @@ class ViewSources extends Component {
 						</Fab>
 					</Tooltip>
 				)}
-				{this.state.listBooks && (
-					<Dialog open={this.state.listBooks}>
-						{isFetching && <CircleLoader />}
-						<DialogContent>
-							<h4>OLD TESTAMENT</h4>
-							<Grid
-								container
-								item
-								className={this.props.classes.bookCard}
-							>
-								{this.displayOldBooks()}
-							</Grid>
-							<h4>NEW TESTAMENT</h4>
-							<Grid
-								container
-								item
-								className={this.props.classes.bookCard}
-							>
-								{this.displayNewBooks()}
-							</Grid>
-						</DialogContent>
-						<DialogActions>
-							<Button
-								onClick={this.closeBookListing}
-								variant="contained"
-								color="secondary"
-							>
-								Close
-							</Button>
-						</DialogActions>
-					</Dialog>
-				)}
 				{this.state.dialogOpen && (
 					<UploadTexts
 						sourceId={this.state.sourceId}
 						dialogOpen={this.state.dialogOpen}
 						close={this.closeDialog}
+						newData={data}
 					/>
 				)}
 			</div>

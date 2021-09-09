@@ -4,11 +4,9 @@ import {
 	Button,
 	Dialog,
 	DialogActions,
-	DialogContent,
-	DialogContentText,
 	DialogTitle,
+	DialogContent,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import PopUpMessages from "./PopUpMessages";
 import ComponentHeading from "./ComponentHeading";
 import {
@@ -16,16 +14,37 @@ import {
 	setCompletedUpload,
 	clearUploadError,
 } from "../store/actions/sourceActions";
+import AddIcon from "@material-ui/icons/Add";
+import { fetchSourceBooks } from "../store/actions/sourceActions";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import swal from "sweetalert";
 import CircleLoader from "./loaders/CircleLoader";
+import { books } from "../components/Common/BibleOldNewTestment";
 var grammar = require("usfm-grammar");
 
 const styles = (theme) => ({
 	progress: {
 		margin: theme.spacing(2),
+	},
+	bookCard: {
+		width: "430px",
+		margin: "0 auto",
+	},
+	btnBooks: {
+		height: "25px",
+		margin: "4px",
+		color: "#28a745",
+	},
+	success: {
+		marginBottom: "10px",
+	},
+	message: {
+		display: "block",
+		paddingTop: "5px",
+	},
+	title: {
+		textAlign: "center",
+		backgroundColor: "#eee",
 	},
 });
 
@@ -36,10 +55,19 @@ class UploadTexts extends Component {
 		disableUpload: true,
 		progress: false,
 		text: "",
+		success: [],
+		errorFiles: [],
+		openDailog: false,
+		failedBook: "",
+		successBook: "",
+		uploading: false,
+		uploadSuccess: [],
+		uploadErrors: [],
 	};
 
 	componentDidUpdate(prevProps) {
-		const { completedUpload, uploadErrorBooks, dispatch } = this.props;
+		const { completedUpload, uploadErrorBooks } = this.props;
+
 		if (
 			prevProps.uploadErrorBooks.length !==
 				this.props.uploadErrorBooks.length ||
@@ -47,27 +75,33 @@ class UploadTexts extends Component {
 		) {
 			if (completedUpload) {
 				if (uploadErrorBooks.length > 0) {
-					swal({
-						title: "Upload Bible",
-						text: `${
-							uploadErrorBooks.length
-						} book(s) failed to upload :-\n${uploadErrorBooks.join(
-							", "
-						)}`,
-						icon: "warning",
-					}).then((msg) => {
-						dispatch(clearUploadError());
-						this.props.close();
-					});
-				} else if (prevProps.uploadErrorBooks.length === 0) {
-					swal({
-						title: "Upload Bible",
-						text: `All books uploaded successfully`,
-						icon: "success",
-					}).then((msg) => {
-						dispatch(clearUploadError());
-						this.props.close();
-					});
+					///MIC-Inserted mic into database
+					for (const book of uploadErrorBooks) {
+						let item = book.split("-");
+						if (item[1].substring(0, 8) === "Inserted") {
+							const { uploadSuccess } = this.state;
+							if (!uploadSuccess.includes(item[0])) {
+								uploadSuccess.push(item[0]);
+								this.setState({
+									uploadSuccess,
+								});
+							}
+						} else {
+							const { uploadErrors } = this.state;
+							if (!uploadErrors.includes(book)) {
+								uploadErrors.push(book);
+								this.setState({
+									uploadErrors,
+								});
+							}
+						}
+						if (
+							uploadErrorBooks.length ===
+							this.state.success.length
+						) {
+							this.setState({ progress: false });
+						}
+					}
 				}
 			}
 		}
@@ -92,26 +126,52 @@ class UploadTexts extends Component {
 	async handleFileChosen(file) {
 		let fileReader = await new FileReader();
 		fileReader.onloadend = (e) => {
-			const { fileContent, parsedUsfm, errorFiles } = this.state;
+			const { fileContent, parsedUsfm, errorFiles, success } = this.state;
 			const content = fileReader.result;
 			const myUsfmParser = new grammar.USFMParser(content);
 			try {
 				var jsonOutput = myUsfmParser.toJSON();
 				fileContent.push(content);
 				parsedUsfm.push(jsonOutput);
-				this.setState({ fileContent, parsedUsfm, progress: false });
+				success.push(jsonOutput.book.bookCode);
+				this.setState({
+					fileContent,
+					parsedUsfm,
+					success,
+				});
 			} catch (error) {
 				errorFiles.push(file.name);
-				window.alert("Parsing Error in " + file.name + " File");
-				this.setState({ errorFiles, progress: false });
+				this.setState({ errorFiles });
+			} finally {
+				if (
+					success.length + errorFiles.length ===
+					this.state.totalFile
+				) {
+					this.uploadFiles();
+				}
 			}
 		};
 		await fileReader.readAsText(file);
 	}
 
+	openDailogBox = () => {
+		this.setState({ openDailog: true });
+	};
+
+	closeDailogBox = () => {
+		const { sourceId, dispatch } = this.props;
+		this.setState({
+			openDailog: false,
+			uploadSuccess: [],
+			uploadErrors: [],
+		});
+		dispatch(clearUploadError());
+		dispatch(fetchSourceBooks(sourceId));
+	};
+
 	addFiles = (e) => {
 		e.preventDefault();
-		const { dispatch } = this.props;
+		this.openDailogBox();
 		const filesObj = e.target.files;
 		const filesKeys = Object.keys(filesObj);
 		this.setState({
@@ -119,89 +179,217 @@ class UploadTexts extends Component {
 			parsedUsfm: [],
 			errorFiles: [],
 			progress: true,
+			success: [],
+			totalFile: filesKeys.length,
+			uploading: true,
 		});
 		filesKeys.map(async (key) => {
-			await this.setState({ progress: true });
 			await this.handleFileChosen(filesObj[key]);
 		});
 	};
 
-	handleSubmit = (e) => {
-		this.uploadFiles();
+	displayAllBooks = () => {
+		const { sourceBooks } = this.props;
+		var totalBooks = [].concat.apply([], sourceBooks); //merging the arrays
+		return books.map((book, i) => {
+			return (
+				<Grid item xs={2} key={i}>
+					<Button
+						className={this.props.classes.btnBooks}
+						variant="outlined"
+						disabled={!totalBooks.includes(book)}
+						style={{ backgroundColor: "transparent" }}
+					>
+						{book.toUpperCase()}
+					</Button>
+				</Grid>
+			);
+		});
+	};
+
+	//display heading of the popup onclick book button
+	displayHeading = () => {
+		const { newData, sourceId } = this.props;
+		for (let index = 0; index < newData.length; index++) {
+			const element = newData[index];
+			if (element[0] === sourceId) {
+				return `Books - ${
+					element[1].charAt(0).toUpperCase() + element[1].slice(1)
+				} ${element[2]} ${element[3]}`;
+			}
+		}
 	};
 
 	render() {
-		const { dialogOpen, close, isFetching } = this.props;
+		const { dialogOpen, close, isFetching, current_user } = this.props;
+		const { success, errorFiles, uploadSuccess, uploadErrors } = this.state;
 		return (
-			<Dialog open={dialogOpen} aria-labelledby="form-dialog-title">
-				<PopUpMessages />
-				{isFetching && <CircleLoader />}
-				<ComponentHeading
-					data={{ text: "Upload Sources", styleColor: "#2a2a2fbd" }}
-				/>
-				<DialogTitle id="form-dialog-title"> </DialogTitle>
-				<DialogContent>
-					<DialogContentText>
-						Select the files to be uploaded and click Upload
-					</DialogContentText>
-					<Grid container spacing={2}>
-						<Grid item xs={2}>
-							<label>
-								{this.state.parsedUsfm.length}{" "}
-								{this.state.parsedUsfm.length > 1
-									? "files"
-									: "file"}
-							</label>
+			<div>
+				<Dialog
+					open={dialogOpen}
+					aria-labelledby="form-dialog-title"
+					className={this.props.classes.dailogWidth}
+					maxWidth="sm"
+					fullWidth={true}
+				>
+					<PopUpMessages />
+					{isFetching && <CircleLoader />}
+					<ComponentHeading
+						data={{
+							text: `${this.displayHeading()}`,
+							styleColor: "#2a2a2fbd",
+						}}
+					/>
+					<DialogContent>
+						<Grid
+							container
+							item
+							className={this.props.classes.bookCard}
+						>
+							{this.displayAllBooks()}
 						</Grid>
-						<Grid item xs={2}>
-							{this.state.progress ? <CircularProgress /> : null}
-							{this.state.text ? this.state.text : null}
-						</Grid>
-						<Grid item xs={5}>
-							<input
-								style={{ display: "none" }}
-								id="raised-button-file"
-								multiple
-								type="file"
-								accept=".usfm,.sfm"
-								onChange={this.addFiles}
-							/>
-							<label htmlFor="raised-button-file">
-								<Button
-									size="small"
-									disabled={this.state.progress}
-									variant="contained"
-									color="primary"
-									component="span"
-								>
-									<AddIcon /> add files
-								</Button>
-							</label>
-						</Grid>
-						<Grid item xs={3}>
+						{current_user.role === "sa" && (
+							<div>
+								<Grid container spacing={2}>
+									<Grid item xs={7}></Grid>
+									<Grid item xs={2}>
+										<Button
+											size="small"
+											onClick={close}
+											variant="contained"
+											color="secondary"
+										>
+											Close
+										</Button>
+									</Grid>
+									<Grid item xs={3}>
+										<input
+											style={{ display: "none" }}
+											id="raised-button-file"
+											multiple
+											type="file"
+											accept=".usfm,.sfm"
+											onChange={this.addFiles}
+										/>
+										<label htmlFor="raised-button-file">
+											<Button
+												variant="contained"
+												color="primary"
+												size="small"
+												component="span"
+											>
+												<AddIcon /> Add Books
+											</Button>
+										</label>
+									</Grid>
+								</Grid>
+							</div>
+						)}
+					</DialogContent>
+					<DialogActions>
+						{current_user.role !== "sa" && (
 							<Button
-								disabled={this.state.progress}
-								variant="contained"
-								color="primary"
 								size="small"
-								onClick={this.handleSubmit}
+								onClick={close}
+								variant="contained"
+								color="secondary"
 							>
-								Upload
+								Close
 							</Button>
-						</Grid>
-					</Grid>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						size="small"
-						onClick={close}
-						variant="contained"
-						color="secondary"
-					>
-						Close
-					</Button>
-				</DialogActions>
-			</Dialog>
+						)}
+					</DialogActions>
+				</Dialog>
+				<Dialog
+					open={this.state.openDailog}
+					aria-labelledby="form-dialog-title"
+					onClose={this.handleClose}
+					fullWidth
+					maxWidth="xs"
+				>
+					<DialogTitle className={this.props.classes.title}>
+						Book Upload Status
+					</DialogTitle>
+					<DialogContent>
+						<div className={this.props.classes.success}>
+							<Grid container>
+								<Grid item xs={6}>
+									Parsed Successfully
+								</Grid>
+								<Grid item xs={6}>
+									({this.state.success.length}/
+									{this.state.totalFile}) :
+									{success && success.join(", ")}
+								</Grid>
+							</Grid>
+						</div>
+						<div className={this.props.classes.success}>
+							{this.state.errorFiles.length > 0 ? (
+								<Grid container>
+									<Grid item xs={6}>
+										Error File(s)
+									</Grid>
+									<Grid item xs={6}>
+										({this.state.errorFiles.length}) :
+										{errorFiles && errorFiles.join(", ")}
+									</Grid>
+								</Grid>
+							) : (
+								""
+							)}
+						</div>
+						<div className={this.props.classes.message}>
+							{uploadSuccess.length > 0 ? (
+								<Grid container>
+									<Grid item xs={6}>
+										Successfully Uploaded
+									</Grid>
+									<Grid item xs={6}>
+										({uploadSuccess.length}) :{" "}
+										{uploadSuccess.join(", ")}
+									</Grid>
+								</Grid>
+							) : (
+								""
+							)}
+						</div>
+						<div className={this.props.classes.message}>
+							{uploadErrors.length > 0 ? (
+								<Grid container>
+									<Grid item xs={6}>
+										Upload Errors
+									</Grid>
+									<Grid item xs={6}>
+										({uploadErrors.length}) :{" "}
+										{uploadErrors.map((book, i) => {
+											const item = book.split("-");
+
+											return (
+												<span key={i} title={item[1]}>
+													{i !== 0 ? ", " : ""}
+													{item[0]}
+												</span>
+											);
+										})}
+									</Grid>
+								</Grid>
+							) : (
+								""
+							)}
+						</div>
+					</DialogContent>
+					<DialogActions>
+						<Button
+							disabled={this.state.progress}
+							size="small"
+							onClick={this.closeDailogBox}
+							variant="contained"
+							color="primary"
+						>
+							Ok
+						</Button>
+					</DialogActions>
+				</Dialog>
+			</div>
 		);
 	}
 }
@@ -210,6 +398,8 @@ const mapStateToProps = (state) => ({
 	isFetching: state.sources.isFetching,
 	uploadErrorBooks: state.sources.uploadErrorBooks,
 	completedUpload: state.sources.completedUpload,
+	sourceBooks: state.sources.sourceBooks,
+	current_user: state.auth.current_user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
