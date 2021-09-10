@@ -14,6 +14,10 @@ import {
 	setCompletedUpload,
 	clearUploadError,
 } from "../store/actions/sourceActions";
+import Chip from "@material-ui/core/Chip";
+import DoneIcon from "@material-ui/icons/Done";
+import Tooltip from "@material-ui/core/Tooltip";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import AddIcon from "@material-ui/icons/Add";
 import { fetchSourceBooks } from "../store/actions/sourceActions";
 import { connect } from "react-redux";
@@ -45,6 +49,15 @@ const styles = (theme) => ({
 	title: {
 		textAlign: "center",
 		backgroundColor: "#eee",
+	},
+	uploadLabel: {
+		lineHeight: "40px",
+	},
+	uploadChip: {
+		margin: "4px",
+	},
+	progressbar: {
+		marginTop: "10px",
 	},
 });
 
@@ -219,10 +232,14 @@ class UploadTexts extends Component {
 			}
 		}
 	};
+	handleDelete = () => {
+		console.info("You clicked the delete icon.");
+	};
 
 	render() {
 		const { dialogOpen, close, isFetching, current_user } = this.props;
-		const { success, errorFiles, uploadSuccess, uploadErrors } = this.state;
+		const { success, errorFiles, uploadSuccess, uploadErrors, totalFile } =
+			this.state;
 		return (
 			<div>
 				<Dialog
@@ -304,7 +321,7 @@ class UploadTexts extends Component {
 					aria-labelledby="form-dialog-title"
 					onClose={this.handleClose}
 					fullWidth
-					maxWidth="xs"
+					maxWidth="sm"
 				>
 					<DialogTitle className={this.props.classes.title}>
 						Book Upload Status
@@ -312,69 +329,122 @@ class UploadTexts extends Component {
 					<DialogContent>
 						<div className={this.props.classes.success}>
 							<Grid container>
-								<Grid item xs={6}>
-									Parsed Successfully
+								<Grid item xs={3}>
+									<span
+										className={
+											this.props.classes.uploadLabel
+										}
+									>
+										Parsed (
+										{success.length + errorFiles.length}/
+										{totalFile}) :
+									</span>
 								</Grid>
-								<Grid item xs={6}>
-									({this.state.success.length}/
-									{this.state.totalFile}) :
-									{success && success.join(", ")}
+								<Grid item xs={9}>
+									{success.map((item, i) => (
+										<Chip
+											className={
+												this.props.classes.uploadChip
+											}
+											key={i}
+											variant="outlined"
+											color="primary"
+											deleteIcon={<DoneIcon />}
+											onDelete={this.handleDelete}
+											label={item}
+										/>
+									))}
+									{errorFiles.map((item, i) => (
+										<Chip
+											className={
+												this.props.classes.uploadChip
+											}
+											key={i}
+											variant="outlined"
+											color="secondary"
+											onDelete={this.handleDelete}
+											label={item}
+										/>
+									))}
+								</Grid>
+								<Grid item xs={12}>
+									<LinearProgress
+										className={
+											this.props.classes.progressbar
+										}
+										variant="determinate"
+										value={
+											((success.length +
+												errorFiles.length) /
+												totalFile) *
+											100
+										}
+									/>
 								</Grid>
 							</Grid>
 						</div>
-						<div className={this.props.classes.success}>
-							{this.state.errorFiles.length > 0 ? (
-								<Grid container>
-									<Grid item xs={6}>
-										Error File(s)
-									</Grid>
-									<Grid item xs={6}>
-										({this.state.errorFiles.length}) :
-										{errorFiles && errorFiles.join(", ")}
-									</Grid>
-								</Grid>
-							) : (
-								""
-							)}
-						</div>
-						<div className={this.props.classes.message}>
-							{uploadSuccess.length > 0 ? (
-								<Grid container>
-									<Grid item xs={6}>
-										Successfully Uploaded
-									</Grid>
-									<Grid item xs={6}>
-										({uploadSuccess.length}) :{" "}
-										{uploadSuccess.join(", ")}
-									</Grid>
-								</Grid>
-							) : (
-								""
-							)}
-						</div>
-						<div className={this.props.classes.message}>
-							{uploadErrors.length > 0 ? (
-								<Grid container>
-									<Grid item xs={6}>
-										Upload Errors
-									</Grid>
-									<Grid item xs={6}>
-										({uploadErrors.length}) :{" "}
-										{uploadErrors.map((book, i) => {
-											const item = book.split("-");
 
-											return (
-												<span key={i} title={item[1]}>
-													{i !== 0 ? ", " : ""}
-													{item[0]}
-												</span>
-											);
-										})}
-									</Grid>
+						<div className={this.props.classes.message}>
+							<Grid container>
+								<Grid item xs={3}>
+									<span
+										className={
+											this.props.classes.uploadLabel
+										}
+									>
+										Uploaded (
+										{uploadSuccess.length +
+											uploadErrors.length}
+										/{success.length}) :
+									</span>
 								</Grid>
-							) : (
-								""
-							)}
+								<Grid item xs={9}>
+									{uploadSuccess.map((item, i) => (
+										<Chip
+											className={
+												this.props.classes.uploadChip
+											}
+											key={i}
+											variant="outlined"
+											color="primary"
+											deleteIcon={<DoneIcon />}
+											onDelete={this.handleDelete}
+											label={item}
+										/>
+									))}
+									{uploadErrors.map((book, i) => {
+										const item = book.split("-");
+										return (
+											<Tooltip key={i} title={item[1]}>
+												<Chip
+													className={
+														this.props.classes
+															.uploadChip
+													}
+													variant="outlined"
+													color="secondary"
+													onDelete={this.handleDelete}
+													label={item[0]}
+												/>
+											</Tooltip>
+										);
+									})}
+								</Grid>
+								<Grid item xs={12}>
+									<LinearProgress
+										className={
+											this.props.classes.progressbar
+										}
+										variant="determinate"
+										value={
+											((uploadSuccess.length +
+												uploadErrors.length) /
+												success.length) *
+											100
+										}
+									/>
+								</Grid>
+							</Grid>
 						</div>
 					</DialogContent>
 					<DialogActions>
