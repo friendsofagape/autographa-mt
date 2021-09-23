@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { InputLabel, FormControl, Select, MenuItem } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { connect } from 'react-redux';
-import { fetchBibleLanguages, fetchAllLanguages } from '../../store/actions/sourceActions';
-import { fetchOrganisations } from '../../store/actions/organisationActions';
-import { createProject } from '../../store/actions/projectActions';
-import VirtualizedSelect from 'react-virtualized-select';
-import CircleLoader from '../loaders/CircleLoader';
-import 'react-select/dist/react-select.css';
-import 'react-virtualized-select/styles.css';
-import './style.css';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import { InputLabel, FormControl, Select, MenuItem } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import { connect } from "react-redux";
+import {
+	fetchBibleLanguages,
+	fetchAllLanguages,
+} from "../../store/actions/sourceActions";
+import { fetchOrganisations } from "../../store/actions/organisationActions";
+import { createProject } from "../../store/actions/projectActions";
+import VirtualizedSelect from "react-virtualized-select";
+import CircleLoader from "../loaders/CircleLoader";
+import "react-select/dist/react-select.css";
+import "react-virtualized-select/styles.css";
+import "./style.css";
 
 const styles = (theme) => ({
 	root: {
@@ -26,40 +29,39 @@ const styles = (theme) => ({
 		padding: theme.spacing(2),
 	},
 	dailog: {
-		minHeight: '300px',
+		minHeight: "300px",
 	},
 	closeButton: {
-		position: 'absolute',
+		position: "absolute",
 		right: theme.spacing(1),
 		top: theme.spacing(1),
 		color: theme.palette.grey[500],
 	},
 	formControl: {
 		margin: theme.spacing(1),
-		minWidth: '100%',
-		margin: 0,
+		minWidth: "100%",
 	},
 	selectMenu: {
-		width: '95%',
+		width: "95%",
 	},
 	virtualSelect: {
-		width: '95%',
+		width: "95%",
 	},
 	label: {
-		paddingLeft: '10px',
+		paddingLeft: "10px",
 	},
 	labelOrd: {
-		paddingTop: '12px',
+		paddingTop: "12px",
 	},
 });
 
 class CreateProject extends Component {
 	state = {
 		source: [],
-		sourceId: '',
-		targetId: '',
-		target: '',
-		organisationId: '',
+		sourceId: "",
+		targetId: "",
+		target: "",
+		organisationId: "",
 	};
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -71,10 +73,10 @@ class CreateProject extends Component {
 	clearState = () => {
 		this.setState({
 			source: [],
-			sourceId: '',
-			targetId: '',
-			target: '',
-			organisationId: '',
+			sourceId: "",
+			targetId: "",
+			target: "",
+			organisationId: "",
 		});
 	};
 
@@ -84,7 +86,10 @@ class CreateProject extends Component {
 			return bibleLanguages.map((lang) => {
 				const langObj = lang.languageVersions[0];
 				return (
-					<MenuItem key={langObj.language.id} value={lang.languageVersions}>
+					<MenuItem
+						key={langObj.language.id}
+						value={lang.languageVersions}
+					>
 						{langObj.language.name}
 					</MenuItem>
 				);
@@ -100,7 +105,10 @@ class CreateProject extends Component {
 			return source.map((item) => {
 				return (
 					<MenuItem key={item.sourceId} value={item.sourceId}>
-						{item.version.code +' (' + item.version.longName +' )'}
+						{item.version.code +
+							" (" +
+							item.version.longName +
+							" )"}
 					</MenuItem>
 				);
 			});
@@ -111,16 +119,19 @@ class CreateProject extends Component {
 
 	displayOrganisations = () => {
 		const { organisations } = this.props;
-		const sortedData = [] 
-        organisations.map(organisation => {
-            if (organisation.active === true) {
-                sortedData.push(organisation)
-            }    
-        });
+		const sortedData = [];
+		organisations.map((organisation) => {
+			if (organisation.active === true) {
+				sortedData.push(organisation);
+			}
+		});
 		if (sortedData.length > 0) {
 			return sortedData.map((item) => {
 				return (
-					<MenuItem key={item.organisationId} value={item.organisationId}>
+					<MenuItem
+						key={item.organisationId}
+						value={item.organisationId}
+					>
 						{item.organisationName}
 					</MenuItem>
 				);
@@ -139,19 +150,22 @@ class CreateProject extends Component {
 			organisationId: organisationId,
 		};
 		dispatch(createProject(apiData, close, this.clearState));
-    };
-    
+	};
 
-    canBeSubmitted() {
-        const { sourceId, targetId, target, organisationId } = this.state;
-        return sourceId.toString().length > 0 && targetId.toString().length > 0 && target.toString().length > 0 && organisationId.toString().length > 0;
+	canBeSubmitted() {
+		const { sourceId, targetId, target, organisationId } = this.state;
+		return (
+			sourceId.toString().length > 0 &&
+			targetId.toString().length > 0 &&
+			target.toString().length > 0 &&
+			organisationId.toString().length > 0
+		);
 	}
 
 	render() {
 		const { source, sourceId, targetId, organisationId } = this.state;
-        const { classes, open, close, allLanguages, isFetching } = this.props;
-        const isEnabled = this.canBeSubmitted();
-
+		const { classes, open, close, allLanguages, isFetching } = this.props;
+		const isEnabled = this.canBeSubmitted();
 
 		var languageData = [];
 		if (this.state.allLanguages !== null) {
@@ -169,12 +183,17 @@ class CreateProject extends Component {
 				aria-labelledby="customized-dialog-title"
 				open={open}
 				fullWidth={true}
-				maxWidth={'sm'}
+				maxWidth={"sm"}
+				disableBackdropClick={true}
 			>
 				{isFetching && <CircleLoader />}
 				<DialogTitle id="customized-dialog-title" onClose={close}>
 					<Typography variant="h6">Create project</Typography>
-					<IconButton aria-label="close" className={classes.closeButton} onClick={close}>
+					<IconButton
+						aria-label="close"
+						className={classes.closeButton}
+						onClick={close}
+					>
 						<CloseIcon />
 					</IconButton>
 				</DialogTitle>
@@ -182,17 +201,24 @@ class CreateProject extends Component {
 					<Grid container spacing={2}>
 						<Grid item xs={6}>
 							<FormControl className={classes.formControl}>
-								<InputLabel className={classes.label} htmlFor="select-language">
+								<InputLabel
+									className={classes.label}
+									htmlFor="select-language"
+								>
 									Language
 								</InputLabel>
 								<Select
 									className={classes.selectMenu}
 									inputProps={{
-										id: 'select-language',
+										id: "select-language",
 									}}
 									value={source}
-									variant={'outlined'}
-									onChange={(e) => this.setState({ source: e.target.value })}
+									variant={"outlined"}
+									onChange={(e) =>
+										this.setState({
+											source: e.target.value,
+										})
+									}
 								>
 									{this.displayLanguage()}
 								</Select>
@@ -200,24 +226,34 @@ class CreateProject extends Component {
 						</Grid>
 						<Grid item xs={6}>
 							<FormControl className={classes.formControl}>
-								<InputLabel className={classes.label} htmlFor="select-version">
+								<InputLabel
+									className={classes.label}
+									htmlFor="select-version"
+								>
 									Version(Revision)
 								</InputLabel>
 								<Select
 									className={classes.selectMenu}
 									inputProps={{
-										id: 'select-version',
+										id: "select-version",
 									}}
 									value={sourceId}
-									variant={'outlined'}
-									onChange={(e) => this.setState({ sourceId: e.target.value })}
+									variant={"outlined"}
+									onChange={(e) =>
+										this.setState({
+											sourceId: e.target.value,
+										})
+									}
 								>
 									{this.displayVersions()}
 								</Select>
 							</FormControl>
 						</Grid>
 						<Grid item xs={6}>
-							<InputLabel className={classes.label} htmlFor="select-target">
+							<InputLabel
+								className={classes.label}
+								htmlFor="select-target"
+							>
 								Target
 							</InputLabel>
 							<VirtualizedSelect
@@ -233,18 +269,28 @@ class CreateProject extends Component {
 							/>
 						</Grid>
 						<Grid item xs={6}>
-							<FormControl className={classes.formControl} style={{ paddingTop: '16px' }}>
-								<InputLabel className={classes.labelOrg} htmlFor="select-organisation">
+							<FormControl
+								className={classes.formControl}
+								style={{ paddingTop: "16px" }}
+							>
+								<InputLabel
+									className={classes.labelOrg}
+									htmlFor="select-organisation"
+								>
 									Organisation
 								</InputLabel>
 								<Select
 									className={classes.selectMenu}
 									inputProps={{
-										id: 'select-organisation',
+										id: "select-organisation",
 									}}
 									value={organisationId}
-									variant={'outlined'}
-									onChange={(e) => this.setState({ organisationId: e.target.value })}
+									variant={"outlined"}
+									onChange={(e) =>
+										this.setState({
+											organisationId: e.target.value,
+										})
+									}
 								>
 									{this.displayOrganisations()}
 								</Select>
@@ -253,10 +299,23 @@ class CreateProject extends Component {
 					</Grid>
 				</DialogContent>
 				<DialogActions>
-					<Button autoFocus onClick={close} color="secondary" size={'small'} variant={'contained'}>
+					<Button
+						autoFocus
+						onClick={close}
+						color="secondary"
+						size={"small"}
+						variant={"contained"}
+					>
 						Close
 					</Button>
-					<Button autoFocus onClick={this.handleSubmit} color="primary" disabled={!isEnabled} size={'small'} variant={'contained'}>
+					<Button
+						autoFocus
+						onClick={this.handleSubmit}
+						color="primary"
+						disabled={!isEnabled}
+						size={"small"}
+						variant={"contained"}
+					>
 						Create
 					</Button>
 				</DialogActions>
@@ -276,4 +335,7 @@ const mapDispatchToProps = (dispatch) => ({
 	dispatch,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CreateProject));
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withStyles(styles)(CreateProject));

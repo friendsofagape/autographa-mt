@@ -189,16 +189,21 @@ class ListOrganisations extends Component {
 					columns={columns}
 					options={options}
 				/>
-				<CreateOrganisations open={open} close={this.handleClose} />
 				{current_user.role !== "sa" && (
-					<Fab
-						aria-label={"add"}
-						className={classes.fab}
-						color={"primary"}
-						onClick={() => this.setState({ open: true })}
-					>
-						<AddIcon />
-					</Fab>
+					<>
+						<CreateOrganisations
+							open={open}
+							close={this.handleClose}
+						/>
+						<Fab
+							aria-label={"add"}
+							className={classes.fab}
+							color={"primary"}
+							onClick={() => this.setState({ open: true })}
+						>
+							<AddIcon />
+						</Fab>
+					</>
 				)}
 			</div>
 		);

@@ -44,6 +44,7 @@ class CreateOrganisations extends Component {
 	};
 
 	handleSubmit = (e) => {
+		e.preventDefault();
 		this.setState({ phError: false, phMessage: "" });
 		const { dispatch, close } = this.props;
 		const {
@@ -100,6 +101,7 @@ class CreateOrganisations extends Component {
 					open={open}
 					fullWidth={true}
 					maxWidth={"sm"}
+					disableBackdropClick={true}
 				>
 					{isFetching && <CircleLoader />}
 

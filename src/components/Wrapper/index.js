@@ -2,21 +2,12 @@ import React from "react";
 // import jwt_decode from 'jwt-decode';
 // import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
 import Header from "../Header";
 import { Component } from "react";
 import Drawer from "./Drawer";
 import { Redirect, Route, Switch, BrowserRouter } from "react-router-dom";
-import {
-	CssBaseline,
-	ListItem,
-	List,
-	Toolbar,
-	Typography,
-	ListItemText,
-	Divider,
-} from "@material-ui/core";
+import { Toolbar } from "@material-ui/core";
 // import HomePage from '../HomePage'
 import DownloadDraft from "../DownloadDraft";
 import ViewSources from "../ViewSources";
@@ -32,7 +23,6 @@ import { connect } from "react-redux";
 import { validateAccessToken } from "../../store/actions/authActions";
 import AssignUser from "../Assignments/AssignUser";
 import MyProjects from "../Translations/MyProjects";
-import CreateOrganisations from "../Assignments/CreateOrganisations";
 import RoleDetails from "../RoleDetails.js";
 
 export const PrivateRoute = ({ component: Component, location, ...rest }) => (
@@ -52,8 +42,6 @@ export const PrivateRoute = ({ component: Component, location, ...rest }) => (
 		}
 	/>
 );
-
-const drawerWidth = 140;
 
 const styles = (theme) => ({
 	root: {
