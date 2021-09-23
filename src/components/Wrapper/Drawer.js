@@ -16,118 +16,122 @@ let decoded;
 var role;
 var accessToken = localStorage.getItem("accessToken");
 if (accessToken) {
-  decoded = jwt_decode(accessToken);
-  role = decoded.role;
+	decoded = jwt_decode(accessToken);
+	role = decoded.role;
 }
 
 const styles = (theme) => ({
-  drawer: {
-    width: 170,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: 168,
-    backgroundColor: "black",
-  },
-  drawerContainer: {
-    overflow: "auto",
-  },
-  content: {
-    flexGrow: 1,
-  },
+	drawer: {
+		width: 170,
+		flexShrink: 0,
+	},
+	drawerPaper: {
+		width: 168,
+		backgroundColor: "black",
+	},
+	drawerContainer: {
+		overflow: "auto",
+	},
+	content: {
+		flexGrow: 1,
+	},
 });
 
 class DrawerPane extends Component {
+	async getOrganisations() {
+		const { updateState, organisationsStatus } = this.props.data;
 
-  async getOrganisations() {
-    const { updateState, organisationsStatus } = this.props.data;
+		const data = await fetch(apiUrl + "/v1/autographamt/organisations", {
+			method: "GET",
+			headers: {
+				Authorization: "bearer " + accessToken,
+			},
+		});
+		const organisationsData = await data.json();
+		organisationsData.map((item) => {
+			organisationsStatus[item.organisationId] = {
+				verified: item.verified,
+			};
+		});
+		updateState({
+			organisationsStatus: organisationsStatus,
+			organisationsData: organisationsData,
+			listOrganisationsPane: true,
+			listUsersPane: false,
+			createProjectsPane: false,
+			listProjectsPane: false,
+			assignmentsPane: false,
+			listUserProjectsPane: false,
+		});
+	}
 
-    const data = await fetch(apiUrl + "/v1/autographamt/organisations", {
-      method: "GET",
-      headers: {
-        Authorization: "bearer " + accessToken,
-      },
-    });
-    const organisationsData = await data.json();
-    organisationsData.map((item) => {
-      organisationsStatus[item.organisationId] = {
-        verified: item.verified,
-      };
-    });
-    updateState({
-      organisationsStatus: organisationsStatus,
-      organisationsData: organisationsData,
-      listOrganisationsPane: true,
-      listUsersPane: false,
-      createProjectsPane: false,
-      listProjectsPane: false,
-      assignmentsPane: false,
-      listUserProjectsPane: false,
-    });
-  }
-
-  render() {
-    const { classes, current_user } = this.props;
-    return (
-      <div>
-        {menus.map((menu, i) => {
-          if (menu.roles.includes(current_user.role)) {
-            return (
-              <Drawer
-                className={classes.drawer}
-                key={i}
-                variant="permanent"
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-              >
-x                <Toolbar />
-                <div className={classes.drawerContainer}>
-                  <List>
-                    {menu.child &&
-                      menu.child.map((childMenu) => {
-                        if (childMenu.roles.includes(current_user.role)) {
-                          return (
-                            <NavLink 
-                              exact className="main-nav" activeClassName='main-nav-active'
-                              to={childMenu.link}
-                              key={childMenu.key}
-                            >
-                              <ListItem
-                                button
-                                key={childMenu.key}
-                                className={classes.exp}
-                                
-                              >
-                                <ListItemText
-                                  disableTypography
-                                  divider="true"
-                                  primary={
-                                    <Typography
-                                      variant="caption"
-                                    >
-                                      {childMenu.name}
-                                    </Typography>
-                                  }
-                                />
-                              </ListItem>
-                            </NavLink>
-                          );
-                        }
-                      })}
-                  </List>
-                </div>
-              </Drawer>
-            );
-          }
-        })}
-      </div>
-    );
-  }
+	render() {
+		const { classes, current_user } = this.props;
+		return (
+			<div>
+				{menus.map((menu, i) => {
+					if (menu.roles.includes(current_user.role)) {
+						return (
+							<Drawer
+								className={classes.drawer}
+								key={i}
+								variant="permanent"
+								classes={{
+									paper: classes.drawerPaper,
+								}}
+							>
+								x <Toolbar />
+								<div className={classes.drawerContainer}>
+									<List>
+										{menu.child &&
+											menu.child.map((childMenu, i) => {
+												return childMenu.roles.includes(
+													current_user.role
+												) ? (
+													<NavLink
+														exact
+														className="main-nav"
+														activeClassName="main-nav-active"
+														to={childMenu.link}
+														key={i}
+													>
+														<ListItem
+															button
+															key={childMenu.key}
+															className={
+																classes.exp
+															}
+														>
+															<ListItemText
+																disableTypography
+																divider="true"
+																primary={
+																	<Typography variant="caption">
+																		{
+																			childMenu.name
+																		}
+																	</Typography>
+																}
+															/>
+														</ListItem>
+													</NavLink>
+												) : (
+													""
+												);
+											})}
+									</List>
+								</div>
+							</Drawer>
+						);
+					}
+				})}
+			</div>
+		);
+	}
 }
 
 const mapStateToProps = (state) => ({
-  current_user: state.auth.current_user,
+	current_user: state.auth.current_user,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(DrawerPane));

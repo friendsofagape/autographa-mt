@@ -110,7 +110,7 @@ class ViewSources extends Component {
 									)
 								}
 							>
-								<span style={{ fontSize: "70%" }}>Books</span>
+								<span>Books</span>
 							</Button>
 						);
 					},
@@ -172,7 +172,6 @@ class ViewSources extends Component {
 						open={createSourceDialog}
 						close={this.handleClose}
 						isFetching={isFetching}
-						data={data}
 					/>
 				)}
 				{current_user.role === "sa" && (

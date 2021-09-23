@@ -88,7 +88,6 @@ class UploadTexts extends Component {
 		) {
 			if (completedUpload) {
 				if (uploadErrorBooks.length > 0) {
-					///MIC-Inserted mic into database
 					for (const book of uploadErrorBooks) {
 						let item = book.split("-");
 						if (item[1].substring(0, 8) === "Inserted") {
@@ -199,6 +198,7 @@ class UploadTexts extends Component {
 		filesKeys.map(async (key) => {
 			await this.handleFileChosen(filesObj[key]);
 		});
+		e.target.value = null;
 	};
 
 	displayAllBooks = () => {
