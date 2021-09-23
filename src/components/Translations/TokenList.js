@@ -36,7 +36,7 @@ class TokenList extends Component {
 
 	// fetch tokens from database
 	gettokenDetails(item) {
-		if (this.state.selectToken != item) {
+		if (this.state.selectToken !== item) {
 			const { sourceId, targetId } = this.props.selectedProject;
 
 			fetch(
@@ -54,7 +54,7 @@ class TokenList extends Component {
 				.then((response) => response.json())
 				.then((data) => {
 					this.setState({ selectToken: item });
-					if (data.success == false) {
+					if (data.success === false) {
 						const emptyData = {
 							translation: "",
 							senses: "",
@@ -91,7 +91,7 @@ class TokenList extends Component {
 	// display token in list view and get details on onclick function
 	getTokens() {
 		const { untoken, allList, checkvalue } = this.props;
-		if (checkvalue == false) {
+		if (checkvalue === false) {
 			if (allList) {
 				return allList.filter(this.dynamicSearch).map((item, index) => {
 					return (
