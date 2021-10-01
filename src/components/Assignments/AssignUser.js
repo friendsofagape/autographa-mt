@@ -89,7 +89,7 @@ class AssignUser extends Component {
 		this.setState({ userListing: true });
 	}
 
-	selectUser = (userId) => {
+	selectUser = (userId, userName) => {
 		const { dispatch } = this.props;
 		const projectId = this.props.location.pathname.split("/").pop();
 		const apiData = {
@@ -98,7 +98,7 @@ class AssignUser extends Component {
 			action: "add_user",
 			books: [],
 		};
-		dispatch(assignUserToProject(apiData, this.closeUserListing));
+		dispatch(assignUserToProject(apiData, this.closeUserListing, userName));
 	};
 
 	closeUserListing = () => {
@@ -123,30 +123,31 @@ class AssignUser extends Component {
 			}
 		});
 		return sortedUsers.map((user) => {
+			const userName = user.firstName + " " + user.lastName;
 			return (
 				<TableRow
 					key={user.userId}
 					hover
-					onClick={() => this.selectUser(user.userId)}
+					onClick={() => this.selectUser(user.userId, userName)}
 				>
 					<TableCell align="center" style={{ padding: "0px" }}>
-						{user.firstName + " " + user.lastName}
+						{userName}
 					</TableCell>
 
 					<TableCell align="center" style={{ padding: "0px" }}>
 						{user.emailId}
 					</TableCell>
-					{user.roleId == "3" ? (
+					{user.roleId === 3 ? (
 						<TableCell style={{ padding: "0px" }}>
 							<ListItem>Super Admin</ListItem>
 						</TableCell>
 					) : null}
-					{user.roleId == "2" ? (
+					{user.roleId === 2 ? (
 						<TableCell style={{ padding: "0px" }}>
 							<ListItem>Admin</ListItem>
 						</TableCell>
 					) : null}
-					{user.roleId == "1" ? (
+					{user.roleId === 1 ? (
 						<TableCell style={{ padding: "0px" }}>
 							<ListItem>Translator</ListItem>
 						</TableCell>
@@ -156,13 +157,13 @@ class AssignUser extends Component {
 		});
 	};
 
-	handleDelete = (userId, projectId) => {
+	handleDelete = (userId, projectId, userName) => {
 		const { dispatch } = this.props;
 		const apiData = {
 			userId: userId,
 			projectId: projectId,
 		};
-		dispatch(deleteUser(apiData));
+		dispatch(deleteUser(apiData, userName));
 	};
 
 	async handleSelectBooks(userId, projectId) {
@@ -213,7 +214,11 @@ class AssignUser extends Component {
 						<Button
 							small="true"
 							onClick={() =>
-								this.handleDelete(userId, user.projectId)
+								this.handleDelete(
+									userId,
+									user.projectId,
+									userName
+								)
 							}
 						>
 							<DeleteOutlinedIcon />
