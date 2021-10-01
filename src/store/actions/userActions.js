@@ -102,40 +102,49 @@ export const getAssignedUsers = (projectId) => async (dispatch) => {
 	}
 };
 
-export const assignUserToProject = (apiData, close) => async (dispatch) => {
-	dispatch(setIsFetching(true));
-	try {
-		const data = await fetch(
-			apiUrl + "v1/autographamt/projects/assignments",
-			{
-				method: "POST",
-				body: JSON.stringify(apiData),
+export const assignUserToProject =
+	(apiData, close, userName) => async (dispatch) => {
+		dispatch(setIsFetching(true));
+		try {
+			const data = await fetch(
+				apiUrl + "v1/autographamt/projects/assignments",
+				{
+					method: "POST",
+					body: JSON.stringify(apiData),
+				}
+			);
+			const myJson = await data.json();
+			// dispatch(setIsFetching(false))
+			if (myJson.success) {
+				dispatch(getAssignedUsers(apiData.projectId));
+				close();
 			}
-		);
-		const myJson = await data.json();
-		// dispatch(setIsFetching(false))
-		if (myJson.success) {
-			dispatch(getAssignedUsers(apiData.projectId));
-			close();
+			if (userName) {
+				swal({
+					title: "Add User",
+					text: "Added User " + userName,
+					icon: myJson.success ? "success" : "error",
+				});
+			} else {
+				swal({
+					title: "Books assignment",
+					text: "Books assignment updated",
+					icon: myJson.success ? "success" : "error",
+				});
+			}
+		} catch (ex) {
+			swal({
+				title: "User assignment",
+				text:
+					"Unable to update user to project, check your internet connection or contact admin admin " +
+					ex,
+				icon: "error",
+			});
 		}
-		swal({
-			title: "User assignment",
-			text: "Books assignment updated",
-			icon: myJson.success ? "success" : "error",
-		});
-	} catch (ex) {
-		swal({
-			title: "User assignment",
-			text:
-				"Unable to update user to project, check your internet connection or contact admin admin " +
-				ex,
-			icon: "error",
-		});
-	}
-	dispatch(setIsFetching(false));
-};
+		dispatch(setIsFetching(false));
+	};
 
-export const deleteUser = (apiData) => async (dispatch) => {
+export const deleteUser = (apiData, userName) => async (dispatch) => {
 	dispatch(setIsFetching(true));
 	try {
 		const data = await fetch(
@@ -150,7 +159,7 @@ export const deleteUser = (apiData) => async (dispatch) => {
 		if (response.success) {
 			swal({
 				title: "Remove user",
-				text: "User successfully removed from project",
+				text: "Successfully removed " + userName + " from the project",
 				icon: "success",
 			});
 			dispatch(getAssignedUsers(apiData.projectId));
