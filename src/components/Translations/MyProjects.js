@@ -28,7 +28,6 @@ import MyProjectReportPopup from "./MyProjectReportPopup";
 import {
   bibleBookNewTestments,
   bibleBookOldTestments,
-  books,
 } from "../Common/BibleOldNewTestment";
 import apiUrl from "../GlobalUrl";
 
@@ -71,11 +70,15 @@ class MyProjects extends Component {
     booksPane: false,
     project: {},
     allTokenList: [],
-    checkBox: false,
     untranslatedToken: [],
-
     bkvalue: "",
-    allChecked: false,
+    isOldChecked: false,
+    isNewChecked: false,
+    oldChecklist: [],
+    newChecklist: [],
+    loading: false,
+    untranslated: false,
+    singleWord: false,
     columns: [
       {
         name: "id",
@@ -106,7 +109,7 @@ class MyProjects extends Component {
         },
       },
       {
-        name: <h4>Books Assigned</h4>,
+        name: <h4 style={{ textAlign: "center" }}>Progress</h4>,
         options: {
           filter: false,
           sort: false,
@@ -118,13 +121,15 @@ class MyProjects extends Component {
             });
             if (valueBooks.length === 0) {
               return (
-                <Tooltip title="Book is not assigned yet">
-                  <span>
-                    <Button size="small" variant="outlined" disabled>
-                      View
-                    </Button>
-                  </span>
-                </Tooltip>
+                <div style={{ textAlign: "center" }}>
+                  <Tooltip title="Book is not assigned yet">
+                    <span>
+                      <Button variant="outlined" disabled size="small">
+                        View Progress
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </div>
               );
             } else {
               return (
@@ -142,7 +147,7 @@ class MyProjects extends Component {
       },
 
       {
-        name: <h4>Projects</h4>,
+        name: <h4 style={{ textAlign: "center" }}>Projects</h4>,
         options: {
           filter: false,
           sort: false,
@@ -151,28 +156,32 @@ class MyProjects extends Component {
             var valuesTran = value.split("/")[0];
             if (valuesbook === 0) {
               return (
-                <Tooltip title="Book is not assigned yet">
-                  <span>
-                    <Button variant="outlined" disabled size="small">
-                      Open Project
-                    </Button>
-                  </span>
-                </Tooltip>
+                <div style={{ textAlign: "center" }}>
+                  <Tooltip title="Book is not assigned yet">
+                    <span>
+                      <Button variant="outlined" disabled size="small">
+                        Open Project
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </div>
               );
             } else {
               return (
-                <Button
-                  variant="contained"
-                  style={{ backgroundColor: "#21b6ae" }}
-                  size="small"
-                >
-                  <Link
-                    style={{ color: "black", textDecoration: "none" }}
-                    to={`/app/translations/projects/${valuesTran}`}
+                <div style={{ textAlign: "center" }}>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "#21b6ae" }}
+                    size="small"
                   >
-                    Open Project
-                  </Link>
-                </Button>
+                    <Link
+                      style={{ color: "black", textDecoration: "none" }}
+                      to={`/app/translations/projects/${valuesTran}`}
+                    >
+                      Open Project
+                    </Link>
+                  </Button>
+                </div>
               );
             }
           },
@@ -192,7 +201,6 @@ class MyProjects extends Component {
                     variant="contained"
                     onClick={this.handleOpen}
                     style={{
-                      // fontSize: "80%",
                       backgroundColor: "#21b6ae",
                       marginRight: 10,
                     }}
@@ -201,16 +209,29 @@ class MyProjects extends Component {
                     <DownloadIcon />
                   </Button>
                 </Tooltip>
+
                 <Tooltip title="Token Upload">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    // onClick={() => this.handleDownload(valuesTran)}
-                    style={{ backgroundColor: "#21b6ae" }}
-                  >
-                    Token
-                    <UploadIcon />
-                  </Button>
+                  <label htmlFor="upload-photo">
+                    <input
+                      style={{ display: "none" }}
+                      id="upload-photo"
+                      name="upload-photo"
+                      type="file"
+                      onChange={this.clickupload}
+                      data-projectid={row.rowData[0]}
+                      onClick={(e) => (e.target.value = null)}
+                    />
+                    <Button
+                      variant="contained"
+                      size="small"
+                      component="span"
+                      style={{ backgroundColor: "#21b6ae" }}
+                    >
+                      {this.state.loading && <CircleLoader />}
+                      Token
+                      <UploadIcon />
+                    </Button>
+                  </label>
                 </Tooltip>
                 <Dialog
                   open={this.state.open}
@@ -222,18 +243,55 @@ class MyProjects extends Component {
                     id="form-dialog-title"
                     className={this.props.classes.title}
                   >
-                    Downloads selected books tokens
+                    Download Project Token
                   </DialogTitle>
-                  <DialogContent>
+                  <DialogContent dividers>
                     <Grid container>
-                      <Grid item sm={1}></Grid>
-                      <Grid item sm={5}>
+                      <Grid
+                        item
+                        sm={12}
+                        style={{ borderBottom: "2px solid #d9d9d9" }}
+                      >
+                        <FormGroup>
+                          <FormControlLabel
+                            control={<Checkbox color="primary" />}
+                            onClick={this.handleOldSelectAll}
+                            checked={this.state.isOldChecked}
+                            label="Old Testment"
+                          />
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
+                    <Grid container>{this.displayOTBooks()}</Grid>
+
+                    <Grid container>
+                      <Grid
+                        item
+                        sm={12}
+                        style={{ borderBottom: "2px solid #d9d9d9" }}
+                      >
+                        <FormGroup>
+                          <FormControlLabel
+                            control={<Checkbox color="primary" />}
+                            onClick={this.handleNewSelectAll}
+                            checked={this.state.isNewChecked}
+                            label="New Testment"
+                          />
+                        </FormGroup>
+                      </Grid>
+                    </Grid>
+                    <Grid container>{this.displayNTBooks()}</Grid>
+                    <hr style={{ border: "1px solid #d9d9d9" }} />
+
+                    <Grid container>
+                      <Grid item sm={6}>
                         <FormGroup>
                           <FormControlLabel
                             control={
                               <Checkbox
                                 color="primary"
                                 onChange={this.checkHandleChange}
+                                checked={this.state.untranslated}
                               />
                             }
                             label="Untranslated Tokens"
@@ -243,47 +301,14 @@ class MyProjects extends Component {
                       <Grid item sm={6}>
                         <FormGroup>
                           <FormControlLabel
-                            control={
-                              <Checkbox
-                                // onChange={this.checkHandleChange}
-                                color="primary"
-                              />
-                            }
-                            label="Single word"
-                          />
-                        </FormGroup>
-                      </Grid>
-                    </Grid>
-                    <hr />
-                    <Grid container>
-                      <Grid item sm={12}>
-                        <FormGroup>
-                          <FormControlLabel
                             control={<Checkbox color="primary" />}
-                            label="Old Testment"
-                            checked={this.state.allChecked}
-                            name="checkAll"
-                            // value={item}
+                            label="Single Word"
+                            onChange={this.checkSinglekWord}
+                            checked={this.state.singleWord}
                           />
                         </FormGroup>
                       </Grid>
                     </Grid>
-
-                    <Grid container>{this.displayOTBooks()}</Grid>
-                    <hr />
-                    <Grid container>
-                      <Grid item sm={12}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox color="primary" />}
-                            label="New Testment"
-                            onChange={this.handleNTSelect}
-                            // checked={this.state.checkBox}
-                          />
-                        </FormGroup>
-                      </Grid>
-                    </Grid>
-                    <Grid container>{this.displayNTBooks()}</Grid>
                   </DialogContent>
                   <DialogActions>
                     <Button
@@ -298,7 +323,10 @@ class MyProjects extends Component {
                       size="small"
                       variant="contained"
                       color="primary"
-                      onClick={this.clickdownload}
+                      onClick={() =>
+                        this.clickdownload(row.rowData[0], row.rowData[1])
+                      }
+                      style={{ marginLeft: 10 }}
                     >
                       Download Tokens
                     </Button>
@@ -311,7 +339,7 @@ class MyProjects extends Component {
       },
 
       {
-        name: <h4>Download Draft</h4>,
+        name: <h4 style={{ textAlign: "center" }}>Draft</h4>,
         options: {
           filter: false,
           sort: false,
@@ -320,24 +348,28 @@ class MyProjects extends Component {
             var valuesTran = value.split("/")[0];
             if (valuesbook === 0) {
               return (
-                <Tooltip title="Book is not assigned yet">
-                  <span>
-                    <Button size="small" variant="outlined" disabled>
-                      Download Draft
-                    </Button>
-                  </span>
-                </Tooltip>
+                <div style={{ textAlign: "center" }}>
+                  <Tooltip title="Book is not assigned yet">
+                    <span>
+                      <Button size="small" variant="outlined" disabled>
+                        Draft
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </div>
               );
             } else {
               return (
-                <Button
-                  size="small"
-                  variant="contained"
-                  onClick={() => this.handleDownload(valuesTran)}
-                  style={{ backgroundColor: "#21b6ae" }}
-                >
-                  Draft <DownloadIcon />
-                </Button>
+                <div style={{ textAlign: "center" }}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => this.handleDownload(valuesTran)}
+                    style={{ backgroundColor: "#21b6ae" }}
+                  >
+                    Draft <DownloadIcon />
+                  </Button>
+                </div>
               );
             }
           },
@@ -351,32 +383,65 @@ class MyProjects extends Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({
+      singleWord: false,
+      untranslated: false,
+      oldChecklist: [],
+      newChecklist: [],
+      open: false,
+    });
   };
 
   checkHandleChange = () => {
-    if (this.state.checkBox === true) {
-      this.setState({ checkBox: false });
-    } else {
-      this.setState({ checkBox: true });
-    }
+    this.setState({ untranslated: !this.state.untranslated });
+  };
+  checkSinglekWord = () => {
+    this.setState({ singleWord: !this.state.singleWord });
   };
 
-  clickdownload = () => {
-    fetch(apiUrl + "v1/tokentranslationlist/131/lev", {
-      method: "GET",
-      headers: {
-        Authorization: "bearer " + accessToken,
-      },
-    })
+  listSort = (a, b) => {
+    var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+    var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  };
+
+  clickdownload = (projectid, projectName) => {
+    const books = this.state.oldChecklist.concat(this.state.newChecklist);
+    if (books.length === 0) {
+      swal({
+        title: "Unable to download tokens",
+        text: "No book(s) selected",
+        icon: "warning",
+      });
+      return;
+    }
+    fetch(
+      apiUrl +
+        "v1/tokentranslationlist/" +
+        projectid +
+        (this.state.singleWord ? "?only_words=True" : "?") +
+        "&books=" +
+        books.join("&books="),
+      {
+        method: "GET",
+        headers: {
+          Authorization: "bearer " + accessToken,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-
         //  full token translations
-        if (this.state.checkBox === false) {
+        data.sort(this.listSort);
+        if (this.state.untranslated === false) {
           let tokenarray = [["token", "translation", "senses"]];
-
           tokenarray.push(...data);
           var wb = XLSX.utils.book_new();
           wb.Props = {
@@ -390,7 +455,6 @@ class MyProjects extends Component {
           var ws = XLSX.utils.aoa_to_sheet(ws_data);
           wb.Sheets["TokenList"] = ws;
           var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-          console.log(wbout);
           function s2ab(s) {
             var buf = new ArrayBuffer(s.length);
             var view = new Uint8Array(buf);
@@ -399,12 +463,12 @@ class MyProjects extends Component {
           }
           saveAs(
             new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-            this.state.bkvalue + ".xlsx"
+            projectName + ".xlsx"
           );
         } else {
           //  ----------Untraslated Tokens----------
           let untokenarray = [["token", "translation", "senses"]];
-          untokenarray.push(...this.state.untranslatedToken);
+          untokenarray.push(...data.filter((item) => item[1] === null));
           var wb = XLSX.utils.book_new();
           wb.Props = {
             Title: "TokenList",
@@ -425,36 +489,107 @@ class MyProjects extends Component {
           }
           saveAs(
             new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-            this.state.bkvalue + ".xlsx"
+            projectName + ".xlsx"
           );
         }
+        this.handleClose();
       });
   };
 
-  displayOTBooks(e) {
+  // Upload tokens from excel file
+  clickupload = (e) => {
+    const stoploading = () => {
+      this.setState({ loading: false });
+    };
+    this.setState({ loading: true });
+    var proId = e.target.getAttribute("data-projectid");
+    var files = e.target.files,
+      f = files[0];
+    var that = this;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, { type: "array" });
+      var first_sheet_name = workbook.SheetNames[0];
+      var worksheet = workbook.Sheets[first_sheet_name];
+      var tknlist = XLSX.utils.sheet_to_json(worksheet);
+      var jsondata = {
+        projectId: proId,
+        tokenTranslations: tknlist,
+      };
+
+      fetch(apiUrl + "v1/autographamt/projects/bulktranslations", {
+        method: "POST",
+        body: JSON.stringify(jsondata),
+        headers: {
+          Authorization: "bearer " + accessToken,
+        },
+      })
+        .then((response) => {
+          stoploading();
+          return response.json();
+        })
+        .then((data) => {
+          swal({
+            title: "Uploaded Tokens to Project",
+            text: data.message,
+            icon: "success",
+          });
+        });
+    };
+    reader.onerror = function (e) {
+      console.error("File could not be read! Code " + e.target.error.code);
+    };
+    reader.readAsArrayBuffer(f);
+  };
+
+  oldHandleChange = (e) => {
+    const checkedName = e.target.name;
+    const books = [...this.state.oldChecklist];
+    if (books.includes(checkedName)) {
+      const bookIndex = books.indexOf(checkedName);
+      books.splice(bookIndex, 1);
+    } else {
+      books.push(checkedName);
+    }
+    this.setState({ oldChecklist: books });
+  };
+
+  handleOldSelectAll = (e) => {
+    const { userProjects } = this.props;
+    const checkValue = e.target.checked;
+    let books = [];
+    if (checkValue) {
+      books = bibleBookOldTestments.filter((item) => {
+        return userProjects[0].books.includes(item);
+      });
+    }
+    this.setState({ oldChecklist: books });
+    this.setState({ isOldChecked: e.target.checked });
+  };
+
+  displayOTBooks() {
     const { userProjects } = this.props;
     if (userProjects.length > 0) {
-      let assignedBooks = [];
-      bibleBookOldTestments.map((item) => {
-        return userProjects[0].books.includes(item)
-          ? assignedBooks.push({ book: item, checkbox: false })
-          : null;
-      });
-      console.log(assignedBooks);
-      return Object.values(assignedBooks).map((item) => {
-        return (
-          <Grid item sm={2} key={item.book}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox color="primary" />}
-                label={item.book.toUpperCase()}
-                value={item.book}
-                name={item.book}
-                // checked={item.checkbox}
-              />
-            </FormGroup>
-          </Grid>
-        );
+      return bibleBookOldTestments.map((item) => {
+        if (userProjects[0].books.includes(item)) {
+          return (
+            <Grid item sm={2} key={item}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox color="primary" />}
+                  label={item.toUpperCase()}
+                  value={item}
+                  name={item}
+                  checked={this.state.oldChecklist.includes(item)}
+                  onClick={this.oldHandleChange}
+                />
+              </FormGroup>
+            </Grid>
+          );
+        } else {
+          return "";
+        }
       });
     } else {
       return (
@@ -465,32 +600,53 @@ class MyProjects extends Component {
     }
   }
 
+  newHandleChange = (e) => {
+    const checkedName = e.target.name;
+    const books = [...this.state.newChecklist];
+    if (books.includes(checkedName)) {
+      const bookIndex = books.indexOf(checkedName);
+      books.splice(bookIndex, 1);
+    } else {
+      books.push(checkedName);
+    }
+    this.setState({ newChecklist: books });
+  };
+
+  handleNewSelectAll = (e) => {
+    const { userProjects } = this.props;
+    const checkValue = e.target.checked;
+    let books = [];
+    if (checkValue) {
+      books = bibleBookNewTestments.filter((item) => {
+        return userProjects[0].books.includes(item);
+      });
+    }
+    this.setState({ newChecklist: books });
+    this.setState({ isNewChecked: e.target.checked });
+  };
+
   displayNTBooks() {
     const { userProjects } = this.props;
     if (userProjects.length > 0) {
-      let assignedNTBooks = [];
-      bibleBookNewTestments.map((item) => {
-        return userProjects[0].books.includes(item)
-          ? assignedNTBooks.push({ book: item, checkbox: false })
-          : null;
-      });
-      return Object.values(assignedNTBooks).map((item) => {
-        return (
-          <Grid
-            item
-            sm={2}
-            key={item.book}
-            className={this.props.classes.checkbox}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox color="primary" />}
-                label={item.book.toUpperCase()}
-                value={item.book}
-              />
-            </FormGroup>
-          </Grid>
-        );
+      return bibleBookNewTestments.map((item) => {
+        if (userProjects[0].books.includes(item)) {
+          return (
+            <Grid item sm={2} key={item}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox color="primary" />}
+                  label={item.toUpperCase()}
+                  value={item}
+                  name={item}
+                  checked={this.state.newChecklist.includes(item)}
+                  onClick={this.newHandleChange}
+                />
+              </FormGroup>
+            </Grid>
+          );
+        } else {
+          return "";
+        }
       });
     } else {
       return (
@@ -503,7 +659,7 @@ class MyProjects extends Component {
 
   handleDownload = (projectId) => {
     var project = this.props.userProjects.filter(
-      (item) => item.projectId === projectId
+      (item) => item.projectId === parseInt(projectId)
     );
     if (project.length > 0) {
       this.setState({
@@ -590,6 +746,7 @@ const mapStateToProps = (state) => ({
   projects: state.project.projects,
   isFetching: state.project.isFetching,
   userProjects: state.project.userProjects,
+  selectedProject: state.project.selectedProject,
 });
 
 const mapDispatchToProps = (dispatch) => ({
