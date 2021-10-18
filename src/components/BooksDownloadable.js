@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Typography, withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -14,10 +14,6 @@ import {
   bibleBookNewTestments,
   bibleBookOldTestments,
 } from "../components/Common/BibleOldNewTestment";
-
-var FileSaver = require("file-saver");
-
-var accessToken = localStorage.getItem("accessToken");
 
 const styles = (theme) => ({
   root: {
@@ -46,7 +42,7 @@ class BooksDownloadable extends Component {
 
   getOldBooksCheckbox = () => {
     //function for old testament books
-    const { targetBooks, targetBooksChecked } = this.state;
+    const { targetBooks } = this.state;
     const { project } = this.props;
     let oldTestment = [];
     if (project.books) {
@@ -55,7 +51,7 @@ class BooksDownloadable extends Component {
         return project.books.includes(book) ? oldTestment.push(book) : null;
       });
     }
-    if (oldTestment.length == 0) {
+    if (oldTestment.length === 0) {
       return (
         <React.Fragment key={oldTestment}>
           No Books Assigned in old Testament
@@ -86,7 +82,7 @@ class BooksDownloadable extends Component {
 
   getNewBooksCheckbox = () => {
     //function for new testament books
-    const { targetBooks, targetBooksChecked } = this.state;
+    const { targetBooks } = this.state;
     const { project } = this.props;
     let newTestments = [];
     if (project.books) {
@@ -95,7 +91,7 @@ class BooksDownloadable extends Component {
         return project.books.includes(book) ? newTestments.push(book) : null;
       });
     }
-    if (newTestments.length == 0) {
+    if (newTestments.length === 0) {
       return (
         <React.Fragment key={newTestments}>
           No Books Assigned in New Testament
@@ -151,7 +147,7 @@ class BooksDownloadable extends Component {
 
   render() {
     const isEnabled = this.canBeSubmitted();
-    const { updateState, booksPane, classes, isFetching } = this.props;
+    const { booksPane, classes, isFetching } = this.props;
     return (
       <Dialog open={booksPane} onClose={this.handleClose}>
         {isFetching && <CircleLoader />}

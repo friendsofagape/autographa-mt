@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => createStyles({}));
 
 export default function SimplePopover(props) {
   const classes = useStyles();
-  const [BookDetails, setBookDetails] = React.useState(null);
   const [unTokenisedOldBooks, setUnTokenisedOldBooks] = React.useState(0);
   const [unTokenisedNewBooks, setUnTokenisedNewBooks] = React.useState(0);
   const [newTestmentBooks, setNewTestmentBooks] = React.useState(null);
@@ -60,7 +59,7 @@ export default function SimplePopover(props) {
     const stoploading = () => {
       setLoading(false);
     };
-    if (proId != props.projectWiseId) {
+    if (proId !== parseInt(props.projectWiseId)) {
       fetch(
         apiUrl + "/v1/autographamt/statistics/projects/" + props.projectWiseId
       )
@@ -69,10 +68,9 @@ export default function SimplePopover(props) {
           return results.json();
         })
         .then((data) => {
-          let matches = [];
           if (
             data.bookWiseData != null &&
-            Object.keys(data.bookWiseData).length != 0
+            Object.keys(data.bookWiseData).length !== 0
           ) {
             let oldTestments = [];
             bibleBookOldTestments.map((book) => {
@@ -109,7 +107,6 @@ export default function SimplePopover(props) {
             setUnTokenisedNewBooks(newTestments.length - newBooks.length);
             setNewTestmentBooks(newBooks);
           }
-          setBookDetails(matches);
           setProId(props.projectWiseId);
         });
     } else {
@@ -235,7 +232,7 @@ export default function SimplePopover(props) {
                 )}
                 &nbsp;&nbsp;&nbsp;
                 {unTokenisedOldBooks !== 0
-                  ? unTokenisedOldBooks + " " + "Untokenised Books"
+                  ? unTokenisedOldBooks + " Untokenised Books"
                   : "BOOKS TO BE TOKENISED"}
                 {newTestmentBooks != null && (
                   <DataTable
@@ -255,7 +252,7 @@ export default function SimplePopover(props) {
                 )}
                 &nbsp;&nbsp;&nbsp;
                 {unTokenisedNewBooks !== 0
-                  ? unTokenisedNewBooks + " " + "Untokenised Books"
+                  ? unTokenisedNewBooks + " Untokenised Books"
                   : ""}
               </div>
             )}

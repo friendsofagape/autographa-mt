@@ -6,30 +6,17 @@ import CircleLoader from "../loaders/CircleLoader";
 import { connect } from "react-redux";
 import MUIDataTable from "mui-datatables";
 import { Redirect, Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grid,
-  DialogTitle,
-} from "@material-ui/core";
 import UploadIcon from "@material-ui/icons/Publish";
 import DownloadIcon from "@material-ui/icons/GetApp";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 import XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import compose from "recompose/compose";
 import { withRouter } from "react-router-dom";
 import BooksDownloadable from "../BooksDownloadable";
 import swal from "sweetalert";
 import MyProjectReportPopup from "./MyProjectReportPopup";
-import {
-  bibleBookNewTestments,
-  bibleBookOldTestments,
-} from "../Common/BibleOldNewTestment";
 import apiUrl from "../GlobalUrl";
+import DownloadTokenDialog from "./DownloadTokenDialog";
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -60,6 +47,9 @@ const styles = (theme) => ({
   title: {
     textAlign: "center",
     backgroundColor: "#eee",
+  },
+  textCenter: {
+    textAlign: "center",
   },
 });
 
@@ -109,7 +99,7 @@ class MyProjects extends Component {
         },
       },
       {
-        name: <h4 style={{ textAlign: "center" }}>Progress</h4>,
+        name: <h4 className={this.props.classes.textCenter}>Progress</h4>,
         options: {
           filter: false,
           sort: false,
@@ -121,7 +111,7 @@ class MyProjects extends Component {
             });
             if (valueBooks.length === 0) {
               return (
-                <div style={{ textAlign: "center" }}>
+                <div className={this.props.classes.textCenter}>
                   <Tooltip title="Book is not assigned yet">
                     <span>
                       <Button variant="outlined" disabled size="small">
@@ -147,7 +137,7 @@ class MyProjects extends Component {
       },
 
       {
-        name: <h4 style={{ textAlign: "center" }}>Projects</h4>,
+        name: <h4 className={this.props.classes.textCenter}>Projects</h4>,
         options: {
           filter: false,
           sort: false,
@@ -156,7 +146,7 @@ class MyProjects extends Component {
             var valuesTran = value.split("/")[0];
             if (valuesbook === 0) {
               return (
-                <div style={{ textAlign: "center" }}>
+                <div className={this.props.classes.textCenter}>
                   <Tooltip title="Book is not assigned yet">
                     <span>
                       <Button variant="outlined" disabled size="small">
@@ -168,7 +158,7 @@ class MyProjects extends Component {
               );
             } else {
               return (
-                <div style={{ textAlign: "center" }}>
+                <div className={this.props.classes.textCenter}>
                   <Button
                     variant="contained"
                     style={{ backgroundColor: "#21b6ae" }}
@@ -188,28 +178,20 @@ class MyProjects extends Component {
         },
       },
       {
-        name: <h4 style={{ textAlign: "center" }}>Tokens</h4>,
+        name: <h4 className={this.props.classes.textCenter}>Tokens</h4>,
         options: {
           filter: false,
           sort: false,
           customBodyRender: (value, row) => {
+            const projectId = row.rowData[0];
+            const projectName = row.rowData[1];
             return (
-              <div style={{ textAlign: "center" }}>
-                <Tooltip title="Token Download">
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={this.handleOpen}
-                    style={{
-                      backgroundColor: "#21b6ae",
-                      marginRight: 10,
-                    }}
-                  >
-                    Token
-                    <DownloadIcon />
-                  </Button>
-                </Tooltip>
-
+              <div className={this.props.classes.textCenter}>
+                <DownloadTokenDialog
+                  projectId={projectId}
+                  projectBooks={value}
+                  projectName={projectName}
+                />
                 <Tooltip title="Token Upload">
                   <label htmlFor="upload-photo">
                     <input
@@ -218,7 +200,7 @@ class MyProjects extends Component {
                       name="upload-photo"
                       type="file"
                       onChange={this.clickupload}
-                      data-projectid={row.rowData[0]}
+                      data-projectid={projectId}
                       onClick={(e) => (e.target.value = null)}
                     />
                     <Button
@@ -233,105 +215,6 @@ class MyProjects extends Component {
                     </Button>
                   </label>
                 </Tooltip>
-                <Dialog
-                  open={this.state.open}
-                  aria-labelledby="form-dialog-title"
-                  fullWidth
-                  maxWidth="sm"
-                >
-                  <DialogTitle
-                    id="form-dialog-title"
-                    className={this.props.classes.title}
-                  >
-                    Download Project Token
-                  </DialogTitle>
-                  <DialogContent dividers>
-                    <Grid container>
-                      <Grid
-                        item
-                        sm={12}
-                        style={{ borderBottom: "2px solid #d9d9d9" }}
-                      >
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox color="primary" />}
-                            onClick={this.handleOldSelectAll}
-                            checked={this.state.isOldChecked}
-                            label="Old Testment"
-                          />
-                        </FormGroup>
-                      </Grid>
-                    </Grid>
-                    <Grid container>{this.displayOTBooks()}</Grid>
-
-                    <Grid container>
-                      <Grid
-                        item
-                        sm={12}
-                        style={{ borderBottom: "2px solid #d9d9d9" }}
-                      >
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox color="primary" />}
-                            onClick={this.handleNewSelectAll}
-                            checked={this.state.isNewChecked}
-                            label="New Testment"
-                          />
-                        </FormGroup>
-                      </Grid>
-                    </Grid>
-                    <Grid container>{this.displayNTBooks()}</Grid>
-                    <hr style={{ border: "1px solid #d9d9d9" }} />
-
-                    <Grid container>
-                      <Grid item sm={6}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                color="primary"
-                                onChange={this.checkHandleChange}
-                                checked={this.state.untranslated}
-                              />
-                            }
-                            label="Untranslated Tokens"
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item sm={6}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox color="primary" />}
-                            label="Single Word"
-                            onChange={this.checkSinglekWord}
-                            checked={this.state.singleWord}
-                          />
-                        </FormGroup>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      size="small"
-                      onClick={this.handleClose}
-                      variant="contained"
-                      color="secondary"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        this.clickdownload(row.rowData[0], row.rowData[1])
-                      }
-                      style={{ marginLeft: 10 }}
-                    >
-                      Download Tokens
-                    </Button>
-                  </DialogActions>
-                </Dialog>
               </div>
             );
           },
@@ -339,7 +222,7 @@ class MyProjects extends Component {
       },
 
       {
-        name: <h4 style={{ textAlign: "center" }}>Draft</h4>,
+        name: <h4 className={this.props.classes.textCenter}>Draft</h4>,
         options: {
           filter: false,
           sort: false,
@@ -348,7 +231,7 @@ class MyProjects extends Component {
             var valuesTran = value.split("/")[0];
             if (valuesbook === 0) {
               return (
-                <div style={{ textAlign: "center" }}>
+                <div className={this.props.classes.textCenter}>
                   <Tooltip title="Book is not assigned yet">
                     <span>
                       <Button size="small" variant="outlined" disabled>
@@ -360,7 +243,7 @@ class MyProjects extends Component {
               );
             } else {
               return (
-                <div style={{ textAlign: "center" }}>
+                <div className={this.props.classes.textCenter}>
                   <Button
                     size="small"
                     variant="contained"
@@ -378,124 +261,6 @@ class MyProjects extends Component {
     ],
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({
-      singleWord: false,
-      untranslated: false,
-      oldChecklist: [],
-      newChecklist: [],
-      open: false,
-    });
-  };
-
-  checkHandleChange = () => {
-    this.setState({ untranslated: !this.state.untranslated });
-  };
-  checkSinglekWord = () => {
-    this.setState({ singleWord: !this.state.singleWord });
-  };
-
-  listSort = (a, b) => {
-    var nameA = a[0].toUpperCase(); // ignore upper and lowercase
-    var nameB = b[0].toUpperCase(); // ignore upper and lowercase
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    // names must be equal
-    return 0;
-  };
-
-  clickdownload = (projectid, projectName) => {
-    const books = this.state.oldChecklist.concat(this.state.newChecklist);
-    if (books.length === 0) {
-      swal({
-        title: "Unable to download tokens",
-        text: "No book(s) selected",
-        icon: "warning",
-      });
-      return;
-    }
-    fetch(
-      apiUrl +
-        "v1/tokentranslationlist/" +
-        projectid +
-        (this.state.singleWord ? "?only_words=True" : "?") +
-        "&books=" +
-        books.join("&books="),
-      {
-        method: "GET",
-        headers: {
-          Authorization: "bearer " + accessToken,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        //  full token translations
-        data.sort(this.listSort);
-        if (this.state.untranslated === false) {
-          let tokenarray = [["token", "translation", "senses"]];
-          tokenarray.push(...data);
-          var wb = XLSX.utils.book_new();
-          wb.Props = {
-            Title: "TokenList",
-            Subject: "TokenList",
-            Author: "TokenList",
-            CreatedDate: new Date(),
-          };
-          wb.SheetNames.push("TokenList");
-          var ws_data = tokenarray;
-          var ws = XLSX.utils.aoa_to_sheet(ws_data);
-          wb.Sheets["TokenList"] = ws;
-          var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-          function s2ab(s) {
-            var buf = new ArrayBuffer(s.length);
-            var view = new Uint8Array(buf);
-            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
-            return buf;
-          }
-          saveAs(
-            new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-            projectName + ".xlsx"
-          );
-        } else {
-          //  ----------Untraslated Tokens----------
-          let untokenarray = [["token", "translation", "senses"]];
-          untokenarray.push(...data.filter((item) => item[1] === null));
-          var wb = XLSX.utils.book_new();
-          wb.Props = {
-            Title: "TokenList",
-            Subject: "TokenList",
-            Author: "TokenList",
-            CreatedDate: new Date(),
-          };
-          wb.SheetNames.push("TokenList");
-          var ws_data = untokenarray;
-          var ws = XLSX.utils.aoa_to_sheet(ws_data);
-          wb.Sheets["TokenList"] = ws;
-          var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-          function s2ab(s) {
-            var buf = new ArrayBuffer(s.length);
-            var view = new Uint8Array(buf);
-            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
-            return buf;
-          }
-          saveAs(
-            new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-            projectName + ".xlsx"
-          );
-        }
-        this.handleClose();
-      });
-  };
-
   // Upload tokens from excel file
   clickupload = (e) => {
     const stoploading = () => {
@@ -505,7 +270,6 @@ class MyProjects extends Component {
     var proId = e.target.getAttribute("data-projectid");
     var files = e.target.files,
       f = files[0];
-    var that = this;
     var reader = new FileReader();
     reader.onload = function (e) {
       var data = new Uint8Array(e.target.result);
@@ -543,120 +307,6 @@ class MyProjects extends Component {
     reader.readAsArrayBuffer(f);
   };
 
-  oldHandleChange = (e) => {
-    const checkedName = e.target.name;
-    const books = [...this.state.oldChecklist];
-    if (books.includes(checkedName)) {
-      const bookIndex = books.indexOf(checkedName);
-      books.splice(bookIndex, 1);
-    } else {
-      books.push(checkedName);
-    }
-    this.setState({ oldChecklist: books });
-  };
-
-  handleOldSelectAll = (e) => {
-    const { userProjects } = this.props;
-    const checkValue = e.target.checked;
-    let books = [];
-    if (checkValue) {
-      books = bibleBookOldTestments.filter((item) => {
-        return userProjects[0].books.includes(item);
-      });
-    }
-    this.setState({ oldChecklist: books });
-    this.setState({ isOldChecked: e.target.checked });
-  };
-
-  displayOTBooks() {
-    const { userProjects } = this.props;
-    if (userProjects.length > 0) {
-      return bibleBookOldTestments.map((item) => {
-        if (userProjects[0].books.includes(item)) {
-          return (
-            <Grid item sm={2} key={item}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox color="primary" />}
-                  label={item.toUpperCase()}
-                  value={item}
-                  name={item}
-                  checked={this.state.oldChecklist.includes(item)}
-                  onClick={this.oldHandleChange}
-                />
-              </FormGroup>
-            </Grid>
-          );
-        } else {
-          return "";
-        }
-      });
-    } else {
-      return (
-        <Grid key="" value="" disabled>
-          No books assigned
-        </Grid>
-      );
-    }
-  }
-
-  newHandleChange = (e) => {
-    const checkedName = e.target.name;
-    const books = [...this.state.newChecklist];
-    if (books.includes(checkedName)) {
-      const bookIndex = books.indexOf(checkedName);
-      books.splice(bookIndex, 1);
-    } else {
-      books.push(checkedName);
-    }
-    this.setState({ newChecklist: books });
-  };
-
-  handleNewSelectAll = (e) => {
-    const { userProjects } = this.props;
-    const checkValue = e.target.checked;
-    let books = [];
-    if (checkValue) {
-      books = bibleBookNewTestments.filter((item) => {
-        return userProjects[0].books.includes(item);
-      });
-    }
-    this.setState({ newChecklist: books });
-    this.setState({ isNewChecked: e.target.checked });
-  };
-
-  displayNTBooks() {
-    const { userProjects } = this.props;
-    if (userProjects.length > 0) {
-      return bibleBookNewTestments.map((item) => {
-        if (userProjects[0].books.includes(item)) {
-          return (
-            <Grid item sm={2} key={item}>
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox color="primary" />}
-                  label={item.toUpperCase()}
-                  value={item}
-                  name={item}
-                  checked={this.state.newChecklist.includes(item)}
-                  onClick={this.newHandleChange}
-                />
-              </FormGroup>
-            </Grid>
-          );
-        } else {
-          return "";
-        }
-      });
-    } else {
-      return (
-        <Grid key="" value="" disabled>
-          No books assigned
-        </Grid>
-      );
-    }
-  }
-
   handleDownload = (projectId) => {
     var project = this.props.userProjects.filter(
       (item) => item.projectId === parseInt(projectId)
@@ -689,7 +339,7 @@ class MyProjects extends Component {
 
     const { columns } = this.state;
     const sortedData = [];
-    userProjects.map((project) => {
+    userProjects.forEach((project) => {
       if (project.active === true) {
         sortedData.push(project);
       }
@@ -706,7 +356,7 @@ class MyProjects extends Component {
           project.version.revision,
         project.projectId + "/" + project.books,
         project.projectId + "/" + project.books.length,
-        0,
+        project.books,
         project.projectId + "/" + project.books.length,
       ];
     });

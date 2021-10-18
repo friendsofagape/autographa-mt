@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import { Typography } from "@material-ui/core";
 import { Grid, Paper } from "@material-ui/core";
@@ -8,9 +8,9 @@ export default function RoleDetails() {
   function AvtarChange() {
     const userDetails = useSelector((state) => state.auth);
     const data = userDetails.current_user.role;
-    if (data == "ad") {
+    if (data && data === "ad") {
       return <Avatar alt="G" src="../images/admin.jpg" />;
-    } else if (data == "m") {
+    } else if (data && data === "m") {
       return <Avatar alt="G" src="../images/translator.png" />;
     } else {
       return <Avatar alt="G" src="../images/superadmin.jpg" />;
@@ -20,21 +20,21 @@ export default function RoleDetails() {
   function RoleId() {
     const userDetails = useSelector((state) => state.auth);
     const id = userDetails.current_user.role;
-    if (id == "ad") {
+    if (id && id === "ad") {
       return (
-        <Grid item sm={8} style={{ paddingLeft: "5%", paddingBottom: "0%" }}>
+        <Grid item sm={8} style={{ paddingTop: "5px", paddingLeft: "5%" }}>
           Admin
         </Grid>
       );
-    } else if (id == "m") {
+    } else if (id && id === "m") {
       return (
-        <Grid item sm={8} style={{ paddingLeft: "5%", paddingBottom: "0%" }}>
+        <Grid item sm={8} style={{ paddingTop: "5px", paddingLeft: "5%" }}>
           Translator
         </Grid>
       );
     } else {
       return (
-        <Grid item sm={8} style={{ paddingLeft: "5%", paddingBottom: "0%" }}>
+        <Grid item sm={8} style={{ paddingTop: "5px", paddingLeft: "5%" }}>
           Super Admin
         </Grid>
       );
@@ -44,7 +44,7 @@ export default function RoleDetails() {
   function RoleDetails() {
     const userDetails = useSelector((state) => state.auth);
     const id = userDetails.current_user.role;
-    if (id == "ad") {
+    if (id && id === "ad") {
       return (
         <Typography variant="caption" style={{ color: "#001e96" }}>
           As an Admin, you can Create Projects. You can assign and unassign
@@ -53,7 +53,7 @@ export default function RoleDetails() {
           tokens from the books assigned to you in the project.
         </Typography>
       );
-    } else if (id == "m") {
+    } else if (id && id === "m") {
       return (
         <Typography variant="caption" style={{ color: "#001e96" }}>
           If there is no projects assigned to you, wait for the admin or super
@@ -85,7 +85,7 @@ export default function RoleDetails() {
   return (
     <div>
       <Paper
-        elevation="4"
+        elevation={4}
         style={{ marginRight: "15%", marginLeft: "15%", marginTop: "5%" }}
       >
         <Grid container>
@@ -153,7 +153,7 @@ export default function RoleDetails() {
                 textAlign: "right",
               }}
             >
-              <Typography component="h4" variant="h7">
+              <Typography component="h4" variant="h6">
                 Email Id
               </Typography>
             </Grid>
@@ -189,11 +189,11 @@ export default function RoleDetails() {
               sm={4}
               style={{
                 paddingLeft: "5%",
-                paddingBottom: "0%",
+                paddingBottom: "2%",
                 textAlign: "right",
               }}
             >
-              <Typography component="h4" variant="h7">
+              <Typography component="h4" variant="h6">
                 Role
               </Typography>
             </Grid>
