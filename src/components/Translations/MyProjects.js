@@ -8,7 +8,6 @@ import MUIDataTable from "mui-datatables";
 import { Redirect, Link } from "react-router-dom";
 import UploadIcon from "@material-ui/icons/Publish";
 import DownloadIcon from "@material-ui/icons/GetApp";
-
 import XLSX from "xlsx";
 import compose from "recompose/compose";
 import { withRouter } from "react-router-dom";
@@ -26,28 +25,6 @@ const styles = (theme) => ({
     paddingLeft: "5%",
     paddingRight: "5%",
   },
-  cursorPointer: {
-    cursor: "pointer",
-    backgroundColor: "#fff",
-    "&:hover": {
-      background: "#ededf4",
-    },
-  },
-  cardHover: {
-    backgroundColor: "#100f0ffa",
-    "&:hover": {
-      background: "#f00",
-    },
-  },
-  fab: {
-    position: "fixed",
-    bottom: "16px",
-    right: "16px",
-  },
-  title: {
-    textAlign: "center",
-    backgroundColor: "#eee",
-  },
   textCenter: {
     textAlign: "center",
   },
@@ -56,19 +33,9 @@ const styles = (theme) => ({
 class MyProjects extends Component {
   state = {
     redirect: null,
-    open: false,
     booksPane: false,
     project: {},
-    allTokenList: [],
-    untranslatedToken: [],
-    bkvalue: "",
-    isOldChecked: false,
-    isNewChecked: false,
-    oldChecklist: [],
-    newChecklist: [],
     loading: false,
-    untranslated: false,
-    singleWord: false,
     columns: [
       {
         name: "id",

@@ -62,7 +62,7 @@ class DownloadTokenDialog extends Component {
   checkHandleChange = () => {
     this.setState({ untranslated: !this.state.untranslated });
   };
-  checkSinglekWord = () => {
+  checkSingleWord = () => {
     this.setState({ singleWord: !this.state.singleWord });
   };
 
@@ -375,7 +375,7 @@ class DownloadTokenDialog extends Component {
                   <FormControlLabel
                     control={<Checkbox color="primary" />}
                     label="Single Word"
-                    onChange={this.checkSinglekWord}
+                    onChange={this.checkSingleWord}
                     checked={this.state.singleWord}
                   />
                 </FormGroup>
