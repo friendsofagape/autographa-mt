@@ -55,6 +55,8 @@ class DownloadTokenDialog extends Component {
       untranslated: false,
       oldChecklist: [],
       newChecklist: [],
+      isOldChecked: false,
+      isNewChecked: false,
       open: false,
     });
   };
