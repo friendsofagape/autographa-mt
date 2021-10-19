@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import jwt_decode from "jwt-decode";
-import {  MenuItem, Grid, Popover } from "@material-ui/core";
+import { MenuItem, Grid, Popover } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
@@ -31,7 +31,6 @@ class SignedInLinks extends Component {
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
     return (
-
       <Popover
         id={id}
         open={open}
@@ -48,7 +47,7 @@ class SignedInLinks extends Component {
       >
         <MenuItem>
           <Link
-            style={{ color: "red", "text-decoration": "none" }}
+            style={{ color: "red", textDecoration: "none" }}
             to="/"
             onClick={this.logOut}
             className={this.props.classes.link}
@@ -90,19 +89,25 @@ class SignedInLinks extends Component {
         tokenAliveFlag = true;
       }
     }
-    
+
     const { current_user } = this.props;
     return (
       <Grid>
         {current_user.firstName ? (
           <div>
-              <label
-                color="inherit"
-                style={{ padding: "5px", paddingRight: "2%", color: "#e0ba1f" }}
-              >
-                Welcome,{" " +current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)+ " " + current_user.lastName.charAt(0).toUpperCase() + current_user.lastName.slice(1)}
-              </label>
-            
+            <label
+              color="inherit"
+              style={{ padding: "5px", paddingRight: "2%", color: "#e0ba1f" }}
+            >
+              Welcome,
+              {" " +
+                current_user.firstName.charAt(0).toUpperCase() +
+                current_user.firstName.slice(1) +
+                " " +
+                current_user.lastName.charAt(0).toUpperCase() +
+                current_user.lastName.slice(1)}
+            </label>
+
             <IconButton
               aria-owns={isMenuOpen ? "material-appbar" : undefined}
               aria-haspopup="true"
@@ -145,7 +150,6 @@ class SignedInLinks extends Component {
 const mapStateToProps = (state) => ({
   current_user: state.auth.current_user,
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
