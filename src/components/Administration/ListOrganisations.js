@@ -150,7 +150,7 @@ class ListOrganisations extends Component {
     const { columns, open } = this.state;
     const data = Object.values(organisations);
     const sortedData = [];
-    data.map((organisation) => {
+    data.forEach((organisation) => {
       if (organisation.active === true) {
         sortedData.push(organisation);
       }

@@ -1,9 +1,6 @@
-
-// import { connect } from 'react-redux';
 import React, { Component } from 'react'
 import { Grid } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
-import Header from './Header';
 import PopUpMessages from './PopUpMessages';
 import apiUrl from './GlobalUrl';
 import { connect } from 'react-redux'
@@ -14,7 +11,6 @@ import { CardHeader } from '@material-ui/core';
 import { Typography, CardContent } from '@material-ui/core';
 import { booksDialog } from '../store/actions/dialogActions';
 import BooksDownloadable from './BooksDownloadable';
-// var FileSaver = require('file-saver');
 
 var accessToken = localStorage.getItem('accessToken')
 
@@ -45,7 +41,6 @@ class DownloadDraft extends Component {
                 }
             })
             const translatedTokenInfo = await data.json()
-            // const response = await data.json()
             if ('success' in translatedTokenInfo) {
                 this.props.displaySnackBar({
                     snackBarMessage: translatedTokenInfo.message,
@@ -75,16 +70,11 @@ class DownloadDraft extends Component {
         this.setState({ versionDetails })
     }
 
-
     async getLanguagesData() {
-        // const data = await fetch('http://localhost:8000/v1/languages', {
-        //     method: 'GET'
-        // })
         const lang = await fetch(apiUrl + 'v1/languages', {
             method: 'GET'
         })
         const languageDetails = await lang.json()
-        // const languages = await lang.json()
         this.setState({ languageDetails })
     }
 
@@ -113,15 +103,12 @@ class DownloadDraft extends Component {
                 snackBarOpen: true,
                 snackBarVariant: "error"
             })
-
         }
     }
 
     componentDidMount() {
         this.getProjectData()
-        // this.getVersionData()
         this.getTranslatedTokenInfo()
-        // this.getLanguagesData()
     }
 
     handleClick = e => {
@@ -136,8 +123,6 @@ class DownloadDraft extends Component {
     handleClose = () => {
         this.setState({ open: false })
     }
-
-
 
     displayLanguage = () => {
         const languages = Object.keys(this.state.translatedTokenInfo)
@@ -191,23 +176,17 @@ class DownloadDraft extends Component {
             return item.languageName === targetLanguage
         })
         const targetLanguageId = selectedLanguage.languageId
-        // this.setState({targetLanguageId})
         this.getTargetBooks(targetLanguageId)
-        // this.props.data.updateState({targetLanguage: value})
-        // this.props.data.updateState({targetLanguageId: selectedLanguage.languageId})
-        // ({ languagename: value, languageid: value[0].languageId })
     }
 
     async setChecked(targetBooksChecked) {
         this.setState({ targetBooksChecked })
     }
 
-
     handleCardClick = (project) => {
         this.props.selectProject({project: project})
         this.props.booksDialog({booksPane: true})
     }
-
 
     displayDraftCards(){
         const { projects } = this.state
@@ -216,10 +195,8 @@ class DownloadDraft extends Component {
             return projects.map(project => {
                 return (
                     <Grid item xs={12} sm={6} md={3} key={project.projectId} style={{gridRowGap:'2px'}}>
-                        {/* <div className={classes.toolbar} /> */}
                         <Card onClick={() => this.handleCardClick(project)} className={classes.cursorPointer}>
                             <CardHeader
-                                // title={`Organisation: ${project.organisationName}`}
                                 subheader={`Organisation: ${project.organisationName}`} />
                             <CardContent>
                                 <Typography varian="h5" gutterBottom>
@@ -236,7 +213,6 @@ class DownloadDraft extends Component {
                     </Grid>
                 )
             })
-
         }else{
             return <Typography variant="h5">No Project available for download</Typography>
         }
@@ -244,25 +220,20 @@ class DownloadDraft extends Component {
 
     render() {
         return (
-
             <Grid item xs={12} container>
-            {/* <Header /> */}
-            <BooksDownloadable />
+                <BooksDownloadable />
                 <Grid 
                     container
                     spacing={1}
                     style={{border:'1px solid #eee', padding:'10px', margin: '5px'}}
                     >
-                        {this.displayDraftCards()}
-            <PopUpMessages />
+                    {this.displayDraftCards()}
+                    <PopUpMessages />
                 </Grid>
             </Grid>
-            // <Grid container item xs={12}>
         )
     }
 }
-
-
 
 const mapDispatchToProps = (dispatch) => {
     return {

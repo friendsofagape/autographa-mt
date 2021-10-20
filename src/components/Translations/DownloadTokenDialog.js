@@ -121,9 +121,7 @@ class DownloadTokenDialog extends Component {
             CreatedDate: new Date(),
           };
           wb.SheetNames.push("TokenList");
-          var ws_data = tokenarray;
-          var ws = XLSX.utils.aoa_to_sheet(ws_data);
-          wb.Sheets["TokenList"] = ws;
+          wb.Sheets["TokenList"] = XLSX.utils.aoa_to_sheet(tokenarray);
           var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
           function s2ab(s) {
             var buf = new ArrayBuffer(s.length);
@@ -139,18 +137,16 @@ class DownloadTokenDialog extends Component {
           //  ----------Untraslated Tokens----------
           let untokenarray = [["token", "translation", "senses"]];
           untokenarray.push(...data.filter((item) => item[1] === null));
-          var wb = XLSX.utils.book_new();
-          wb.Props = {
+          var wb2 = XLSX.utils.book_new();
+          wb2.Props = {
             Title: "TokenList",
             Subject: "TokenList",
             Author: "TokenList",
             CreatedDate: new Date(),
           };
-          wb.SheetNames.push("TokenList");
-          var ws_data = untokenarray;
-          var ws = XLSX.utils.aoa_to_sheet(ws_data);
-          wb.Sheets["TokenList"] = ws;
-          var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+          wb2.SheetNames.push("TokenList");
+          wb2.Sheets["TokenList"] = XLSX.utils.aoa_to_sheet(untokenarray);
+          var wbout2 = XLSX.write(wb2, { bookType: "xlsx", type: "binary" });
           function s2ab(s) {
             var buf = new ArrayBuffer(s.length);
             var view = new Uint8Array(buf);
@@ -158,7 +154,7 @@ class DownloadTokenDialog extends Component {
             return buf;
           }
           saveAs(
-            new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+            new Blob([s2ab(wbout2)], { type: "application/octet-stream" }),
             this.props.projectName + ".xlsx"
           );
         }

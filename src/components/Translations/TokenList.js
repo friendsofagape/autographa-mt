@@ -153,7 +153,7 @@ class TokenList extends Component {
 					className={classes.searchTerm}
 					type="search"
 					value={this.state.searchTerm}
-					onInput={this.filterTokens}
+					onChange={this.filterTokens}
 					placeholder="Search..."
 				/>
 				<Grid item xs={12} className={classes.containerGrid}>

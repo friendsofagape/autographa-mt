@@ -3,8 +3,6 @@ import {
   Grid,
   TextField,
   Button,
-  FormControlLabel,
-  Checkbox,
   Link,
   Typography,
   Dialog,
@@ -17,7 +15,6 @@ import {
 import Container from "@material-ui/core/Container";
 import { Redirect } from "react-router-dom";
 import Header from "./Header";
-import jwt_decode from "jwt-decode";
 import apiUrl from "./GlobalUrl";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/styles";
@@ -70,7 +67,6 @@ class LoginPage extends Component {
         accessToken: myJson.accessToken,
       });
     } else {
-      // alert(myJson.message)
       this.props.displaySnackBar({
         snackBarMessage: myJson.message,
         snackBarOpen: true,
@@ -116,7 +112,6 @@ class LoginPage extends Component {
         verificationCodeDialogOpen: true,
       });
     } else {
-      // alert(myJson.message)
       this.props.displaySnackBar({
         snackBarMessage: myJson.message,
         snackBarOpen: true,
@@ -173,7 +168,7 @@ class LoginPage extends Component {
         <Header />
         <PopUpMessages />
         <Container component="main" maxWidth="xs" className={classes.loginPage}>
-          <Paper elevation="3" style={{ padding: "8%" }}>
+          <Paper elevation={3} style={{ padding: "8%" }}>
             <Typography
               component="h1"
               variant="h5"
@@ -206,7 +201,6 @@ class LoginPage extends Component {
                 autoComplete="current-password"
                 onChange={(e) => this.setState({ password: e.target.value })}
               />
-              {/* <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" /> */}
               <Grid container>
                 <Grid item sm={5}>
                   <Link

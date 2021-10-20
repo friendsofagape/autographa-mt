@@ -3,8 +3,6 @@ import {
     Grid,
     TextField,
     Button,
-    FormControlLabel,
-    Checkbox,
     Link,
     Paper,
     Typography,
@@ -13,7 +11,6 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Slide
 } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { Redirect } from 'react-router-dom';
@@ -21,21 +18,14 @@ import Header from './Header';
 import apiUrl from './GlobalUrl';
 import { withStyles } from '@material-ui/core/styles';
 
-
 const styles = theme => ({
     loginPage: {
       marginTop: '120px'
     },
     form: {
-      // backgroundColor:'blue',
       padding: '3% 10%'
     },
 });
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
-
 
 class SignUp extends Component {
     state = {
@@ -48,8 +38,6 @@ class SignUp extends Component {
         verificationDialogOpen: false,
     }
 
-
-
     async registerUser() {
         var formData = new FormData();
         var apiData = {
@@ -61,7 +49,6 @@ class SignUp extends Component {
         for (var name in apiData) {
             formData.append(name, apiData[name])
         }
-
         const data = await fetch(apiUrl +  'v1/registrations', {
             method: "POST",
             body: formData
@@ -98,7 +85,7 @@ class SignUp extends Component {
             <Grid container>
             <Header />
             <Container component="main" maxWidth="xs" className={classes.loginPage}>
-            <Paper elevation='3' >
+            <Paper elevation={3} >
                 <Typography component="h1" variant="h5" style={{textAlign:"center" ,paddingBottom:"4%", paddingTop:"5%"}}>
                     Sign Up
                 </Typography>
@@ -162,19 +149,13 @@ class SignUp extends Component {
                             size="small"
                             onChange={(e) => this.setState({ password: e.target.value })}
                         />
-                    </Grid>
-                    {/* <FormControlLabel
-                        control={<Checkbox value="allowExtraEmails" color="primary" />}
-                        label="I want to recieve promotional emails"
-                    /> */}
-                    
+                    </Grid>                    
                     <Grid container style={{ marginTop: "20%" }}>
                         <Grid item  xs style={{ margin: '2%' }}>
                             <Link href="/signin" variant="body2">
                                 {"Sign in instead"}
                             </Link>
                         </Grid>
-                        
                         <Grid item style={{ textAlign: "right", paddingBottom:'10%'}}>
                             <Button
                             type="submit"
@@ -186,11 +167,9 @@ class SignUp extends Component {
                             </Button>
                         </Grid>
                     </Grid>
-                
                 </form>
                 <Dialog
                     open={this.state.verificationDialogOpen}
-                    TransitionComponent={Transition}
                     keepMounted
                     onClose={this.handleClose}
                     aria-labelledby="alert-dialog-slide-title"

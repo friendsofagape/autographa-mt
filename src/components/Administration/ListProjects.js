@@ -130,7 +130,7 @@ class ListProjects extends Component {
     const { classes, projects, isFetching, current_user } = this.props;
     const { columns, open } = this.state;
     const sortedData = [];
-    projects.map((project) => {
+    projects.forEach((project) => {
       if (project.active === true) {
         sortedData.push(project);
       }
