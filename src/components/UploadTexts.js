@@ -16,6 +16,7 @@ import {
 } from "../store/actions/sourceActions";
 import Chip from "@material-ui/core/Chip";
 import DoneIcon from "@material-ui/icons/Done";
+import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import Tooltip from "@material-ui/core/Tooltip";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import AddIcon from "@material-ui/icons/Add";
@@ -76,11 +77,11 @@ class UploadTexts extends Component {
 		uploading: false,
 		uploadSuccess: [],
 		uploadErrors: [],
+    finishedParsing:false,
 	};
 
 	componentDidUpdate(prevProps) {
 		const { completedUpload, uploadErrorBooks } = this.props;
-
 		if (
 			prevProps.uploadErrorBooks.length !==
 				this.props.uploadErrorBooks.length ||
@@ -152,14 +153,17 @@ class UploadTexts extends Component {
 					success,
 				});
 			} catch (error) {
-				errorFiles.push(file.name);
+        errorFiles.push(file.name+"/Error: "+error);
 				this.setState({ errorFiles });
 			} finally {
-				if (
+        if(errorFiles.length === this.state.totalFile){
+          this.setState({ progress: false });
+        } else if (
 					success.length + errorFiles.length ===
 					this.state.totalFile
 				) {
 					this.uploadFiles();
+          this.setState({finishedParsing:true})
 				}
 			}
 		};
@@ -167,7 +171,7 @@ class UploadTexts extends Component {
 	}
 
 	openDailogBox = () => {
-		this.setState({ openDailog: true });
+		this.setState({ openDailog: true,finishedParsing:false });
 	};
 
 	closeDailogBox = () => {
@@ -183,7 +187,7 @@ class UploadTexts extends Component {
 
 	addFiles = (e) => {
 		e.preventDefault();
-		this.openDailogBox();
+    this.openDailogBox();
 		const filesObj = e.target.files;
 		const filesKeys = Object.keys(filesObj);
 		this.setState({
@@ -232,9 +236,7 @@ class UploadTexts extends Component {
 			}
 		}
 	};
-	handleDelete = () => {
-		console.info("You clicked the delete icon.");
-	};
+	handleDelete = () => {};
 
 	render() {
 		const { dialogOpen, close, isFetching, current_user } = this.props;
@@ -355,16 +357,18 @@ class UploadTexts extends Component {
 										/>
 									))}
 									{errorFiles.map((item, i) => (
-										<Chip
-											className={
-												this.props.classes.uploadChip
-											}
-											key={i}
-											variant="outlined"
-											color="secondary"
-											onDelete={this.handleDelete}
-											label={item}
-										/>
+                    <Tooltip key={i} title={item.split("/")[1]}>
+                      <Chip
+                        className={
+                          this.props.classes.uploadChip
+                        }
+                        variant="outlined"
+                        color="secondary"
+                        deleteIcon={<ErrorIcon/>}
+                        onDelete={this.handleDelete}
+                        label={item.split("/")[0]}
+                      />
+                    </Tooltip>
 									))}
 								</Grid>
 								<Grid item xs={12}>
@@ -383,8 +387,7 @@ class UploadTexts extends Component {
 								</Grid>
 							</Grid>
 						</div>
-
-						<div className={this.props.classes.message}>
+						{this.state.finishedParsing && <div className={this.props.classes.message}>
 							<Grid container>
 								<Grid item xs={3}>
 									<span
@@ -423,6 +426,7 @@ class UploadTexts extends Component {
 													}
 													variant="outlined"
 													color="secondary"
+                          deleteIcon={<ErrorIcon/>}
 													onDelete={this.handleDelete}
 													label={item[0]}
 												/>
@@ -445,7 +449,7 @@ class UploadTexts extends Component {
 									/>
 								</Grid>
 							</Grid>
-						</div>
+						</div>}
 					</DialogContent>
 					<DialogActions>
 						<Button
