@@ -136,8 +136,8 @@ class ViewSources extends Component {
 			this.props;
 		const { columns, createSourceDialog } = this.state;
 		var data = [];
-		bibleLanguages.map((bible) => {
-			bible["languageVersions"].map((version) => {
+		bibleLanguages.forEach((bible) => {
+			bible["languageVersions"].forEach((version) => {
 				data.push([
 					version.sourceId,
 					version.language.name,

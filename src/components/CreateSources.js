@@ -17,10 +17,7 @@ import ComponentHeading from "./ComponentHeading";
 import apiUrl from "./GlobalUrl";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { displaySnackBar, createSource } from "../store/actions/sourceActions";
-import PopUpMessages from "./PopUpMessages";
-import { uploadDialog } from "../store/actions/dialogActions";
-
+import { createSource } from "../store/actions/sourceActions";
 import VirtualizedSelect from "react-virtualized-select";
 import "react-virtualized-select/styles.css";
 import "react-virtualized/styles.css";
@@ -176,7 +173,7 @@ class UploadSource extends Component {
 
 		var languageData = [];
 		if (this.state.languageDetails != null) {
-			Object.values(this.state.languageDetails).map((lang) => {
+			Object.values(this.state.languageDetails).forEach((lang) => {
 				languageData.push({
 					label: lang.languageName,
 					value: lang.languageId,

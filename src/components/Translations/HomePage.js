@@ -65,7 +65,7 @@ class HomePage extends Component {
         let allTokenArray = [];
         let unTokenArray = [];
 
-        data.map((i) => {
+        data.forEach((i) => {
           allTokenArray.push(i[0]);
           if (i[1] == null) {
             excelUnTokens.push(i);
@@ -125,11 +125,9 @@ class HomePage extends Component {
     return (
       <Grid container>
         {isFetching && <CircleLoader />}
-
         <Grid item sm={3}>
           <MenuBar updateState={this.updateState} />
         </Grid>
-
         <Grid item sm={4} style={{ textAlign: "center", paddingTop: "10px" }}>
           <Typography component="h3" variant="h6">
             {this.props.selectedProject.projectName &&
@@ -138,9 +136,8 @@ class HomePage extends Component {
                 .toUpperCase()}
           </Typography>
         </Grid>
-
         {this.state.bkvalue && (
-          <Grid item container sm={5} style={{ marginTop: "1%" }}>
+          <Grid container item  sm={5} style={{ marginTop: "1%" }}>
             <Grid item sm={4}>
               <Typography
                 component="h5"
@@ -169,7 +166,6 @@ class HomePage extends Component {
               </span>
             </Grid>
             <Grid item sm={2}>
-              {/* <span style={{fontSize:'78%'}}>{this.state.translatedTokensCount}/{alltokenProgress}</span> */}
               <Tooltip title="Click here to reload tokens">
                 <CachedIcon
                   fontSize="default"
@@ -182,11 +178,9 @@ class HomePage extends Component {
             </Grid>
           </Grid>
         )}
-
         <Grid item sm={12} style={{ marginTop: "2%" }}>
           <Divider />
         </Grid>
-
         {this.state.bkvalue && (
           <Grid
             container
@@ -194,9 +188,9 @@ class HomePage extends Component {
             spacing={0}
           >
             <Grid item sm={3} style={{ paddingRight: "2%" }}>
-              <Paper elevation="2">
+              <Paper elevation={2}>
                 <Grid container style={{ backgroundColor: "#f2eddf" }}>
-                  <Grid sm={11}>
+                  <Grid item sm={11}>
                     <Typography
                       component="h4"
                       variant="h6"
@@ -255,7 +249,6 @@ class HomePage extends Component {
                   label="Single Word"
                 />
               </Grid>
-
               <Grid
                 item
                 sm={12}
@@ -267,7 +260,7 @@ class HomePage extends Component {
                 }}
               >
                 <Grid item sm={12}></Grid>
-                <Paper elevation="1">
+                <Paper elevation={1}>
                   <TokenList
                     checkvalue={this.state.untranslated}
                     untoken={this.state.untoken}
@@ -278,9 +271,8 @@ class HomePage extends Component {
                 </Paper>
               </Grid>
             </Grid>
-
             <Grid item sm={5} style={{ paddingRight: "2%" }}>
-              <Paper elevation="2">
+              <Paper elevation={2}>
                 <Grid item sm={12} style={{ backgroundColor: "#f2eddf" }}>
                   <Typography
                     component="h4"
@@ -294,7 +286,6 @@ class HomePage extends Component {
                   </Typography>
                 </Grid>
               </Paper>
-
               <Grid
                 item
                 sm={12}
@@ -305,7 +296,7 @@ class HomePage extends Component {
                   paddingBottom: "2%",
                 }}
               >
-                <Paper elevation="1">
+                <Paper elevation={1}>
                   <UpdateTokens
                     updateState={this.updateState}
                     bkvalue={this.state.bkvalue}
@@ -315,9 +306,8 @@ class HomePage extends Component {
                 </Paper>
               </Grid>
             </Grid>
-
             <Grid item sm={4} style={{ paddingRight: "2%" }}>
-              <Paper elevation="2">
+              <Paper elevation={2}>
                 <Grid item sm={12} style={{ backgroundColor: "#f2eddf" }}>
                   <Typography
                     component="h4"
@@ -341,7 +331,7 @@ class HomePage extends Component {
                   paddingBottom: "2%",
                 }}
               >
-                <Paper elevation="1">
+                <Paper elevation={1}>
                   <Concordance
                     updateState={this.updateState}
                     bkvalue={this.state.bkvalue}

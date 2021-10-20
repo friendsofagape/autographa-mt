@@ -8,7 +8,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import {
@@ -29,7 +28,7 @@ const styles = (theme) => ({
 		padding: theme.spacing(2),
 	},
 	dailog: {
-		minHeight: "300px",
+		minHeight: "200px",
 	},
 	closeButton: {
 		position: "absolute",
@@ -120,7 +119,7 @@ class CreateProject extends Component {
 	displayOrganisations = () => {
 		const { organisations } = this.props;
 		const sortedData = [];
-		organisations.map((organisation) => {
+		organisations.forEach((organisation) => {
 			if (organisation.active === true) {
 				sortedData.push(organisation);
 			}
@@ -169,7 +168,7 @@ class CreateProject extends Component {
 
 		var languageData = [];
 		if (this.state.allLanguages !== null) {
-			Object.values(allLanguages).map((lang) => {
+			Object.values(allLanguages).forEach((lang) => {
 				languageData.push({
 					label: lang.languageName,
 					value: lang.languageId,
@@ -188,7 +187,7 @@ class CreateProject extends Component {
 			>
 				{isFetching && <CircleLoader />}
 				<DialogTitle id="customized-dialog-title" onClose={close}>
-					<Typography variant="h6">Create project</Typography>
+					Create project
 					<IconButton
 						aria-label="close"
 						className={classes.closeButton}

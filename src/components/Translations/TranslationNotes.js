@@ -20,9 +20,6 @@ const styles = theme => ({
 
 const ReactMarkdown = require('react-markdown/with-html');
 
-
-
-
 class TranslationNotes extends Component {
     state = {
         translationNotes: 'Select Concordance to Fetch Notes',
@@ -69,11 +66,10 @@ class TranslationNotes extends Component {
             )
     }
     render() {
-        const { classes } = this.props
         return (
             <Grid item sm={12}>
                 <Grid item sm={12} >
-					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
+					<Typography component="h4" variant="h6" style={{textAlign:"left" ,padding:"1%"}}>
                    		Translation Notes
 					</Typography>
 				</Grid>

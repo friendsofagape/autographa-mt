@@ -6,7 +6,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableHead from "@material-ui/core/TableHead";
-import { Checkbox, Button, Paper, List } from "@material-ui/core";
+import { Checkbox, Button, Paper } from "@material-ui/core";
 import ComponentHeading from "../ComponentHeading";
 import apiUrl from "../GlobalUrl";
 import Dialog from "@material-ui/core/Dialog";
@@ -117,7 +117,7 @@ class AssignUser extends Component {
 	getUserNames = () => {
 		const { users } = this.props;
 		const sortedUsers = [];
-		users.map((user) => {
+		users.forEach((user) => {
 			if (user.active === true) {
 				sortedUsers.push(user);
 			}

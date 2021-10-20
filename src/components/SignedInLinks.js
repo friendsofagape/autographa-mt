@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import jwt_decode from "jwt-decode";
 import { MenuItem, Grid, Popover } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import { Link, NavLink } from "react-router-dom";
@@ -61,13 +60,13 @@ class SignedInLinks extends Component {
 
   avatarChange() {
     const { current_user } = this.props;
-    if (current_user.role == "ad") {
+    if (current_user.role === "ad") {
       return <Avatar alt="A" src="../images/admin.jpg" />;
     }
-    if (current_user.role == "m") {
+    if (current_user.role === "m") {
       return <Avatar alt="T" src="../images/translator.png" />;
     }
-    if (current_user.role == "sa") {
+    if (current_user.role === "sa") {
       return <Avatar alt="SA" src="../images/superadmin.jpg" />;
     }
   }
@@ -76,19 +75,6 @@ class SignedInLinks extends Component {
     const { classes } = this.props;
     const { anchorEl } = this.state;
     const isMenuOpen = Boolean(anchorEl);
-    let tokenAliveFlag = false;
-    let decoded;
-    const { accessToken } = this.props;
-    if (accessToken) {
-      decoded = jwt_decode(accessToken);
-      let currentDate = new Date().getTime();
-      let expiry = decoded.exp * 1000;
-      var firstName = decoded.firstName;
-      var hours = (expiry - currentDate) / 36e5;
-      if (hours > 0) {
-        tokenAliveFlag = true;
-      }
-    }
 
     const { current_user } = this.props;
     return (
@@ -123,7 +109,6 @@ class SignedInLinks extends Component {
           <Grid>
             <NavLink
               exact
-              className="main-nav"
               activeClassName="main-nav-active"
               to="/signin"
               className={classes.link}
@@ -132,7 +117,6 @@ class SignedInLinks extends Component {
             </NavLink>
             <NavLink
               exact
-              className="main-nav"
               activeClassName="main-nav-active"
               style={{ paddingLeft: "2%", paddingRight: "1%" }}
               to="/signup"

@@ -5,13 +5,11 @@ import './loader.css';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-       
     }
 });
 
 class CircleLoader extends Component {
     render() {
-        const { classes } = this.props;
         return (
             <div className="loading">Loading</div>
         )

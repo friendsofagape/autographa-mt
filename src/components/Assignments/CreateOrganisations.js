@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, TextField, Button, Typography } from "@material-ui/core";
+import { Grid, TextField, Button } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -106,9 +106,7 @@ class CreateOrganisations extends Component {
 					{isFetching && <CircleLoader />}
 
 					<DialogTitle id="customized-dialog-title" onClose={close}>
-						<Typography variant="h6">
-							Create organisation
-						</Typography>
+						Create organisation
 					</DialogTitle>
 					<DialogContent dividers className={classes.dailog}>
 						<form

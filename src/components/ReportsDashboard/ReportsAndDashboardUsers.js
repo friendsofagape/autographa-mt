@@ -12,45 +12,14 @@ import CircleLoader from "../loaders/CircleLoader";
 import swal from "sweetalert";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import {
 	bibleBookNewTestments,
 	bibleBookOldTestments,
 } from "../Common/BibleOldNewTestment";
-
-// const styles = (theme) => ({
-// root: {
-// 	flexGrow: 1,
-//     padding: theme.spacing(8),
-//     paddingLeft:'4%',
-//     paddingRight:'4%'
-// },
-// disabled: {
-// 	color: "lightgrey"
-//   },
-// toolbar: theme.mixins.toolbar,
-// gridSize: {
-// 	height: 340,
-// 	width: 300,
-// },
-// listItem: {
-// 	border: '1px solid #eee',
-// },
-// checkBox: {
-// 	border: '1px solid #eee',
-// },
-// statisticsPane: {
-// 	minHeight: '50px',
-// },
-// bookCard: {
-// 	width: '400px',
-// },
-// });
 
 function LinearProgressWithLabel(props) {
 	//This function is to get linear progress bar
@@ -81,23 +50,14 @@ function LinearProgressWithLabel(props) {
 	);
 }
 
-// const useStyles = makeStyles((theme) => createStyles({}));
-
 const accessToken = localStorage.getItem("accessToken");
 
 export default function UsersReports(props) {
 	const [assignedUsers, setAssignedUsers] = React.useState([]);
-	// const [userId, setUserId] = React.useState("");
-	// const [projectId, setProjectId] = React.useState("");
-	// const [oldBooksLength, setOldBooksLength] = React.useState(null);
-	// const [newBooksLength, setNewBooksLength] = React.useState(null);
 	const [bookList, setBookList] = React.useState({});
-	const [bookNTlist, setbookNTlist] = React.useState(null);
-
 	const [open, setOpen] = React.useState(false);
 	const [scroll, setScroll] = React.useState("paper");
 	const [loading, setLoading] = React.useState(false);
-
 	const [proId, setProId] = React.useState(0);
 
 	const stoploading = () => {
@@ -125,7 +85,7 @@ export default function UsersReports(props) {
 			apiUrl + "v1/autographamt/statistics/projects/" + projectId
 		);
 		const response = await data.json();
-		if (data.status != 200) {
+		if (data.status !== 200) {
 			swal({
 				title: "Statistics",
 				text:
@@ -147,7 +107,7 @@ export default function UsersReports(props) {
 			}
 		);
 		const response1 = await data1.json();
-		if (data1.status != 200) {
+		if (data1.status !== 200) {
 			swal({
 				title: "Statistics",
 				text: "Unable to fetch User information: " + response.message,
@@ -162,8 +122,7 @@ export default function UsersReports(props) {
 
 	const handleClickOpen = (scrollType) => () => {
 		const projectIdCheck = props.value.split("/")[0];
-
-		if (proId != projectIdCheck) {
+		if (proId !== parseInt(projectIdCheck)) {
 			setLoading(true);
 			setOpen(true);
 			setScroll(scrollType);
@@ -178,10 +137,10 @@ export default function UsersReports(props) {
 		//This function is for the datas of assigned users
 		const bookWiseDatas = bookList.bookWiseData;
 		const combineDict = {};
-		assignedUsers.map((data) => {
+		assignedUsers.forEach((data) => {
 			const { books } = data;
 			const { userName, email } = data.user;
-			books.map((bk) => {
+			books.forEach((bk) => {
 				const checkBook = bookWiseDatas[bk];
 				if (checkBook) {
 					const addData = checkBook;
@@ -195,12 +154,12 @@ export default function UsersReports(props) {
 		const book_keys = Object.keys(combineDict);
 
 		const sortOT = [];
-		bibleBookOldTestments.map((book) => {
+		bibleBookOldTestments.forEach((book) => {
 			if (book_keys.includes(book)) {
 				sortOT.push(combineDict[book]);
 			}
 		});
-		if (sortOT.length != 0) {
+		if (sortOT.length !== 0) {
 			return sortOT.map((bkdetails, i) => {
 				return (
 					<TableRow key={i}>
@@ -227,7 +186,7 @@ export default function UsersReports(props) {
 				);
 			});
 		} else {
-			return <span style={{ color: "red" }}>No book assigned</span>;
+			return <TableRow><TableCell colSpan={5} style={{ color: "red" }}>No book assigned</TableCell></TableRow>;
 		}
 	};
 
@@ -235,10 +194,10 @@ export default function UsersReports(props) {
 		//Function for new testament books along with the assigned users
 		const bookWiseDatas = bookList.bookWiseData;
 		const combineDict = {};
-		assignedUsers.map((data) => {
+		assignedUsers.forEach((data) => {
 			const { books } = data;
 			const { userName, email } = data.user;
-			books.map((bk) => {
+			books.forEach((bk) => {
 				const checkBook = bookWiseDatas[bk];
 				if (checkBook) {
 					const addData = checkBook;
@@ -252,13 +211,12 @@ export default function UsersReports(props) {
 
 		const sortNT = [];
 
-		bibleBookNewTestments.map((book) => {
+		bibleBookNewTestments.forEach((book) => {
 			if (book_keys.includes(book)) {
 				sortNT.push(combineDict[book]);
 			}
 		});
-
-		if (sortNT != 0) {
+		if (sortNT.length !== 0) {
 			return sortNT.map((bkdetails, i) => {
 				return (
 					<TableRow key={i}>
@@ -285,7 +243,7 @@ export default function UsersReports(props) {
 				);
 			});
 		} else {
-			return <span style={{ color: "red" }}>No book assigned</span>;
+			return <TableRow><TableCell colSpan={5} style={{ color: "red" }}>No book assigned</TableCell></TableRow>;
 		}
 	};
 
@@ -310,17 +268,10 @@ export default function UsersReports(props) {
 					<span style={{ fontSize: "80%", fontWeight: "bold" }}>
 						&nbsp;Assigned Books- ({assignedUsersSum})
 					</span>
-					{/* <span
-            style={{ fontSize: "80%", fontWeight: "bold", paddingLeft: "5%" }}
-          >
-            &nbsp;Unassigned Books- ({bookData.length - assignedUsersSum})
-          </span> */}
 				</React.Fragment>
 			);
 		}
 	};
-
-	let projectName = props.value.split("/")[1].toUpperCase();
 
 	return (
 		<div>
@@ -332,7 +283,6 @@ export default function UsersReports(props) {
 			>
 				View
 			</Button>
-			{/* {loading && <CircleLoader />} */}
 			<Dialog
 				open={open}
 				onClose={handleCloses}
@@ -349,11 +299,7 @@ export default function UsersReports(props) {
 							sm={6}
 							style={{ fontSize: "80%", fontWeight: "bold" }}
 						>
-							{
-								(projectName = props.value
-									.split("/")[1]
-									.toUpperCase())
-							}
+							{props.value.split("/")[1].toUpperCase()}
 						</Grid>
 						<Grid
 							item
@@ -368,88 +314,68 @@ export default function UsersReports(props) {
 						</Grid>
 					</Grid>
 				</DialogTitle>
-
-				<DialogContent dividers={scroll === "paper"}>
-					<DialogContentText
-						id="scroll-dialog-description"
-						ref={descriptionElementRef}
-						tabIndex={-1}
-					>
-						{loading ? (
-							<CircleLoader />
-						) : assignedUsers.length > 0 ? (
-							<div>
-								<Table>
-									<TableHead>
-										<span
-											style={{
-												fontSize: "100%",
-												fontWeight: "bold",
-											}}
-										>
-											&nbsp;&nbsp;&nbsp;OLD TESTAMENT
-										</span>
-										<TableRow>
-											<TableCell align="left">
-												<h4>BOOK NAME</h4>
-											</TableCell>
-											{/*Heading for the old testament table*/}
-											<TableCell align="center">
-												<h4>USER NAME</h4>
-											</TableCell>
-											<TableCell align="center">
-												<h4>EMAIL ID</h4>
-											</TableCell>
-											<TableCell align="left">
-												<h4>TRANSLATION PROGRESS</h4>
-											</TableCell>
-											<TableCell align="center">
-												<h4>DRAFT READY</h4>
-											</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>{displayOldBooks()}</TableBody>
-								</Table>
-
-								<Table>
-									<TableHead>
-										<h4></h4>
-										<span
-											style={{
-												fontSize: "100%",
-												fontWeight: "bold",
-											}}
-										>
-											&nbsp;&nbsp;&nbsp;NEW TESTAMENT
-										</span>
-										<TableRow>
-											<TableCell align="left">
-												<h4>BOOK NAME</h4>
-											</TableCell>
-											{/*Heading for the old testament table*/}
-											<TableCell align="center">
-												<h4>USER NAME</h4>
-											</TableCell>
-											<TableCell align="center">
-												<h4>EMAIL ID</h4>
-											</TableCell>
-											<TableCell align="left">
-												<h4>TRANSLATION PROGRESS</h4>
-											</TableCell>
-											<TableCell align="center">
-												<h4>DRAFT READY</h4>
-											</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>{displayNewBooks()}</TableBody>
-								</Table>
+				<DialogContent dividers={scroll === "paper"} ref={descriptionElementRef}>
+					{loading ? (
+						<CircleLoader />
+					) : assignedUsers.length > 0 ? (
+						<div>
+							<div style={{fontSize: "100%",fontWeight: "bold",margin :"15px 0 0 15px" }}>
+								OLD TESTAMENT
 							</div>
-						) : (
-							<div> Books are not assigned to Users</div>
-						)}
-					</DialogContentText>
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableCell align="left">
+											<h4>BOOK NAME</h4>
+										</TableCell>
+										{/*Heading for the old testament table*/}
+										<TableCell align="center">
+											<h4>USER NAME</h4>
+										</TableCell>
+										<TableCell align="center">
+											<h4>EMAIL ID</h4>
+										</TableCell>
+										<TableCell align="left">
+											<h4>TRANSLATION PROGRESS</h4>
+										</TableCell>
+										<TableCell align="center">
+											<h4>DRAFT READY</h4>
+										</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>{displayOldBooks()}</TableBody>
+							</Table>
+							<div style={{ fontSize: "100%", fontWeight: "bold",margin :"25px 0 0 15px" }}>
+								NEW TESTAMENT
+							</div>
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableCell align="left">
+											<h4>BOOK NAME</h4>
+										</TableCell>
+										{/*Heading for the old testament table*/}
+										<TableCell align="center">
+											<h4>USER NAME</h4>
+										</TableCell>
+										<TableCell align="center">
+											<h4>EMAIL ID</h4>
+										</TableCell>
+										<TableCell align="left">
+											<h4>TRANSLATION PROGRESS</h4>
+										</TableCell>
+										<TableCell align="center">
+											<h4>DRAFT READY</h4>
+										</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>{displayNewBooks()}</TableBody>
+							</Table>
+						</div>
+					) : (
+						<div> Books are not assigned to Users</div>
+					)}
 				</DialogContent>
-
 				<DialogActions>
 					<Button onClick={handleCloses} color="primary">
 						Close

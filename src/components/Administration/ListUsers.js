@@ -141,8 +141,8 @@ class ListUsers extends Component {
         const { columns } = this.state;
         const data =  Object.values(users)
         const sortedData = [] 
-        data.map(user => {
-            if (user.roleId != 3 & user.active === true) {
+        data.forEach(user => {
+            if (user.roleId !== 3 & user.active === true) {
                 sortedData.push(user)
             }    
         });

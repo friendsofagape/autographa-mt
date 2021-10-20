@@ -6,13 +6,9 @@ import Popover from "@material-ui/core/Popover";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import DataTable from "react-data-table-component";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
 import Box from "@material-ui/core/Box";
-import {
-	bibleBookNewTestments,
-	bibleBookOldTestments,
-} from "../Common/BibleOldNewTestment";
-// import Progress from 'react-progressbar';
+import apiUrl from "../../components/GlobalUrl.js";
+import {bibleBookNewTestments,bibleBookOldTestments} from "../Common/BibleOldNewTestment";
 
 function LinearProgressWithLabel(props) {
 	return (
@@ -61,16 +57,12 @@ export default function AvailableSourceReport(props) {
 	const [FirstBookLength, setFirstBookLength] = React.useState(null);
 
 	const handleClick = (event) => {
-		{
-			/*To open the popup*/
-		}
+		/*To open the popup*/
 		setAnchorEl(event.currentTarget);
 	};
 
 	const handleClose = () => {
-		{
-			/*To close the popup*/
-		}
+		/*To close the popup*/
 		setAnchorEl(null);
 	};
 
@@ -78,13 +70,8 @@ export default function AvailableSourceReport(props) {
 	const id = open ? "simple-popover" : undefined;
 
 	React.useEffect(() => {
-		{
-			/*fetching statistics data for the popup*/
-		}
-		fetch(
-			"https://stagingapi.autographamt.com/v1/autographamt/statistics/projects/" +
-				props.projectId
-		) //popup
+		/*fetching statistics data for the popup*/
+		fetch(apiUrl+"v1/autographamt/statistics/projects/" +props.projectId) //popup
 			.then((results) => results.json())
 			.then((data) => {
 				let matches = [];
@@ -92,7 +79,7 @@ export default function AvailableSourceReport(props) {
 				let newBooks = [];
 				if (
 					data.bookWiseData != null &&
-					Object.keys(data.bookWiseData).length != 0
+					Object.keys(data.bookWiseData).length !== 0
 				) {
 					for (let book of bibleBookOldTestments) {
 						//for order objects and also adding three code book name to the object
@@ -122,7 +109,7 @@ export default function AvailableSourceReport(props) {
 				}
 				setFirstBookLength(matches.length); //Data for the text on the button for popup
 			});
-	}, []);
+	}, [props.projectId]);
 
 	const columns = [
 		//columns for the popup
@@ -212,7 +199,7 @@ export default function AvailableSourceReport(props) {
 					/>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					{unTokenisedOldBooks !== 0
-						? unTokenisedOldBooks + " " + "Untokenised Books"
+						? unTokenisedOldBooks + " Untokenised Books"
 						: "BOOKS TO BE TOKENISED"}
 					<DataTable
 						title={
@@ -227,7 +214,7 @@ export default function AvailableSourceReport(props) {
 					/>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					{unTokenisedNewBooks !== 0
-						? unTokenisedNewBooks + " " + "Untokenised Books"
+						? unTokenisedNewBooks + " Untokenised Books"
 						: ""}
 				</Popover>
 			)}
