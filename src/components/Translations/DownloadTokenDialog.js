@@ -323,7 +323,7 @@ class DownloadTokenDialog extends Component {
                       control={<Checkbox color="primary" />}
                       onClick={this.handleOldSelectAll}
                       checked={this.state.isOldChecked}
-                      label="Old Testment"
+                      label="Old Testament"
                     />
                   </FormGroup>
                 </Grid>
@@ -344,7 +344,7 @@ class DownloadTokenDialog extends Component {
                       control={<Checkbox color="primary" />}
                       onClick={this.handleNewSelectAll}
                       checked={this.state.isNewChecked}
-                      label="New Testment"
+                      label="New Testament"
                     />
                   </FormGroup>
                 </Grid>
