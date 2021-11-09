@@ -11,7 +11,7 @@ const styles = (theme) => ({
 		marginLeft: "4%",
 	},
 	formControl: {
-		minWidth: 120,
+		minWidth: 130,
 	},
 	selectMenu: {
 		width: "140px",
@@ -46,11 +46,7 @@ class MenuBar extends Component {
 			return assignedBooks.map((item) => {
 				//map function for displaying books on UI
 				return (
-					<MenuItem
-						key={item}
-						value={item}
-						style={{ fontSize: "80%" }}
-					>
+					<MenuItem key={item} value={item}>
 						{item.toUpperCase()}
 					</MenuItem>
 				);
@@ -74,12 +70,11 @@ class MenuBar extends Component {
 	render() {
 		const { classes } = this.props;
 		return (
-			<FormControl className={classes.formControl}>
+			<FormControl variant="filled" className={classes.formControl}>
 				<InputLabel id="demo-simple-select-label">
 					Select Book
 				</InputLabel>
 				<Select
-					margin="dense"
 					value={this.state.selectbook}
 					onChange={this.onSelect}
 					labelId="demo-simple-select-label"
