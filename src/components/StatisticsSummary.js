@@ -13,11 +13,7 @@ class StatisticsSummary extends Component {
 
     render() {
         const { projects, projectId } = this.props
-        var project = projects.filter(item => {
-            if (item.projectId === parseInt(projectId)){
-                return item
-            }
-        });
+        var project = projects.filter(item => item.projectId === parseInt(projectId));
         project = project.length > 0 ? project[0] : {}
         return (
             <Grid container spacing={2}>

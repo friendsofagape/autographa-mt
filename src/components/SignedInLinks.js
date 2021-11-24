@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import jwt_decode from "jwt-decode";
-import {  MenuItem, Grid, Popover } from "@material-ui/core";
+import { MenuItem, Grid, Popover } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import { Link, NavLink } from "react-router-dom";
 import { connect } from "react-redux";
@@ -31,7 +30,6 @@ class SignedInLinks extends Component {
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
     return (
-
       <Popover
         id={id}
         open={open}
@@ -48,7 +46,7 @@ class SignedInLinks extends Component {
       >
         <MenuItem>
           <Link
-            style={{ color: "red", "text-decoration": "none" }}
+            style={{ color: "red", textDecoration: "none" }}
             to="/"
             onClick={this.logOut}
             className={this.props.classes.link}
@@ -62,13 +60,13 @@ class SignedInLinks extends Component {
 
   avatarChange() {
     const { current_user } = this.props;
-    if (current_user.role == "ad") {
+    if (current_user.role === "ad") {
       return <Avatar alt="A" src="../images/admin.jpg" />;
     }
-    if (current_user.role == "m") {
+    if (current_user.role === "m") {
       return <Avatar alt="T" src="../images/translator.png" />;
     }
-    if (current_user.role == "sa") {
+    if (current_user.role === "sa") {
       return <Avatar alt="SA" src="../images/superadmin.jpg" />;
     }
   }
@@ -77,32 +75,25 @@ class SignedInLinks extends Component {
     const { classes } = this.props;
     const { anchorEl } = this.state;
     const isMenuOpen = Boolean(anchorEl);
-    let tokenAliveFlag = false;
-    let decoded;
-    const { accessToken } = this.props;
-    if (accessToken) {
-      decoded = jwt_decode(accessToken);
-      let currentDate = new Date().getTime();
-      let expiry = decoded.exp * 1000;
-      var firstName = decoded.firstName;
-      var hours = (expiry - currentDate) / 36e5;
-      if (hours > 0) {
-        tokenAliveFlag = true;
-      }
-    }
-    
+
     const { current_user } = this.props;
     return (
       <Grid>
         {current_user.firstName ? (
           <div>
-              <label
-                color="inherit"
-                style={{ padding: "5px", paddingRight: "2%", color: "#e0ba1f" }}
-              >
-                Welcome,{" " +current_user.firstName.charAt(0).toUpperCase() + current_user.firstName.slice(1)+ " " + current_user.lastName.charAt(0).toUpperCase() + current_user.lastName.slice(1)}
-              </label>
-            
+            <label
+              color="inherit"
+              style={{ padding: "5px", paddingRight: "2%", color: "#e0ba1f" }}
+            >
+              Welcome,
+              {" " +
+                current_user.firstName.charAt(0).toUpperCase() +
+                current_user.firstName.slice(1) +
+                " " +
+                current_user.lastName.charAt(0).toUpperCase() +
+                current_user.lastName.slice(1)}
+            </label>
+
             <IconButton
               aria-owns={isMenuOpen ? "material-appbar" : undefined}
               aria-haspopup="true"
@@ -118,7 +109,6 @@ class SignedInLinks extends Component {
           <Grid>
             <NavLink
               exact
-              className="main-nav"
               activeClassName="main-nav-active"
               to="/signin"
               className={classes.link}
@@ -127,7 +117,6 @@ class SignedInLinks extends Component {
             </NavLink>
             <NavLink
               exact
-              className="main-nav"
               activeClassName="main-nav-active"
               style={{ paddingLeft: "2%", paddingRight: "1%" }}
               to="/signup"
@@ -145,7 +134,6 @@ class SignedInLinks extends Component {
 const mapStateToProps = (state) => ({
   current_user: state.auth.current_user,
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,

@@ -54,7 +54,7 @@ class UpdateTokens extends Component {
   };
 
 // set state into empty
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       token: this.props.tokenSelected,
       updateToken: this.props.tokenSelected,
@@ -76,8 +76,7 @@ class UpdateTokens extends Component {
       updateTranslation: nextProps.tokenUpdateData.translation,
       sense: nextProps.tokenUpdateData.senses,
     });
-
-    if (oldSelectBook != newSelectBook) {
+    if (oldSelectBook !== newSelectBook) {
       this.setState({
         token: "",
         updateToken: "",
@@ -179,18 +178,14 @@ class UpdateTokens extends Component {
 
 
   render() {
-    const { classes, selectedProject } = this.props;
+    const { classes } = this.props;
     const { updateToken, translation, updateTranslation, sense } = this.state;
-    var displayLanguage = "";
-    if (selectedProject.projectName) {
-      displayLanguage = selectedProject.projectName.split("|")[0].split("-")[2];
-    }
     return (
       <Grid item xs={12}>
         {this.state.loading && <CircleLoader />}
         <Typography
           component="h4"
-          variant="h7"
+          variant="h6"
           style={{
             textAlign: "left",
             paddingLeft: "3%",
@@ -251,7 +246,7 @@ class UpdateTokens extends Component {
         <Divider />
         <Typography
           component="h4"
-          variant="h7"
+          variant="h6"
           style={{
             textAlign: "left",
             paddingLeft: "3%",

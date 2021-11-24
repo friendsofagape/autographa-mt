@@ -9,15 +9,13 @@ const styles = theme => ({
     root: {
         display:'flex',
         flexGrow: 1,
-      },
-      tokenList: {
+    },
+    tokenList: {
         height: '30vh',
         overflowX: 'hidden',
         overflowY: 'auto',
-      }
+    }
 });
-
-
 
 class TranslationWords extends Component {
     state = {
@@ -26,26 +24,21 @@ class TranslationWords extends Component {
         tokenSelected:''
     }
 
-
     // check previous value
     componentWillReceiveProps(nextProps) {
-		if(this.props.tokenSelected != nextProps.tokenSelected){
+		if(this.props.tokenSelected !== nextProps.tokenSelected){
 			this.setState({
-        	        tokenSelected:'',			
-					translationWords:''
-        	    })
-			}
-
+                tokenSelected:'',			
+                translationWords:''
+            })
+        }
 	}
 
     // fetch token details from database
     async getTranslationWords() {
-
-        if(this.props.tokenSelected !=''){
+        if(this.props.tokenSelected !==''){
             if(this.state.tokenSelected !== this.props.tokenSelected){
-
                 const { tokenSelected } = this.props;
-
                 const data = await fetch(apiUrl + 'v1/translationshelps/words/' + this.props.selectedProject.sourceId + '/' + tokenSelected, {
                     method: 'GET'
                 });
@@ -55,11 +48,10 @@ class TranslationWords extends Component {
         }
     }
 
-
     // display details 
     displayTranslationWords() {
         const { translationWords } = this.state
-        if(translationWords.success == false){
+        if(String(translationWords.success) === "false"){
             return <p style={{paddingLeft:"3%", fontSize:"75%", color:'#b1b2b3'}} >No data available</p>
         }
         if (translationWords.definition) {
@@ -95,7 +87,7 @@ class TranslationWords extends Component {
                         <p style={{paddingLeft:"4%",paddingRight:"5%", fontSize:'75%',textAlign:'left', margin:'0', paddingBottom:'1%'}}>{translationWords.wordforms}</p>
                     </Grid>
                 </Grid>
-                )
+            )
         } 
         
     }
@@ -104,13 +96,12 @@ class TranslationWords extends Component {
         return (
             <Grid item xs={12}>
                 <Grid item sm={12} >
-					<Typography component="h4" variant="h7" style={{textAlign:"left" ,padding:"1%"}}>
+					<Typography component="h4" variant="h6" style={{textAlign:"left" ,padding:"1%"}}>
                    		Dictionary
 					</Typography>
 				</Grid>
                 <Grid item sm={12} style={{height: '120px'}}>
                     <Grid item sm={12} style={{height: "96%",overflowX: "hidden", overflowY: "auto"}}>
-                        
                         {!this.state.translationWords &&
                             <Grid style={{paddingTop:'11%', paddingLeft:'38%'}}>
 							<Button size={'small'} 
@@ -125,12 +116,6 @@ class TranslationWords extends Component {
                     </Grid>
                 </Grid>
             </Grid>
-
-
-
-
-
-            
         )
     }
 }

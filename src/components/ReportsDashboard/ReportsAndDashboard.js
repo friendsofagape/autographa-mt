@@ -9,7 +9,6 @@ import { withRouter } from "react-router-dom";
 import AssignedUsersReports from './ReportsAndDashboardUsers'
 import AvailableSourceReports from "./AvailableSourceReports";
 
-
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -100,7 +99,7 @@ class ReportsDashboard extends Component {
     const { classes, projects, isFetching } = this.props;
     const { columns } = this.state;
     const sortedData = [] 
-        projects.map(project => {
+        projects.forEach(project => {
             if (project.active === true) {
                 sortedData.push(project)
             }    

@@ -12,10 +12,8 @@ import {
 } from "./actionConstants";
 import apiUrl from "../../components/GlobalUrl.js";
 import swal from "sweetalert";
-// import { setDisplayName } from 'recompose';
 var FileSaver = require("file-saver");
 var JSZip = require("jszip");
-// var zip;
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -139,7 +137,6 @@ export const fetchUserProjects = () => async (dispatch) => {
         icon: "error",
       });
     } else {
-      // this.setState({ projects: response })
       dispatch(setUserProjects(response));
     }
     dispatch(setIsFetching(false));
@@ -152,7 +149,7 @@ export const fetchUserProjects = () => async (dispatch) => {
     });
   }
 };
-
+//Unused function ??
 export const fetchTokenList = (currentBook, sourceId) => async (dispatch) => {
   dispatch(setIsFetching(true));
   var bookData = await fetch(
@@ -164,9 +161,8 @@ export const fetchTokenList = (currentBook, sourceId) => async (dispatch) => {
   const tokenList = await bookData.json();
   dispatch(setTokenList(tokenList));
   dispatch(setIsFetching(false));
-  // this.setState({ tokenList: tokenList })
 };
-
+//Unused function ??
 export const fetchConcordances =
   (token, sourceId, book) => async (dispatch) => {
     if (book) {
@@ -184,7 +180,6 @@ export const fetchConcordances =
       } catch (e) {
         dispatch(setIsFetching(false));
       }
-      // await this.setState({ concordance: concordance })
     }
   };
 
@@ -207,11 +202,8 @@ export const getTranslatedText =
       if ("translatedUsfmText" in myJson) {
         const usfmTexts = myJson.translatedUsfmText;
         var zip = new JSZip();
-
-        Object.keys(usfmTexts).map((book) => {
-          // let blob = new Blob([usfmTexts[book]], { type: "text/plain;charset=utf-8" });
+        Object.keys(usfmTexts).forEach((book) => {
           zip.file(book + ".usfm", usfmTexts[book]);
-          // FileSaver.saveAs(blob, book + "_" + projectName.split("|")[0] + "_.usfm");
         });
         zip.generateAsync({ type: "blob" }).then(function (content) {
           // see FileSaver.js
@@ -233,6 +225,7 @@ export const getTranslatedText =
     }
     dispatch(setIsFetching(false));
   };
+//Unused function ??
 export const updateTransaltion = (apiData) => async (dispatch) => {
   dispatch(setIsFetching(true));
   try {
@@ -248,8 +241,6 @@ export const updateTransaltion = (apiData) => async (dispatch) => {
     );
     const myJson = await update.json();
     if (myJson.success) {
-      // clear()
-      // dispatch(getTranslatedWords(getState().project.selectedToken, getState().project.selectedProject.sourceId, getState().project.selectedProject.targetId))
       swal({
         title: "Token translation",
         text: myJson.message,
@@ -271,26 +262,18 @@ export const updateTransaltion = (apiData) => async (dispatch) => {
   }
   dispatch(setIsFetching(false));
 };
-
+//Unused function ??
 export const getTranslatedWords =
   (token, sourceId, targetLanguageId) => async (dispatch) => {
     dispatch(setIsFetching(true));
     try {
       const data = await fetch(
-        apiUrl +
-          "/v1/translations/" +
-          sourceId +
-          "/" +
-          targetLanguageId +
-          "/" +
-          token,
-        {
+        apiUrl +"/v1/translations/" +sourceId +"/" +targetLanguageId +"/" +token,{
           method: "GET",
         }
       );
       const translatedWords = await data.json();
       if ("translation" in translatedWords) {
-        const { translation, senses } = translatedWords;
         dispatch(setTranslatedWord(translatedWords));
       } else {
         dispatch(
