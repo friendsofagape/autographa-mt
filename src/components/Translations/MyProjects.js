@@ -160,11 +160,11 @@ class MyProjects extends Component {
                   projectName={projectName}
                 />
                 <Tooltip title="Token Upload">
-                  <label htmlFor="upload-photo">
+                  <label htmlFor={"projectId-" + projectId}>
                     <input
                       style={{ display: "none" }}
-                      id="upload-photo"
-                      name="upload-photo"
+                      id={"projectId-" + projectId}
+                      name={"projectId-" + projectId}
                       type="file"
                       onChange={this.clickupload}
                       data-projectid={projectId}
